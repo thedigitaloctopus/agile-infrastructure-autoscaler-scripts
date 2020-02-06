@@ -1,0 +1,16 @@
+These scripts are responsible for spawning new webservers based on demand configuration set by the deployer.
+To alter the number of webservers which are deployed, modify the
+
+NO_WEBSERVERS variable in ${HOME}/autoscaler/PerformScaling.sh
+
+If you do a "production" deployment, you will also find a scale up and scale down script in the crontab which you can modify
+to reflect your needs in terms of time to scale up and time to scale down and how many webservers in each case. 
+
+In effect this system doesn't "autoscale" although it could be extended to but it does "scale".
+The deployer is resonsible for defining the scaling profile using the scale up and scale down scripts and also,
+by modifying the NO_WEBSERVERS parameter in the PerformScaling script. 
+
+**NOTE** 
+If you are deploying for "Development", then remember that auto-scaling or scaling is switched off. 
+If you want to switch into Production mode (with autoscaling or scaling), the best thing to do is to rebuild. 
+Although you could manually alter things to switch tfrom development to production, it is not recommended.
