@@ -44,8 +44,31 @@ if ( [ "${DATASTORE_PROVIDER}" = "amazonS3" ] )
 then
     export AWSACCESSKEYID=`/bin/cat ~/.s3cfg | /bin/grep 'access_key' | /usr/bin/awk '{print $NF}'`
     export AWSSECRETACCESSKEY=`/bin/cat ~/.s3cfg | /bin/grep 'secret_key' | /usr/bin/awk '{print $NF}'`
-    /usr/bin/s3cmd mb s3://${configbucket}
-    /usr/bin/s3fs -o nonempty -ourl=https://${endpoint} ${configbucket} ${HOME}/config
+    
+    if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" = "" ] )
+    then
+       if ( [ -f ${HOME}/.ssh/ENABLEEFS:1 ] )
+       then
+           aws_region="`/bin/cat ${HOME}/.aws/config | /bin/grep region | /usr/bin/awk '{print $NF}'`"
+           /bin/mkdir ~/.aws 2>/dev/null
+           /bin/cp ${HOME}/.aws/* ~/.aws 2>/dev/null
+
+           /usr/bin/aws efs describe-file-systems | /usr/bin/jq '.FileSystems[] | .CreationToken + " " + .FileSystemId' | /bin/sed 's/\"//g' | while read identifier
+           do
+                   echo ${configbucket} 
+                   exit
+                if ( [ "`/bin/echo ${identifier} | /bin/grep ${configbucket}`" != "" ] )
+                then
+                    id="`/bin/echo ${identifier} | /usr/bin/awk '{print $NF}'`"
+                    efsmounttarget="`/usr/bin/aws efs describe-mount-targets --file-system-id ${id} | /usr/bin/jq '.MountTargets[].IpAddress' | /bin/sed 's/"//g'`"
+                    /bin/mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport ${efsmounttarget}:/   ${HOME}/config
+                 fi
+            done
+        else
+            /usr/bin/s3cmd mb s3://${configbucket}
+            /usr/bin/s3fs -o nonempty -ourl=https://${endpoint} ${configbucket} ${HOME}/config
+        fi
+    fi
 fi
 
 if ( [ "${DATASTORE_PROVIDER}" = "digitalocean" ] )
