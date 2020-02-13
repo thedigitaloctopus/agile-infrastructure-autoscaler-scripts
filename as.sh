@@ -131,6 +131,11 @@ ${HOME}/installscripts/InstallSSHFS.sh ${BUILDOS}
 ${HOME}/installscripts/InstallS3FS.sh ${BUILDOS}
 ${HOME}/installscripts/InstallRsync.sh ${BUILDOS}
 
+if ( [ -f ${HOME}/.ssh/ENABLEEFS:1 ] )
+then
+    ${HOME}/installscripts/InstallNFS.sh ${BUILDOS}
+fi
+
 ${HOME}/providerscripts/utilities/InstallMonitoringGear.sh
 
 /bin/echo "${0}: Setting timezone" >> ${HOME}/logs/MonitoringLog.log
