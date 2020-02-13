@@ -55,8 +55,6 @@ then
 
            /usr/bin/aws efs describe-file-systems | /usr/bin/jq '.FileSystems[] | .CreationToken + " " + .FileSystemId' | /bin/sed 's/\"//g' | while read identifier
            do
-                   echo ${configbucket} 
-                   exit
                 if ( [ "`/bin/echo ${identifier} | /bin/grep ${configbucket}`" != "" ] )
                 then
                     id="`/bin/echo ${identifier} | /usr/bin/awk '{print $NF}'`"
