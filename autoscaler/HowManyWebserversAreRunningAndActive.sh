@@ -64,7 +64,7 @@ SERVER_USER_PASSWORD="`/bin/ls ${HOME}/.ssh/SERVERUSERPASSWORD:* | /usr/bin/awk 
 SSH_PORT="`/bin/ls ${HOME}/.ssh/SSH_PORT:* | /usr/bin/awk -F':' '{print $NF}'`"
 
 #This lists all the ip addresses of webservers on our current cloudhost, built or not
-ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "webserver" ${CLOUDHOST}`"
+ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "webserver*" ${CLOUDHOST}`"
 noactiveips="0"
 
 #Find out the number of webservers that are active and also online
