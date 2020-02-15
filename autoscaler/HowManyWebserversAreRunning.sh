@@ -28,4 +28,4 @@ fi
 
 CLOUDHOST="${1}"
 #return how many (number of) webservers that are currently running for our chosen cloudhost
-${HOME}/providerscripts/server/NumberOfServers.sh "webserver" ${CLOUDHOST}
+${HOME}/providerscripts/server/NumberOfServers.sh "webserver*" ${CLOUDHOST}
