@@ -28,19 +28,31 @@ then
     exit
 fi
 
-#Note, the space before NO_WEBSERVERS is essential because this file gets parsed by a cron job looking for NO_WEBSERVERS
-#at the start of a line. It is recommended (essential for resilience) that this value is never set to less than 2
+#################################################ESSENTIAL#########################################################
+#To configure how many websevers are deployed, you can edit the file at:  ${HOME}/config/scalingprofile/profile.cnf 
+#################################################ESSENTIAL#########################################################
+
+SCALING_MODE="static"
 NO_WEBSERVERS="`/bin/ls ${HOME}/.ssh/NUMBERWS:* | /usr/bin/awk -F':' '{print $NF}'`"
 
-#If you want to override what you set to be the number of webservers at build time, uncomment and set this value here.
-#You will need to uncomment this line if you wish to have the scripts: ${HOME}/providerscripts/utilities/DailyScaleup.sh and
-#the ${HOME}/providerscripts/utilities/DailyScaledown.sh scripts work you will need to uncomment the NO_WEBSERVERS line below
-#NO_WEBSERVERS must be fully left justified for the parsing to work by the scaling scripts.
-#This value should never be less than 3 in production systems. This is because with some providers there can be network glitches and
-#as we check across the network for status we can sometimes mark a machine as down when really it isn't and destroy it. If you only
-#have one machine or server running then you are offline, but, if you have several then they should still be resilient if the comms to
-#a particular box is playing up. It's just something I've seen happen so I mentioned it here.
-#NO_WEBSERVERS=2
+if ( [ ! -d ${HOME}/config/scalingprofile/ ] )
+then
+    /bin/mkdir -p ${HOME}/config/scalingprofile
+fi
+
+if ( [ "`/bin/cat ${HOME}/config/scalingprofile/profile.cnf | /bin/grep "NO_WEBSERVERS"`" = "" ] )
+then
+    /bin/echo  "SCALING_MODE=static" > ${HOME}/config/scalingprofile/profile.cnf
+    /bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> ${HOME}/config/scalingprofile/profile.cnf
+fi
+
+SCALING_MODE="`/bin/cat ${HOME}/config/scalingprofile/profile.cnf | /bin/grep "SCALING_MODE" | /usr/bin/awk -F'=' '{print $NF}'`"
+NO_WEBSERVERS="`/bin/cat ${HOME}/config/scalingprofile/profile.cnf | /bin/grep "NO_WEBSERVERS" | /usr/bin/awk -F'=' '{print $NF}'`"
+
+if ( [ "${SCALING_MODE}" != "static" ] )
+then
+    exit
+fi
 
 if ( [ ! -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
 then
