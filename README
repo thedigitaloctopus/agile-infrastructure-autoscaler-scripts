@@ -1,5 +1,5 @@
 These scripts are responsible for spawning new webservers based on demand configuration set by the deployer.
-To alter the number of webservers which are deployed, modify the
+To alter the number of webservers which are deployed, modify the through the configration file in ${HOME}/config/scalingpolicy/policy.cnf
 
 NO_WEBSERVERS variable in ${HOME}/autoscaler/PerformScaling.sh
 
