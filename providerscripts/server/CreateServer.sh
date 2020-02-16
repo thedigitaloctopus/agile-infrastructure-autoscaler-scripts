@@ -181,6 +181,10 @@ then
     /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=0,ToPort=65535,IpRanges='[{CidrIp=0.0.0.0/0}]',Ipv6Ranges='[{CidrIpv6=::/0}]'
 
    snapshot_id="`/bin/ls ${HOME}/.ssh/SNAPSHOT* | /usr/bin/awk -F':' '{print $NF}'`"
+   
+   #TODO, search by tags for dynamically scaled webserver. If find one, write IPs to config directory under dynamicscaling
+   # and grab those ip addresses in the PerformScaling script and then do the same as for snapshots. Return DYNAMIC.
+   # remove dynamic tag from the machine once it is built in the BuildWebserver script
 
     if ( [ "${snapshot_id}" != "" ] && [ -f ${HOME}/.ssh/SNAPAUTOSCALE:1 ] )
     then
