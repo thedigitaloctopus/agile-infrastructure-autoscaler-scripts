@@ -35,9 +35,10 @@ fi
 SCALING_MODE="static"
 NO_WEBSERVERS="`/bin/ls ${HOME}/.ssh/NUMBERWS:* | /usr/bin/awk -F':' '{print $NF}'`"
 
-if ( [ ! -d ${HOME}/config/scalingprofile/ ] )
+if ( [ ! -f ${HOME}/config/scalingprofile/profile.cnf ] )
 then
     /bin/mkdir -p ${HOME}/config/scalingprofile
+    /bin/touch ${HOME}/config/scalingprofile/profile.cnf
 fi
 
 if ( [ "`/bin/cat ${HOME}/config/scalingprofile/profile.cnf | /bin/grep "NO_WEBSERVERS"`" = "" ] )
