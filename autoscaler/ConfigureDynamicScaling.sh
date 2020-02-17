@@ -42,7 +42,7 @@ fi
 
 if ( [ "${CLOUDHOST}" = "aws" ] )
 then
-    if ( [ "`${HOME}/autoscaler/HowManyWebserversAreRunning.sh`" -ge "${MAX_WEBSERVERS}" ] )
+    if ( [ "`${HOME}/autoscaler/HowManyWebserversAreRunning.sh ${CLOUDHOST}`" -ge "${MAX_WEBSERVERS}" ] )
     then
         exit
     fi
