@@ -30,7 +30,7 @@ fi
 
 ${HOME}/autoscaler/ConfigureDynamicScaling.sh
 
-if ( [ "`${HOME}/providerscripts/autoscaler/CheckForDynamicScaling.sh`" = "1" ] )
+if ( [ "`${HOME}/autoscaler/CheckForDynamicScaling.sh`" = "1" ] )
 then
     newip="`${HOME}/autoscaler/BuildWebserver.sh`"
     if ( [ "${newip}" != "" ] )
