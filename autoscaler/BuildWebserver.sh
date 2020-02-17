@@ -211,7 +211,7 @@ fi
 /usr/sbin/ufw allow from ${ip}
 
 # Build our webserver
-if ( [ "`/bin/echo ${buildmethod} | /bin/grep 'SNAPPED'`" = "" ] && [ "`/bin/echo ${buildmethod} | /bin/grep 'DYNAMIC'`" = "" ] )
+if ( [ "`/bin/echo ${buildmethod} | /bin/grep 'SNAPPED'`" = "" ] )
 then
     #If we are here, then we are not building from a snapshot
     webserver_name="${SERVER_INSTANCE_NAME}"
