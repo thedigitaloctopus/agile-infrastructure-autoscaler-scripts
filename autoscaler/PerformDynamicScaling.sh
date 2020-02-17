@@ -47,7 +47,11 @@ fi
 
 /bin/echo "${0} `/bin/date`: ##########################################################################" >> ${HOME}/logs/ScalingEventsLog.log
 
-newip="`${HOME}/autoscaler/BuildWebserver.sh`"
+instanceid="`/usr/bin/aws ec2 describe-instances --filters "Name=tag:ScalingType,Values=Dynamic" | /usr/bin/jq '.Reservations[].Instances[].InstanceId$
+if ( [ "${instanceid}" != "" ] )
+then
+    newip="`${HOME}/autoscaler/BuildWebserver.sh`"
+fi
 
 if ( [ "${newip}" != "" ] )
 then
