@@ -180,17 +180,24 @@ then
 
     /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=0,ToPort=65535,IpRanges='[{CidrIp=0.0.0.0/0}]',Ipv6Ranges='[{CidrIpv6=::/0}]'
 
-   snapshot_id="`/bin/ls ${HOME}/.ssh/SNAPSHOT* | /usr/bin/awk -F':' '{print $NF}'`"
+
    
    instanceid="`/usr/bin/aws ec2 describe-instances --filter 'Name=tag:ScalingStyle,Values=Dynamic' 'Name=instance-state-name,Values=running' | /usr/bin/jq '.Reservations[].Instances[].InstanceId'`"
-   /usr/bin/aws ec2 create-tags --resources ${instanceid} --tags Key=descriptiveName,Value=${server_name}
-   /usr/bin/aws ec2 delete-tags --resources ${instanceid} --tags Key=ScalingStyle
+   if ( [ "${instanceid}" != "" ] )
+   then
+       /usr/bin/aws ec2 delete-tags --resources ${instanceid} --tags Key=descriptiveName
+       /usr/bin/aws ec2 create-tags --resources ${instanceid} --tags Key=descriptiveName,Value=${server_name}
+       /usr/bin/aws ec2 delete-tags --resources ${instanceid} --tags Key=ScalingStyle
+       /bin/echo "DYNAMIC"
+   else
+       snapshot_id="`/bin/ls ${HOME}/.ssh/SNAPSHOT* | /usr/bin/awk -F':' '{print $NF}'`"
    
-    if ( [ "${snapshot_id}" != "" ] && [ -f ${HOME}/.ssh/SNAPAUTOSCALE:1 ] )
-    then
-        /usr/bin/aws ec2 run-instances --count 1 --instance-type ${server_size} --key-name ${key_id} --tag-specifications "ResourceType=instance,Tags=[{Key=descriptiveName,Value=${server_name}}]" --subnet-id ${subnet_id} --security-group-ids ${security_group_id} --image-id ${snapshot_id}
-        /bin/echo "SNAPPED"
-    else
-        /usr/bin/aws ec2 run-instances --image-id ${os_choice} --count 1 --instance-type ${server_size} --key-name ${key_id} --tag-specifications "ResourceType=instance,Tags=[{Key=descriptiveName,Value=${server_name}}]" --subnet-id ${subnet_id} --security-group-ids ${security_group_id}
+       if ( [ "${snapshot_id}" != "" ] && [ -f ${HOME}/.ssh/SNAPAUTOSCALE:1 ] )
+       then
+           /usr/bin/aws ec2 run-instances --count 1 --instance-type ${server_size} --key-name ${key_id} --tag-specifications "ResourceType=instance,Tags=[{Key=descriptiveName,Value=${server_name}}]" --subnet-id ${subnet_id} --security-group-ids ${security_group_id} --image-id ${snapshot_id}
+           /bin/echo "SNAPPED"
+        else
+           /usr/bin/aws ec2 run-instances --image-id ${os_choice} --count 1 --instance-type ${server_size} --key-name ${key_id} --tag-specifications "ResourceType=instance,Tags=[{Key=descriptiveName,Value=${server_name}}]" --subnet-id ${subnet_id} --security-group-ids ${security_group_id}
+        fi
     fi
 fi
