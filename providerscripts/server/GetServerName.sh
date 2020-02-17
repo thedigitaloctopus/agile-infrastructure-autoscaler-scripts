@@ -51,24 +51,7 @@ fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
-    /bin/rm ${HOME}/runtime/ips ${HOME}/runtime/names
-    /usr/local/bin/cs listVirtualMachines | /usr/bin/jq ".virtualmachine[].nic[].ipaddress"  | /bin/grep -v 'null' | /bin/sed 's/\"//g' >${HOME}/runtime/ips 2>/dev/null
-    /usr/local/bin/cs listVirtualMachines | /usr/bin/jq ".virtualmachine[].displayname"  | /bin/grep -v 'null' | /bin/sed 's/\"//g' > ${HOME}/runtime/names 2>/dev/null
-    count="0"
-    while ( ( [ "`/bin/cat ${HOME}/runtime/ips | /usr/bin/wc -l 2>/dev/null`" = "0" ]  || [ "`/bin/cat ${HOME}/runtime/names | /usr/bin/wc -l 2>/dev/null`" = "0" ] ) && [ "${count}" -lt "10" ] )
-    do
-        /bin/echo "${0} `/bin/date` : failed in an attempt to get server name, trying again ...." >> ${HOME}/logs/MonitoringLog.log
-        /usr/local/bin/cs listVirtualMachines | /usr/bin/jq ".virtualmachine[].nic[].ipaddress"  | /bin/grep -v 'null' | /bin/sed 's/\"//g' >${HOME}/runtime/ips 2>/dev/null
-        /usr/local/bin/cs listVirtualMachines | /usr/bin/jq ".virtualmachine[].displayname"  | /bin/grep -v 'null' | /bin/sed 's/\"//g' > ${HOME}/runtime/names 2>/dev/null
-        count="`/usr/bin/expr ${count} + 1`"
-        /bin/sleep 5
-    done
-    if ( [ "${count}" -eq "10" ] )
-    then
-        /bin/echo "${0} `/bin/date` : failed in an attempt to get server name too many times, giving up ...." >> ${HOME}/logs/MonitoringLog.log
-    else
-        /usr/bin/paste -d" " ${HOME}/runtime/names ${HOME}/runtime/ips | /bin/grep ${server_ip} | /usr/bin/awk '{print $1}'
-    fi
+    /usr/local/bin/cs listVirtualMachines | /usr/bin/jq '.virtualmachine[] | .nic[].ipaddress + " " + .displayname' | /bin/grep ".*${server_ip}" | /bin/sed 's/"//g' | /usr/bin/awk '{print $NF}'
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
