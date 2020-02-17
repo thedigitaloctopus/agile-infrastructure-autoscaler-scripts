@@ -28,6 +28,17 @@ then
     exit
 fi
 
+if ( [ "`${HOME}/providerscripts/autoscaler/CheckForDynamicScaling.sh`" = "1" ] )
+then
+    newip="`${HOME}/autoscaler/BuildWebserver.sh`"
+    if ( [ "${newip}" != "" ] )
+    then
+        /bin/echo "${0} `/bin/date`:  Added the new IP ( ${newip} ) to the DNS system" >> ${HOME}/logs/ScalingEventsLog.log
+        ${HOME}/providerscripts/email/SendEmail.sh "A WEBSERVER HAS BEEN DEPLOYED" "Webserver ( ${ip} ) has just been deployed and activated"
+    fi
+    exit
+fi
+
 #################################################ESSENTIAL#########################################################
 #To configure how many websevers are deployed, you can edit the file at:  ${HOME}/config/scalingprofile/profile.cnf 
 #################################################ESSENTIAL#########################################################
@@ -43,7 +54,7 @@ fi
 
 if ( [ "`/bin/cat ${HOME}/config/scalingprofile/profile.cnf | /bin/grep "NO_WEBSERVERS"`" = "" ] )
 then
-    /bin/echo  "SCALING_MODE=static" > ${HOME}/config/scalingprofile/profile.cnf
+    /bin/echo  "SCALING_MODE=${SCALING_MODE}" > ${HOME}/config/scalingprofile/profile.cnf
     /bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> ${HOME}/config/scalingprofile/profile.cnf
 fi
 
