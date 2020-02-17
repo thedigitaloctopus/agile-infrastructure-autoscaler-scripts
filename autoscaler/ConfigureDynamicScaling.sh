@@ -53,6 +53,6 @@ then
         fi
     else
         id="`${HOME}/providerscripts/server/ListServerIDs.sh webserver ${CLOUDHOST} | /usr/bin/head -1`"
-        /usr/bin/aws autoscaling create-auto-scaling-group --auto-scaling-group-name "AgileDeploymentToolkitAutoscalingGroup" --min-size ${minsize} --max-size ${maxsize} --instance-id ${id} --tags "Name=ScalingStyle,Value=Dynamic"
+        /usr/bin/aws autoscaling create-auto-scaling-group --auto-scaling-group-name "AgileDeploymentToolkitAutoscalingGroup" --min-size ${minsize} --max-size ${maxsize} --instance-id ${id} --tags "Key=ScalingStyle,Value=Dynamic"
     fi  
 fi
