@@ -42,6 +42,10 @@ fi
 
 if ( [ "${CLOUDHOST}" = "aws" ] )
 then
+    if ( [ "`${HOME}/autoscaler/HowManyWebserversAreRunning.sh`" -ge "${MAX_WEBSERVERS}" ] )
+    then
+        exit
+    fi
     if ( [ "`/usr/bin/aws autoscaling describe-auto-scaling-groups | /usr/bin/jq ".AutoScalingGroups[].LaunchConfigurationName" | /bin/sed 's/"//g'| /bin/grep "AgileDeploymentToolkitAutoscalingGroup"`" != "" ] )
     then
         live_minsize="`/usr/bin/aws autoscaling describe-auto-scaling-groups | /usr/bin/jq ".AutoScalingGroups[].MinSize"`"
