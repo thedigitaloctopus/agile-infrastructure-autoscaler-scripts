@@ -211,7 +211,7 @@ fi
 /usr/sbin/ufw allow from ${ip}
 
 # Build our webserver
-if ( [ "`/bin/echo ${buildmethod} | /bin/grep 'SNAPPED'`" = "" ] )
+if ( [ "`/bin/echo ${buildmethod} | /bin/grep 'SNAPPED'`" = "" ] && [ "`/bin/echo ${buildmethod} | /bin/grep 'DYNAMIC'`" = "" ] )
 then
     #If we are here, then we are not building from a snapshot
     webserver_name="${SERVER_INSTANCE_NAME}"
@@ -369,7 +369,7 @@ elif ( [ "${BUILD_CHOICE}" = "5" ] )
         /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO}  ${HOME}/ws.sh 'bimonthly' ${SERVER_USER}"
     fi
 else
-    /bin/echo "${0} `/bin/date`: Building a new machine from a snapshot" >> ${HOME}/logs/MonitoringWebserverBuildLog.log
+    /bin/echo "${0} `/bin/date`: Building a new machine from a snapshot or dynamically scaled" >> ${HOME}/logs/MonitoringWebserverBuildLog.log
 
     #If we got to here, then the server has been built from a snapshot.
     /usr/bin/touch ${HOME}/config/bootedwebserverips/${private_ip}
