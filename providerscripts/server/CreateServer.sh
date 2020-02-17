@@ -182,13 +182,10 @@ then
 
    snapshot_id="`/bin/ls ${HOME}/.ssh/SNAPSHOT* | /usr/bin/awk -F':' '{print $NF}'`"
    
-   #TODO, search by tags for dynamically scaled webserver. If find one, write IPs to config directory under dynamicscaling
-   # and grab those ip addresses in the PerformScaling script and then do the same as for snapshots. Return DYNAMIC.
-   # remove dynamic tag from the machine once it is built in the BuildWebserver script
-   
    instanceid="`/usr/bin/aws ec2 describe-instances --filter 'Name=tag:ScalingStyle,Values=Dynamic' 'Name=instance-state-name,Values=running' | /usr/bin/jq '.Reservations[].Instances[].InstanceId'`"
+   /usr/bin/aws ec2 create-tags --resources ${instanceid} --tags Key=descriptiveName,Value=${server_name}
+   /usr/bin/aws ec2 delete-tags --resources ${instanceid} --tags Key=ScalingStyle
    
-
     if ( [ "${snapshot_id}" != "" ] && [ -f ${HOME}/.ssh/SNAPAUTOSCALE:1 ] )
     then
         /usr/bin/aws ec2 run-instances --count 1 --instance-type ${server_size} --key-name ${key_id} --tag-specifications "ResourceType=instance,Tags=[{Key=descriptiveName,Value=${server_name}}]" --subnet-id ${subnet_id} --security-group-ids ${security_group_id} --image-id ${snapshot_id}
