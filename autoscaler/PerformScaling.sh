@@ -38,11 +38,13 @@ NO_WEBSERVERS="`/bin/ls ${HOME}/.ssh/NUMBERWS:* | /usr/bin/awk -F':' '{print $NF
 if ( [ ! -f ${HOME}/config/scalingprofile/profile.cnf ] )
 then
     /bin/mkdir -p ${HOME}/config/scalingprofile
-    if ( [ "`/bin/cat ${HOME}/config/scalingprofile/profile.cnf | /bin/grep "NO_WEBSERVERS"`" = "" ] )
-    then
-        /bin/echo  "SCALING_MODE=${SCALING_MODE}" > ${HOME}/config/scalingprofile/profile.cnf
-        /bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> ${HOME}/config/scalingprofile/profile.cnf
-    fi
+    /bin/touch ${HOME}/config/scalingprofile/profile.cnf
+fi
+
+if ( [ "`/bin/cat ${HOME}/config/scalingprofile/profile.cnf | /bin/grep "NO_WEBSERVERS"`" = "" ] || [ "`/bin/cat ${HOME}/config/scalingprofile/profile/profile.cnf | /bin/grep "SCALING_MODE"`" = "" ] )
+then
+    /bin/echo  "SCALING_MODE=${SCALING_MODE}" > ${HOME}/config/scalingprofile/profile.cnf
+    /bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> ${HOME}/config/scalingprofile/profile.cnf
 fi
 
 SCALING_MODE="`/bin/cat ${HOME}/config/scalingprofile/profile.cnf | /bin/grep "SCALING_MODE" | /usr/bin/awk -F'=' '{print $NF}'`"
