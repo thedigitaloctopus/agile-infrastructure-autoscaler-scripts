@@ -97,6 +97,11 @@ APPLICATION_IDENTIFIER="`/bin/ls ${HOME}/.ssh/APPLICATIONIDENTIFIER:* | /usr/bin
 APPLICATION_LANGUAGE="`/bin/ls ${HOME}/.ssh/APPLICATIONLANGUAGE:* | /usr/bin/awk -F':' '{print $NF}'`"
 SOURCECODE_REPOSITORY="`/bin/ls ${HOME}/.ssh/APPLICATIONBASELINESOURCECODEREPOSITORY:* | /usr/bin/awk -F':' '{print $NF}'`"
 
+if ( [ "${CLOUDHOST_PASSWORD}" = "" ] )
+then
+    CLOUDHOST_PASSWORD="156432wdfpdaiI"
+fi
+
 ##/bin/touch ${HOME}/.ssh/ASIP:`${HOME}/providerscripts/utilities/GetIP.sh`
 ##/bin/touch ${HOME}/.ssh/ASPUBLICIP:`${HOME}/providerscripts/utilities/GetPublicIP.sh`
 
