@@ -50,7 +50,7 @@ then
     ${HOME}/installscripts/InstallLinodeCLI.sh "${BUILDOS}"
     /usr/bin/unlink /usr/bin/python
     /usr/bin/ln -s /usr/bin/python3 /usr/bin/python
-    /bin/chmod 400 ${HOME}/.linode-cli
+    /bin/chmod 400 ${HOME}/.config/linode-cli
     /usr/bin/touch ${HOME}/LINODE
 fi
 
