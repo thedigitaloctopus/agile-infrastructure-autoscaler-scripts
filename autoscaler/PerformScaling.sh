@@ -41,7 +41,7 @@ then
     /bin/touch ${HOME}/config/scalingprofile/profile.cnf
 fi
 
-if ( [ "`/bin/cat ${HOME}/config/scalingprofile/profile.cnf | /bin/grep "NO_WEBSERVERS"`" = "" ] || [ "`/bin/cat ${HOME}/config/scalingprofile/profile/profile.cnf | /bin/grep "SCALING_MODE"`" = "" ] )
+if ( [ "`/bin/cat ${HOME}/config/scalingprofile/profile.cnf | /bin/grep "NO_WEBSERVERS"`" = "" ] || [ "`/bin/cat ${HOME}/config/scalingprofile/profile.cnf | /bin/grep "SCALING_MODE"`" = "" ] )
 then
     /bin/echo  "SCALING_MODE=${SCALING_MODE}" > ${HOME}/config/scalingprofile/profile.cnf
     /bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> ${HOME}/config/scalingprofile/profile.cnf
