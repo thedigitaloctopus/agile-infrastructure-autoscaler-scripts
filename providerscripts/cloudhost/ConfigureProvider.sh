@@ -43,8 +43,8 @@ fi
 if ( [ "${CLOUDHOST}" = "linode" ] )
 then
     /bin/echo "${0} `/bin/date`: Configuring cloudtools (linodecli) for webserver with IP: ${IP}" >> ${HOME}/logs/MonitoringLog.log
-    /usr/bin/scp -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${HOME}/.linodecli/config ${SERVER_USER}@${IP}:${HOME}/.linode-cli
-    /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${IP} "/bin/chmod 400 ${HOME}/.linode-cli"
+    /usr/bin/scp -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${HOME}/.config/linode-cli ${SERVER_USER}@${IP}:${HOME}/.config/linode-cli
+    /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${IP} "/bin/chmod 400 ${HOME}/.config/linode-cli"
 fi
 if ( [ "${CLOUDHOST}" = "vultr" ] )
 then
