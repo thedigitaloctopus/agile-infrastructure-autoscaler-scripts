@@ -26,14 +26,20 @@ fi
 
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
-    /usr/bin/apt-get -qq -y install python3-pip
-    /usr/bin/pip3 install -U awscli
-    /usr/bin/ln -s /usr/local/bin/aws /usr/bin/aws
+   /usr/bin/apt-get unzip
+   /usr/bin/curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+   /usr/bin/unzip awscliv2.zip
+   ./aws/install
+   /bin/rm /usr/bin/aws > /dev/null
+   /usr/bin/ln -s /usr/local/bin/aws /usr/bin/aws
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
-    /usr/bin/apt-get -qq -y install python3-pip
-    /usr/bin/pip3 install -U awscli
-    /usr/bin/ln -s /usr/local/bin/aws /usr/bin/aws
+   /usr/bin/apt-get unzip
+   /usr/bin/curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+   /usr/bin/unzip awscliv2.zip
+   ./aws/install
+   /bin/rm /usr/bin/aws > /dev/null
+   /usr/bin/ln -s /usr/local/bin/aws /usr/bin/aws
 fi
