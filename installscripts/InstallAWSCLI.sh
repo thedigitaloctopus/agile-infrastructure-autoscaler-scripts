@@ -38,12 +38,12 @@ fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
-    /usr/bin/apt-get install unzip
-    /usr/bin/curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-    /usr/bin/unzip awscliv2.zip
-    ./aws/install
-    /usr/bin/ln -s /usr/local/bin/aws /usr/bin/aws
-    #/usr/bin/apt-get -qq -y install awscli
-    #/usr/bin/unlink /usr/local/bin/aws
-    #/usr/bin/ln -s /usr/bin/aws /usr/local/bin/aws
+   # /usr/bin/apt-get install unzip
+   # /usr/bin/curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+   # /usr/bin/unzip awscliv2.zip
+   # ./aws/install
+   # /usr/bin/ln -s /usr/local/bin/aws /usr/bin/aws
+    /usr/bin/apt-get -qq -y install awscli
+    /usr/bin/unlink /usr/local/bin/aws
+    /usr/bin/ln -s /usr/bin/aws /usr/local/bin/aws
 fi
