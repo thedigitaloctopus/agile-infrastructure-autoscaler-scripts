@@ -26,4 +26,6 @@
 /bin/rm ${HOME}/config/autoscalerip/`${HOME}/providerscripts/utilities/GetIP.sh`
 ${HOME}/providerscripts/email/SendEmail.sh "Shutting down the autoscaler" "Shutting down the autoscaler"
 /bin/echo "${0} `/bin/date`: Shutting down the autoscaler" >> ${HOME}/logs/MonitoringLog.log
-/sbin/shutdown -h now
+
+#Note, we don't call the shutdown command here, on purpose, we just destroy the VM because we have cleaned it up as much as we need to
+
