@@ -28,32 +28,10 @@ fi
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y update
-    while ( [ "$?" != "0" ] )
-    do
-        /bin/sleep 10
-        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y update
-    done
-    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y upgrade
-    while ( [ "$?" != "0" ] )
-    do
-        /bin/sleep 10
-        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y upgrade
-    done
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y update
-    while ( [ "$?" != "0" ] )
-    do
-        /bin/sleep 10
-        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y update
-    done
-    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y upgrade
-    while ( [ "$?" != "0" ] )
-    do
-        /bin/sleep 10
-        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y upgrade
-    done
 fi
 
