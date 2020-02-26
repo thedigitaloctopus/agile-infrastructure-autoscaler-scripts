@@ -27,7 +27,7 @@ then
     /bin/mkdir -p ${HOME}/config/lowmemoryaudit/autoscaler/${IP}
 fi
 
-if ( [ "${MEMORY}" -lt "100000" ] )
+if ( [ "${MEMORY}" -lt "$1" ] )
 then
     /bin/echo "LOW MEMORY state detected `/bin/date` VALUE: ${MEMORY} KB remaining" >> ${HOME}/config/lowmemoryaudit/${IP}/lowmemoryaudittrail.dat
     ${HOME}/providerscripts/email/SendEmail.sh "LOW MEMORY STATE DETECTED" "LOW MEMORY state detected `/bin/date` VALUE: ${MEMORY} KB remaining on machine with ip address: `${HOME}/providerscripts/utilities/GetPublicIP.sh`"
