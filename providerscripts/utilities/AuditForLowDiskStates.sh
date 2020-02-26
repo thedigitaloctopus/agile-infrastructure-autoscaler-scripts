@@ -27,7 +27,7 @@ then
     /bin/mkdir -p ${HOME}/config/lowdiskaudit/autoscaler/${IP}
 fi
 
-if ( [ "${DISK}" -gt "90" ] )
+if ( [ "${DISK}" -gt "$1" ] )
 then
     /bin/echo "LOW DISK state detected `/bin/date` VALUE: ${DISK} % in use" >> ${HOME}/config/lowdiskaudit/${IP}/lowdiskaudittrail.dat
     ${HOME}/providerscripts/email/SendEmail.sh "LOW DISK STATE DETECTED" "LOW DISK state detected `/bin/date` VALUE: ${DISK} % in use on machine with ip address: `${HOME}/providerscripts/utilities/GetPublicIP.sh`"
