@@ -27,7 +27,7 @@ then
     /bin/mkdir -p ${HOME}/config/lowcpuaudit/autoscaler/${IP}
 fi
 
-if ( [ "${CPU}" -lt "10" ] )
+if ( [ "${CPU}" -lt "$1" ] )
 then
     /bin/echo "LOW CPU state detected `/bin/date` VALUE: ${CPU}% remaining" >> ${HOME}/config/lowcpuaudit/${IP}/lowcpuaudittrail.dat
     ${HOME}/providerscripts/email/SendEmail.sh "LOW CPU STATE DETECTED" "LOW CPU state detected `/bin/date` VALUE: ${CPU}% remaining on machine with ip address: `${HOME}/providerscripts/utilities/GetPublicIP.sh`"
