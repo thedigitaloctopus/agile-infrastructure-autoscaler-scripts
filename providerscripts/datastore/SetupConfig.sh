@@ -171,11 +171,6 @@ then
     /bin/mkdir -p ${HOME}/config/credentials
     /bin/chmod 700 ${HOME}/config/credentials
 fi
-if ( [ ! -d ${HOME}/config/cpuaggregator ] )
-then
-    /bin/mkdir -p ${HOME}/config/cpuaggregator
-    /bin/chmod 700 ${HOME}/config/cpuaggregator
-fi
 
 if ( [ ! -d ${HOME}/config/webrootsynctunnel ] )
 then
