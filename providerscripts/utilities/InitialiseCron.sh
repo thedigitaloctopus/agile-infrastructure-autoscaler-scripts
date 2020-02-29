@@ -39,16 +39,15 @@
 #These scripts are set to run every 5 minutes
 /bin/echo "*/5 * * * * export HOME="${HOMEDIR}" && ${HOME}/security/MonitorFirewall.sh" >> /var/spool/cron/crontabs/root
 /bin/echo "*/5 * * * * export HOME="${HOMEDIR}" && ${HOME}/autoscaler/MonitorForSlowBuilds.sh" >> /var/spool/cron/crontabs/root
+/bin/echo "*/5 * * * * export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/AuditForLowCPUStates.sh 10" >> /var/spool/cron/crontabs/root
+/bin/echo "*/5 * * * * export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/AuditForLowMemoryStates.sh 90" >> /var/spool/cron/crontabs/root
+/bin/echo "*/5 * * * * export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/AuditForLowDiskStates.sh 100000" >> /var/spool/cron/crontabs/root
 
 #This script will run every 10 minutes
 /bin/echo "*/10 * * * * export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/EnforcePermissions.sh" >> /var/spool/cron/crontabs/root
 
 #These scripts will run at set times
 /bin/echo "30 2 * * * /usr/sbin/ufw --force reset" >> /var/spool/cron/crontabs/root
-
-/bin/echo "@hourly export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/AuditForLowCPUStates.sh 10" >> /var/spool/cron/crontabs/root
-/bin/echo "@hourly export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/AuditForLowMemoryStates.sh 90" >> /var/spool/cron/crontabs/root
-/bin/echo "@hourly export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/AuditForLowDiskStates.sh 100000" >> /var/spool/cron/crontabs/root
 
 /bin/echo "@daily export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/MonitorFreeDiskSpace.sh" >> /var/spool/cron/crontabs/root
 /bin/echo "@daily export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/PerformSoftwareUpdate.sh" >> /var/spool/cron/crontabs/root
