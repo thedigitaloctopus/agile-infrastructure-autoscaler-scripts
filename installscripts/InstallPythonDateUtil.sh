@@ -26,11 +26,11 @@ fi
 
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
-    /usr/bin/apt-get -qq -y -f install python-dateutil
+    /usr/bin/apt-get -qq -y -f install python3-dateutil
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
-    /usr/bin/apt-get -qq -y -f install python-dateutil
+    /usr/bin/apt-get -qq -y -f install python3-dateutil
 fi
 
