@@ -29,6 +29,8 @@ then
     /usr/bin/apt-get -qq install python3-pip
     /bin/rm /usr/bin/python
     /bin/ln /usr/bin/python3 /usr/bin/python
+    /bin/rm /usr/bin/pip
+    /bin/ln /usr/bin/pip3 /usr/bin/pip
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
@@ -36,5 +38,7 @@ then
     /usr/bin/apt-get -qq install python3-pip
     /bin/rm /usr/bin/python
     /bin/ln /usr/bin/python3 /usr/bin/python
+    /bin/rm /usr/bin/pip
+    /bin/ln /usr/bin/pip3 /usr/bin/pip
 fi
 
