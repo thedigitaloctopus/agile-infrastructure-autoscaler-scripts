@@ -34,7 +34,7 @@ if ( [ "${CLOUDHOST}" = "vultr" ] )
 then
     if ( [ "${BUILDOS}" = "ubuntu" ] )
     then
-        if ( [ "${BUILDOSVERSION}" = "18.04" ] || [ "${BUILDOSVERSION}" = "19.04" ] )
+        if ( [ "${BUILDOSVERSION}" = "18.04" ] || [ "${BUILDOSVERSION}" = "19.04" ] || [ "${BUILDOSVERSION}" = "20.04" ] )
 	then
             ip="`/bin/ls ${HOME}/.ssh/MYIP:* | /usr/bin/awk -F':' '{print $NF}'`"
 	    /bin/sed -i "s/addresses.*/addresses: [${ip}\/16]/" /etc/netplan/10-ens7.yaml
