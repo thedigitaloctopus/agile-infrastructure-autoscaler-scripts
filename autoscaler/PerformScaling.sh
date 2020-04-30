@@ -28,6 +28,12 @@ then
     exit
 fi
 
+#If there's an build processes hanging around from previous attempts, purge them so we are nice and clean
+for pid in "`/bin/pgrep BuildWebserver`"
+do
+    /bin/kill ${pid}
+done
+
 #################################################ESSENTIAL#########################################################
 #To configure how many websevers are deployed, you can edit the file at:  ${HOME}/config/scalingprofile/profile.cnf 
 #################################################ESSENTIAL#########################################################
