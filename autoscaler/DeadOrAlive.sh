@@ -190,8 +190,6 @@ then
     do
         if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "/bin/ls ${HOME}/runtime/WEBSERVER_READY"`" = "" ] ||  [ "`iswebserverup`" -eq "0" ] )
         then
-            /bin/echo "${0} `/bin/date`: Webserver with ip address: ${ip} is being destroyed" >> ${HOME}/logs/UnresponsiveWebservers.log
-            /bin/echo "${0} `/bin/date` : ${ip} is being destroyed because it was considered orphaned from the DNS system" >> ${HOME}/logs/MonitoringLog.log
             if ( [ ! -f ${HOME}/runtime/POTENTIALORPHAN:${ip}:1 ] )
             then
                 /bin/touch ${HOME}/runtime/POTENTIALORPHAN:${ip}:1
@@ -209,6 +207,9 @@ then
             else
                 /bin/rm ${HOME}/runtime/POTENTIALORPHAN:${ip}:*
             fi
+            
+            /bin/echo "${0} `/bin/date`: Orphaned webserver with ip address: ${ip} is being destroyed" >> ${HOME}/logs/UnresponsiveWebservers.log
+            /bin/echo "${0} `/bin/date` : ${ip} is being destroyed because it was considered orphaned from the DNS system" >> ${HOME}/logs/MonitoringLog.log
 
             ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
             DBaaS_DBSECURITYGROUP="`/bin/ls ${HOME}/.ssh/DBaaSDBSECURITYGROUP:* | /usr/bin/awk -F':' '{print $NF}'`"
