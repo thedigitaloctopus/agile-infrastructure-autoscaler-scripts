@@ -194,6 +194,8 @@ PRODUCTION="`/bin/ls ${HOME}/.ssh/PRODUCTION:* | /usr/bin/awk -F':' '{print $NF}
 #This call is necessary as it primes the networking interface for some providers.
 ${HOME}/providerscripts/utilities/GetIP.sh
 
+${HOME}/installscripts/Upgrade.sh ${BUILDOS}
+
 #Write the flag to say that the autoscaler has been built correctly
 /bin/touch ${HOME}/runtime/AUTOSCALER_READY
 
