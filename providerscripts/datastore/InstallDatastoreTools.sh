@@ -25,14 +25,16 @@ BUILDOS="`/bin/ls ${HOME}/.ssh/BUILDOS:* | /usr/bin/awk -F':' '{print $NF}'`"
 if ( [ -f ${HOME}/.ssh/DATASTORECHOICE:amazonS3 ]  || [ -f ${HOME}/.ssh/DATASTORECHOICE:digitalocean ] || [ -f ${HOME}/.ssh/DATASTORECHOICE:exoscale ] ||  [ -f ${HOME}/.ssh/DATASTORECHOICE:linode ] || [ -f ${HOME}/.ssh/DATASTORECHOICE:vultr ] )
 then
 
-    if ( [ ! -f /usr/bin/python ] )
+    if ( [ -f /usr/bin/python ] )
     then
         ${HOME}/installscripts/PurgePython.sh ${BUILDOS}
         ${HOME}/installscripts/Update.sh ${BUILDOS}
         ${HOME}/installscripts/ForceInstall.sh ${BUILDOS}
-        ${HOME}/installscripts/ForceInstallPythonPIP.sh ${BUILDOS}
-        ${HOME}/installscripts/InstallPythonDateUtil.sh ${BUILDOS}
     fi
+    
+    ${HOME}/installscripts/ForceInstallPythonPIP.sh ${BUILDOS}
+    ${HOME}/installscripts/InstallPythonDateUtil.sh ${BUILDOS}
+    
     if ( [ ! -f /usr/bin/s3cmd ] )
     then
         /bin/mkdir scratch
