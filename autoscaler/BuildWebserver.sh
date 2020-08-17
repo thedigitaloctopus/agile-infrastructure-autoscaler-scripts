@@ -456,6 +456,15 @@ fi
 
 #Wait for the machine to become responsive before we check its integrity
 
+/usr/bin/ping -c 10 ${ip}
+
+while ( [ "$?" != "0" ] )
+do
+    /usr/bin/ping -c 10 ${ip}
+done
+
+/bin/sleep 10
+
 /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=60 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "exit"
 
 if ( [ "$?" != "0" ] )
