@@ -28,12 +28,15 @@ if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
     /usr/bin/apt-get -qq -y -f install python3-dateutil
     /usr/bin/pip install python-dateutil
-
+    /bin/rm /usr/bin/python
+    /usr/bin/ln /usr/bin/python3 /usr/bin/python
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
     /usr/bin/apt-get -qq -y -f install python3-dateutil
     /usr/bin/pip install python-dateutil
+    /bin/rm /usr/bin/python
+    /usr/bin/ln /usr/bin/python3 /usr/bin/python
 fi
 
