@@ -26,11 +26,11 @@ fi
 
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
-    /usr/bin/apt-get purge python-pkg-resources
+    /usr/bin/apt-get -qq -y purge python-pkg-resources
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
-    /usr/bin/apt-get purge python-pkg-resources
+    /usr/bin/apt-get -qq -y purge python-pkg-resources
 fi
 
