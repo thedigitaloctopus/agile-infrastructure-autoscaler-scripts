@@ -167,7 +167,7 @@ count="0"
 # We are prepared to wait a total of 300 seconds for the machine to come online
 while ( [ "`/bin/echo ${ip} | /bin/grep -E "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$"`" = "" ] && [ "${count}" -lt "30" ] || [ "${ip}" = "0.0.0.0" ] )
 do
-    /bin/sleep 10
+    /bin/sleep 20
     ip="`${HOME}/providerscripts/server/GetServerIPAddresses.sh ${SERVER_INSTANCE_NAME} ${CLOUDHOST}`"
     /bin/touch ${HOME}/config/webserverpublicips/${ip}
     private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh ${SERVER_INSTANCE_NAME} ${CLOUDHOST}`"
