@@ -64,7 +64,7 @@ then
             done
         else
             /usr/bin/s3cmd mb s3://${configbucket}
-            /usr/bin/s3fs -o nonempty -ourl=https://${endpoint} ${configbucket} ${HOME}/config
+            /usr/bin/s3fs -o nonempty,allow_other -ourl=https://${endpoint} ${configbucket} ${HOME}/config
         fi
     fi
 fi
@@ -74,7 +74,7 @@ then
     export AWSACCESSKEYID=`/bin/cat ~/.s3cfg | /bin/grep 'access_key' | /usr/bin/awk '{print $NF}'`
     export AWSSECRETACCESSKEY=`/bin/cat ~/.s3cfg | /bin/grep 'secret_key' | /usr/bin/awk '{print $NF}'`
     /usr/bin/s3cmd mb s3://${configbucket}
-    /usr/bin/s3fs -o nonempty -ourl=https://${endpoint} ${configbucket} ${HOME}/config
+    /usr/bin/s3fs -o nonempty,allow_other -ourl=https://${endpoint} ${configbucket} ${HOME}/config
 fi
 
 if ( [ "${DATASTORE_PROVIDER}" = "exoscale" ] )
@@ -82,7 +82,7 @@ then
     export AWSACCESSKEYID=`/bin/cat ~/.s3cfg | /bin/grep 'access_key' | /usr/bin/awk '{print $NF}'`
     export AWSSECRETACCESSKEY=`/bin/cat ~/.s3cfg | /bin/grep 'secret_key' | /usr/bin/awk '{print $NF}'`
     /usr/bin/s3cmd mb s3://${configbucket}
-    /usr/bin/s3fs -o nonempty -ourl=https://${endpoint} ${configbucket} ${HOME}/config
+    /usr/bin/s3fs -o nonempty,allow_other -ourl=https://${endpoint} ${configbucket} ${HOME}/config
 fi
 
 if ( [ "${DATASTORE_PROVIDER}" = "linode" ] )
@@ -90,7 +90,7 @@ then
     export AWSACCESSKEYID=`/bin/cat ~/.s3cfg | /bin/grep 'access_key' | /usr/bin/awk '{print $NF}'`
     export AWSSECRETACCESSKEY=`/bin/cat ~/.s3cfg | /bin/grep 'secret_key' | /usr/bin/awk '{print $NF}'`
     /usr/bin/s3cmd mb s3://${configbucket}
-    /usr/bin/s3fs -o nonempty -ourl=https://${endpoint} ${configbucket} ${HOME}/config
+    /usr/bin/s3fs -o nonempty,allow_other -ourl=https://${endpoint} ${configbucket} ${HOME}/config
 fi
 
 if ( [ "${DATASTORE_PROVIDER}" = "vultr" ] )
@@ -98,7 +98,7 @@ then
     export AWSACCESSKEYID=`/bin/cat ~/.s3cfg | /bin/grep 'access_key' | /usr/bin/awk '{print $NF}'`
     export AWSSECRETACCESSKEY=`/bin/cat ~/.s3cfg | /bin/grep 'secret_key' | /usr/bin/awk '{print $NF}'`
     /usr/bin/s3cmd mb s3://${configbucket}
-    /usr/bin/s3fs -o nonempty -ourl=https://${endpoint} ${configbucket} ${HOME}/config
+    /usr/bin/s3fs -o nonempty,allow_other -ourl=https://${endpoint} ${configbucket} ${HOME}/config
 fi
 
 if ( [ ! -f ${HOME}/runtime/INITIALCONFIGSET ] )
