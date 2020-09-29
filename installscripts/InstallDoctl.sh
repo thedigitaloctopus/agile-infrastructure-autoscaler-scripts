@@ -33,6 +33,7 @@ fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
+    /usr/bin/apt-get -qq -y install curl
     latest_doctl_version="`/usr/bin/curl https://github.com/digitalocean/doctl/releases | /bin/grep releases | /bin/grep download | /bin/grep doctl | /bin/grep href | /bin/grep tar.gz | /bin/sed 's/.*\/v//g' | /usr/bin/awk -F'/' '{print $1}' | /usr/bin/head -1`"
     /usr/bin/curl -sL https://github.com/digitalocean/doctl/releases/download/v${latest_doctl_version}/doctl-${latest_doctl_version}-linux-amd64.tar.gz | /bin/tar -xzv
     /bin/mv doctl /usr/local/bin
