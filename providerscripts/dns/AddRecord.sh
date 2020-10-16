@@ -21,6 +21,18 @@
 ####################################################################################
 #set -x
 
+websiteurl="${4}"
+domainurl="`/bin/echo ${4} | /usr/bin/cut -d'.' -f2-`"
+subdomain="`/bin/echo ${4} | /usr/bin/awk -F'.' '{print $1}'`"
+ip="${5}"
+dns="${7}"
+
+if ( [ "${dns}" = "digitalocean" ] )
+then
+    /usr/local/bin/doctl compute domain records create --record-type A --record-name ${subdomain} --record-data ${ip} ${domainurl}
+fi
+
+
 zoneid="${1}"
 email="${2}"
 authkey="${3}"
