@@ -20,11 +20,11 @@
 #######################################################################################
 #set -x
 
-websiteurl="${1}"
-domainurl="`/bin/echo ${1} | /usr/bin/cut -d'.' -f2-`"
-subdomain="`/bin/echo ${1} | /usr/bin/awk -F'.' '{print $1}'`"
-ip="${2}"
-dns="${4}"
+websiteurl="${2}"
+domainurl="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
+subdomain="`/bin/echo ${2} | /usr/bin/awk -F'.' '{print $1}'`"
+ip="${3}"
+dns="${6}"
 
 if ( [ "${dns}" = "digitalocean" ] )
 then
