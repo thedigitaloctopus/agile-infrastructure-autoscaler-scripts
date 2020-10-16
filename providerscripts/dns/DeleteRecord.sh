@@ -21,16 +21,16 @@
 #####################################################################################
 #set -x
 
-domain="${5}"
-domainurl="`/bin/echo ${domain} | /usr/bin/cut -d'.' -f2-`"
+home="/home/`/bin/ls /root/.ssh/HOMEDIRFORROOT:* | /usr/bin/awk -F':' '{print $NF}'`"
+domainurl="`/bin/ls ${home}/.ssh/WEBSITEURL:* | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/cut -d'.' -f2-`"
 recordid="${2}"
 dns="${5}"
 
 if ( [ "${dns}" = "digitalocean" ] )
 then
+    /usr/local/bin/doctl compute domain records list ${domainurl} | /bin/grep ${recordid} | /usr/bin/awk '{print $1}'
     /usr/local/bin/doctl compute domain records delete --force ${domainurl} ${recordid}
 fi
-
 
 zoneid="${1}"
 recordid="${2}"
