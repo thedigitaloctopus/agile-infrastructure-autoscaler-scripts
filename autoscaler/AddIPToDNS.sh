@@ -41,7 +41,11 @@ then
     #Add the ip address to the DNS provider. Once this is done, the webserver should be online then.
     zonename="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{$1=""}1' | /bin/sed 's/^ //g' | /bin/sed 's/ /./g'`"
     zoneid="`${HOME}/providerscripts/dns/GetZoneID.sh "${zonename}" "${DNS_USERNAME}" "${DNS_SECURITY_KEY}" "${DNS_CHOICE}"`"
-    ${HOME}/providerscripts/dns/AddRecord.sh "${zoneid}" "${DNS_USERNAME}" "${DNS_SECURITY_KEY}" "${WEBSITE_URL}" "${ip}" "${DNS_CHOICE}"
-    /bin/echo "${0} `/bin/date`: ##################################################################" >> ${HOME}/logs/DNSRegistrationLog.log
-    /bin/echo "${0} `/bin/date`: Added IP ${ip} to DNS" >> ${HOME}/logs/DNSRegistrationLog.log
+    if ( [ "${CLOUDHOST}" != "digitalocean" ] || [ "`${HOME}/providerscripts/dns/GetRecordID.sh "${zoneid}" "${WEBSITE_URL}" "${ip}" "${DNS_USERNAME}" "${DNS_SECURITY_KEY}" "${DNS_CHOICE}"`" = "" ] )
+    then    
+        ${HOME}/providerscripts/dns/AddRecord.sh "${zoneid}" "${DNS_USERNAME}" "${DNS_SECURITY_KEY}" "${WEBSITE_URL}" "${ip}" "${DNS_CHOICE}" 
+        /bin/echo "${0} `/bin/date`: ##################################################################" >> ${HOME}/logs/DNSRegistrationLog.log
+        /bin/echo "${0} `/bin/date`: Added IP ${ip} to DNS" >> ${HOME}/logs/DNSRegistrationLog.log
+    fi
 fi
+
