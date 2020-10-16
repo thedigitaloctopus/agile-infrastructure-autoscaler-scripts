@@ -18,8 +18,10 @@
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
 #######################################################################################################
 #######################################################################################################
-BUILD_IDENTIFIER="`/bin/ls ${HOME}/.ssh/BUILDIDENTIFIER:* | /usr/bin/awk -F':' '{print $NF}'`"
 
-/bin/echo "${BUILD_IDENTIFIER}AS" > /etc/hostname
+WEBSITE_URL="`/bin/ls ${HOME}/.ssh/WEBSITEURL:* | /usr/bin/awk -F':' '{print $NF}'`"
+WEBSITE_NAME="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{print $2}'`"
 
-/usr/bin/hostnamectl set-hostname "${BUILD_IDENTIFIER}AS"
+/bin/echo "${WEBSITE_NAME}AS" > /etc/hostname
+
+/usr/bin/hostnamectl set-hostname "${WEBSITE_NAME}AS"
