@@ -21,6 +21,17 @@
 #####################################################################################
 #set -x
 
+domain="${5}"
+domainurl="`/bin/echo ${domain} | /usr/bin/cut -d'.' -f2-`"
+recordid="${2}"
+dns="${5}"
+
+if ( [ "${dns}" = "digitalocean" ] )
+then
+    /usr/local/bin/doctl compute domain records delete --force ${domainurl} ${recordid}
+fi
+
+
 zoneid="${1}"
 recordid="${2}"
 email="${3}"
