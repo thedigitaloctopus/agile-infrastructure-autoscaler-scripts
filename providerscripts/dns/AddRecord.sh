@@ -25,7 +25,7 @@ websiteurl="${4}"
 domainurl="`/bin/echo ${4} | /usr/bin/cut -d'.' -f2-`"
 subdomain="`/bin/echo ${4} | /usr/bin/awk -F'.' '{print $1}'`"
 ip="${5}"
-dns="${7}"
+dns="${6}"
 
 if ( [ "${dns}" = "digitalocean" ] )
 then
