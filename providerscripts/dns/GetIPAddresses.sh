@@ -21,6 +21,17 @@
 ##########################################################################################
 #set -x
 
+websiteurl="${2}"
+domainurl="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
+subdomain="`/bin/echo ${2} | /usr/bin/awk -F'.' '{print $1}'`"
+dns="${5}"
+
+if ( [ "${dns}" = "digitalocean" ] )
+then
+    /usr/local/bin/doctl compute domain records list ${domainurl} | /bin/grep ${subdomain} | /usr/bin/awk '{print $4}'
+fi
+
+
 zoneid="${1}"
 websiteurl="${2}"
 email="${3}"
