@@ -20,6 +20,25 @@
 #######################################################################################
 #set -x
 
+websiteurl="${2}"
+domainurl="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
+subdomain="`/bin/echo ${2} | /usr/bin/awk -F'.' '{print $1}'`"
+ip="${3}"
+dns="${6}"
+
+if ( [ "${dns}" = "digitalocean" ] )
+then
+    recordid="`/usr/local/bin/doctl compute domain records list ${domainurl} | /bin/grep ${subdomain} | /bin/grep ${ip} | /usr/bin/awk '{print $1}'`"
+    count="0"
+    while ( [ "${count}" -lt "5" ] && [ "${recordid}" = "" ] )
+    do
+        /bin/sleep 5
+        recordid="`/usr/local/bin/doctl compute domain records list ${domainurl} | /bin/grep ${subdomain} | /bin/grep ${ip} | /usr/bin/awk '{print $1}'`"
+	count="`/usr/bin/expr ${count} + 1`"
+    done
+    /bin/echo "${recordid}"
+fi
+
 zoneid="${1}"
 websiteurl="${2}"
 ip="${3}"
