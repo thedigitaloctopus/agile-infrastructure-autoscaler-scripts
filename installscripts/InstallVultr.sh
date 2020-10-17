@@ -18,34 +18,35 @@
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################################
 ################################################################################################
+set -x
 
 if ( [ "${1}" != "" ] )
 then
-    BUILDOS="${1}"
+    BUILD_OS="${1}"
 fi
 
-if ( [ "${BUILDOS}" = "ubuntu" ] )
+if ( [ "${BUILD_OS}" = "ubuntu" ] )
 then
-    if ( [ ! -f /usr/bin/vultr ] )
+    latest="`/usr/bin/curl https://github.com/JamesClonk/vultr/releases/latest | /bin/sed 's/.*tag\///g' | /bin/sed 's/\".*//g' | /bin/sed 's/v//g'`"
+    /usr/bin/wget https://github.com/JamesClonk/vultr/releases/download/v${latest}/vultr_${latest}_Linux-64bit.tar.gz
+    if ( [ ! -d ${HOME}/vultr ] )
     then
-        latest="`/usr/bin/curl https://github.com/JamesClonk/vultr/releases/latest | /bin/sed 's/.*tag\///g' | /bin/sed 's/\".*//g' | /bin/sed 's/v//g'`"
-        /usr/bin/wget https://github.com/JamesClonk/vultr/releases/download/${latest}/vultr_linux_386.tar.gz
-        /bin/tar xvfz ${HOME}/vultr_linux_386.tar.gz
-        /bin/cp ${HOME}/vultr_linux_386/vultr /usr/bin
-        /bin/rm -r ${HOME}/vultr_linux_386
-        /bin/rm ${HOME}/vultr_linux_386.tar.gz
+        /bin/mkdir ${HOME}/vultr
     fi
+    /bin/tar xvfz ${HOME}/vultr_${latest}_Linux-64bit.tar.gz  -C ${BUILD_HOME}/vultr
+    /bin/mv ${HOME}/vultr/vultr /usr/bin
+    /bin/rm -r ${HOME}/vultr
 fi
 
-if ( [ "${BUILDOS}" = "debian" ] )
+if ( [ "${BUILD_OS}" = "debian" ] )
 then
-    if ( [ ! -f /usr/bin/vultr ] )
+    latest="`/usr/bin/curl https://github.com/JamesClonk/vultr/releases/latest | /bin/sed 's/.*tag\///g' | /bin/sed 's/\".*//g' | /bin/sed 's/v//g'`"
+    /usr/bin/wget https://github.com/JamesClonk/vultr/releases/download/v${latest}/vultr_${latest}_Linux-64bit.tar.gz
+    if ( [ ! -d ${HOME}/vultr ] )
     then
-        latest="`/usr/bin/curl https://github.com/JamesClonk/vultr/releases/latest | /bin/sed 's/.*tag\///g' | /bin/sed 's/\".*//g' | /bin/sed 's/v//g'`"
-        /usr/bin/wget https://github.com/JamesClonk/vultr/releases/download/${latest}/vultr_linux_386.tar.gz
-        /bin/tar xvfz ${HOME}/vultr_linux_386.tar.gz
-        /bin/cp ${HOME}/vultr_linux_386/vultr /usr/bin
-        /bin/rm -r ${HOME}/vultr_linux_386
-        /bin/rm ${HOME}/vultr_linux_386.tar.gz
+        /bin/mkdir ${HOME}/vultr
     fi
+    /bin/tar xvfz ${HOME}/vultr_${latest}_Linux-64bit.tar.gz  -C ${BUILD_HOME}/vultr
+    /bin/mv ${HOME}/vultr/vultr /usr/bin
+    /bin/mv ${HOME}/vultr /usr/bin
 fi
