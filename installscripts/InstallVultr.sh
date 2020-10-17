@@ -28,7 +28,8 @@ if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
     if ( [ ! -f /usr/bin/vultr ] )
     then
-        /usr/bin/wget https://github.com/JamesClonk/vultr/releases/download/1.12.0/vultr_linux_386.tar.gz
+        latest="`/usr/bin/curl https://github.com/JamesClonk/vultr/releases/latest | /bin/sed 's/.*tag\///g' | /bin/sed 's/\".*//g' | /bin/sed 's/v//g'`"
+        /usr/bin/wget https://github.com/JamesClonk/vultr/releases/download/${latest}/vultr_linux_386.tar.gz
         /bin/tar xvfz ${HOME}/vultr_linux_386.tar.gz
         /bin/cp ${HOME}/vultr_linux_386/vultr /usr/bin
         /bin/rm -r ${HOME}/vultr_linux_386
@@ -40,7 +41,8 @@ if ( [ "${BUILDOS}" = "debian" ] )
 then
     if ( [ ! -f /usr/bin/vultr ] )
     then
-        /usr/bin/wget https://github.com/JamesClonk/vultr/releases/download/1.12.0/vultr_linux_386.tar.gz
+        latest="`/usr/bin/curl https://github.com/JamesClonk/vultr/releases/latest | /bin/sed 's/.*tag\///g' | /bin/sed 's/\".*//g' | /bin/sed 's/v//g'`"
+        /usr/bin/wget https://github.com/JamesClonk/vultr/releases/download/${latest}/vultr_linux_386.tar.gz
         /bin/tar xvfz ${HOME}/vultr_linux_386.tar.gz
         /bin/cp ${HOME}/vultr_linux_386/vultr /usr/bin
         /bin/rm -r ${HOME}/vultr_linux_386
