@@ -18,7 +18,7 @@
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################################
 ################################################################################################
-#set -x
+set -x
 
 if ( [ "${1}" != "" ] )
 then
@@ -52,4 +52,5 @@ then
     /bin/rm -r ${HOME}/vultrcli
     /bin/rm ${HOME}/vultrcli.tar.gz  
 fi
+
 
