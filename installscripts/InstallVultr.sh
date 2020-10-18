@@ -18,7 +18,7 @@
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################################
 ################################################################################################
-set -x
+#set -x
 
 if ( [ "${1}" != "" ] )
 then
@@ -28,25 +28,28 @@ fi
 if ( [ "${BUILD_OS}" = "ubuntu" ] )
 then
     latest="`/usr/bin/curl https://github.com/JamesClonk/vultr/releases/latest | /bin/sed 's/.*tag\///g' | /bin/sed 's/\".*//g' | /bin/sed 's/v//g'`"
-    /usr/bin/wget https://github.com/JamesClonk/vultr/releases/download/v${latest}/vultr_${latest}_Linux-64bit.tar.gz
-    if ( [ ! -d ${HOME}/vultr ] )
+    /usr/bin/wget -O ${HOME}/vultrcli.tar.gz https://github.com/JamesClonk/vultr/releases/download/v${latest}/vultr_${latest}_Linux-64bit.tar.gz 
+    if ( [ ! -d ${HOME}/vultrcli ] )
     then
-        /bin/mkdir ${HOME}/vultr
+        /bin/mkdir ${HOME}/vultrcli
     fi
-    /bin/tar xvfz ${HOME}/vultr_${latest}_Linux-64bit.tar.gz  -C ${BUILD_HOME}/vultr
-    /bin/mv ${HOME}/vultr/vultr /usr/bin
-    /bin/rm -r ${HOME}/vultr
+    /bin/tar xvfz ${HOME}/vultrcli.tar.gz  -C ${HOME}/vultrcli
+    /bin/mv ${HOME}/vultrcli/vultr /usr/bin
+    /bin/rm -r ${HOME}/vultrcli
+    /bin/rm ${HOME}/vultrcli.tar.gz 
 fi
 
 if ( [ "${BUILD_OS}" = "debian" ] )
 then
     latest="`/usr/bin/curl https://github.com/JamesClonk/vultr/releases/latest | /bin/sed 's/.*tag\///g' | /bin/sed 's/\".*//g' | /bin/sed 's/v//g'`"
-    /usr/bin/wget https://github.com/JamesClonk/vultr/releases/download/v${latest}/vultr_${latest}_Linux-64bit.tar.gz
-    if ( [ ! -d ${HOME}/vultr ] )
+    /usr/bin/wget -O ${HOME}/vultrcli.tar.gz https://github.com/JamesClonk/vultr/releases/download/v${latest}/vultr_${latest}_Linux-64bit.tar.gz 
+    if ( [ ! -d ${HOME}/vultrcli ] )
     then
-        /bin/mkdir ${HOME}/vultr
+        /bin/mkdir ${HOME}/vultrcli
     fi
-    /bin/tar xvfz ${HOME}/vultr_${latest}_Linux-64bit.tar.gz  -C ${BUILD_HOME}/vultr
-    /bin/mv ${HOME}/vultr/vultr /usr/bin
-    /bin/mv ${HOME}/vultr /usr/bin
+    /bin/tar xvfz ${HOME}/vultrcli.tar.gz  -C ${HOME}/vultrcli
+    /bin/mv ${HOME}/vultrcli/vultr /usr/bin
+    /bin/rm -r ${HOME}/vultrcli
+    /bin/rm ${HOME}/vultrcli.tar.gz  
 fi
+
