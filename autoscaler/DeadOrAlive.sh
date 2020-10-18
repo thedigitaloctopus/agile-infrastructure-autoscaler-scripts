@@ -50,10 +50,30 @@ iswebserverup ()
         else
             file=""
         fi
+	
+        test1="`/usr/bin/wget --timeout=10 --tries=3 --spider --no-check-certificate https://${ip}/${file}`" 
+	   
+       #cludge because of wordpress problem with particular app
+        if ( [ -f ${HOME}/.ssh/APPLICATION:wordpress ] )
+        then
+	        test2="`/usr/bin/wget --timeout=10 --tries=3 --spider --no-check-certificate https://${ip}/wp-login.php`"
+        fi
+	    status1="0"
+	    status2="0"
 
-        /usr/bin/wget --timeout=10 --tries=3 --spider --no-check-certificate https://${ip}/${file}
+	    exec $test1
+	    if ( [ "$?" = "0" ] )
+	    then
+            status1="1"
+        fi
 
-        if ( [ "$?" = "0" ] )
+	   exec $test2
+	   if ( [ "$?" = "0" ] )
+	    then
+            status2="1"
+        fi
+
+	    if ( [ "${status1}" ] || [ "${status2}" ] )
         then
             break
         else
