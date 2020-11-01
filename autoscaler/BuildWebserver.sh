@@ -516,7 +516,7 @@ do
     fi
 done
 
-if ( [ "${loop}" = "7" ] || [ "${tries}" = "10" ] )
+if ( [ "${loop}" = "7" ] || [ "${tries}" = "20" ] )
 then
     #If either of these are true, then somehow the machine/application didn't come online and so we need to destroy the machine
     if ( [ "${CLOUDHOST}" = "vultr" ] )
