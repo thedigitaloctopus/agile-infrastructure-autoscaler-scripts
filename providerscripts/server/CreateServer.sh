@@ -203,6 +203,12 @@ then
     /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=icmp,FromPort=-1,ToPort=-1,IpRanges='[{CidrIp=0.0.0.0/0}]'
   
     snapshot_id="`/bin/ls ${HOME}/.ssh/SNAPSHOT* | /usr/bin/awk -F':' '{print $NF}'`"
+    
+    if ( [ "${snapshot_id}" = "" ] )
+    then
+        /bin/rm ${HOME}/.ssh/SNAPAUTOSCALE:*
+        /bin/touch ${HOME}/.ssh/SNAPAUTOSCALE:0
+    fi
    
     if ( [ "${snapshot_id}" != "" ] && [ -f ${HOME}/.ssh/SNAPAUTOSCALE:1 ] )
     then
