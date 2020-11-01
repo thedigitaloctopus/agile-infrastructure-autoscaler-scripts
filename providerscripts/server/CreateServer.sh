@@ -33,8 +33,16 @@ cloudhost="${6}"
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
+    snapshotid="`/bin/ls ${HOME}/.ssh/SNAPSHOTID:* | /usr/bin/awk -F':' '{print $NF}'`"
+
+    if ( [ "${snapshotid}" = "" ] )
+    then
+        /bin/rm ${HOME}/.ssh/SNAPAUTOSCALE:*
+        /bin/touch ${HOME}/.ssh/SNAPAUTOSCALE:0
+    fi
+
     #Digital ocean supports snapshots so, we test to see if we want to use them
-    if ( [ "`/bin/ls ${HOME}/.ssh/SNAPSHOTID:* | /usr/bin/awk -F':' '{print $NF}'`" != "" ] && [ -f ${HOME}/.ssh/SNAPAUTOSCALE:1 ] )
+    if ( [ "S{snapshotid}" != "" ] && [ -f ${HOME}/.ssh/SNAPAUTOSCALE:1 ] )
     then
         #If we get to here, then we are building from a snapshot and we pass the snapshotid in as the oschoice parameter
         snapshotid="`/bin/ls ${HOME}/.ssh/SNAPSHOTID:* | /usr/bin/awk -F':' '{print $NF}'`"
@@ -140,9 +148,17 @@ cloudhost="${6}"
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
     export VULTR_API_KEY="`/bin/ls ${HOME}/.ssh/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
+    
+    snapshot_id="`/bin/ls ${HOME}/.ssh/SNAPSHOTID:* | /usr/bin/awk -F':' '{print $NF}'`"
+
+    if ( [ "${snapshot_id}" = "" ] )
+    then
+        /bin/rm ${HOME}/.ssh/SNAPAUTOSCALE:*
+        /bin/touch ${HOME}/.ssh/SNAPAUTOSCALE:0
+    fi
 
     #Vultr supports snapshots, so decide if we are building from a snapshot
-    if ( [ "`/bin/ls ${HOME}/.ssh/SNAPSHOT*`" != "" ] && [ -f ${HOME}/.ssh/SNAPAUTOSCALE:1 ] )
+    if ( [ "${snapshot_id}" != "" ] && [ -f ${HOME}/.ssh/SNAPAUTOSCALE:1 ] )
     then
         #If we are here, then we are building from a snapshot, so, get the snapshot id and pass it in to the server create command
         #Note 164 is a special os id to say that we are building from a snapshot and not a standard image
