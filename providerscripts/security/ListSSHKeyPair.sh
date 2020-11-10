@@ -32,10 +32,12 @@ if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
     /usr/local/bin/cs listSSHKeyPair | /usr/bin/jq '.sshkeypair[].name' | /bin/grep "${key_name}"
 fi
-if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
+
+if ( [ "${cloudhost}" = "linode" ] )
 then
-    :
+    /usr/local/bin/linode-cli --text sshkeys list | /bin/grep "${key_name}"
 fi
+
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
     export VULTR_API_KEY="`/bin/ls ${HOME}/.ssh/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
