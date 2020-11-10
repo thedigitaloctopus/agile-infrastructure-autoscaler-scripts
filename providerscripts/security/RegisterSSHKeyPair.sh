@@ -40,32 +40,34 @@ n = split($0, t, ",")
 for (i = 0; ++i <= n;)
 print t[i]
 }' | /bin/grep "\(id\|name\)" | /bin/sed 'N;s/\n/ /' | /bin/grep "${key_name}" | /usr/bin/wc -l`" != "1" ] )
-            then
-                /bin/echo ""
-                /bin/echo "There's more than one key with the name ${key_name} in the digital ocean account you are using please remove them all manually"
-                exit
-            fi
-        fi
+    then
+        /bin/echo ""
+        /bin/echo "There's more than one key with the name ${key_name} in the digital ocean account you are using please remove them all manually"
+        exit
+    fi
+fi
+        
+if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
+then
+    /usr/local/bin/cs registerSSHKeyPair name="${key_name}" publicKey="${key_substance}"
+fi
+        
+if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
+then
+    /usr/local/bin/linode-cli sshkeys create --label "${key_name}" --ssh_key="${key_substance}"
+fi
+        
+if ( [ -f /root/VULTR ] || [ "${cloudhost}" = "vultr" ] )
+then
+    export VULTR_API_KEY="`/bin/ls ${HOME}/.ssh/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
+    /bin/sleep 1
+    /usr/bin/vultr sshkey create -n "${key_name}" -k "${key_substance}"
+fi
 
-        if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
-        then
-            /usr/local/bin/cs registerSSHKeyPair name="${key_name}" publicKey="${key_substance}"
-        fi
-        if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
-        then
-            :
-        fi
-        if ( [ -f /root/VULTR ] || [ "${cloudhost}" = "vultr" ] )
-        then
-            export VULTR_API_KEY="`/bin/ls ${HOME}/.ssh/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-            /bin/sleep 1
-            /usr/bin/vultr sshkey create -n "${key_name}" -k "${key_substance}"
-        fi
-
-        if ( [ "${cloudhost}" = "aws" ] )
-        then
-            /usr/bin/aws ec2 import-key-pair --key-name "${key_name}" --public-key-material "${key_substance}"
-        fi
+if ( [ "${cloudhost}" = "aws" ] )
+then
+    /usr/bin/aws ec2 import-key-pair --key-name "${key_name}" --public-key-material "${key_substance}"
+fi
 
 
 
