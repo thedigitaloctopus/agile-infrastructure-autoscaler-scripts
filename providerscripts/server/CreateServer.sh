@@ -101,11 +101,12 @@ fi
 distribution="${1}"
 location="${2}"
 server_size="${3}"
-server_name="${4}"
+server_name="`/bin/echo ${4} | /usr/bin/cut -c -32`"
 key="${5}"
 cloudhost="${6}"
 username="${7}"
 password="${8}"
+snapshot_id="${10}"
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
@@ -113,30 +114,36 @@ then
     then
         password="156432wdfpdaiI"
     fi
-    
-    if ( [ "`/bin/echo ${distribution} | /bin/grep 'Ubuntu 18.04'`" != "" ] )
+
+    if ( [ "${snapshot_id}" != "" ] )
     then
-        /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image linode/ubuntu18.04 --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
-        server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
-        /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
-elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Ubuntu 20.04'`" != "" ] )
-    then
-        /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image linode/ubuntu20.04 --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
-        server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
-        /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
-elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Debian 9'`" != "" ] )
-    then
-        /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image linode/debian9 --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
-        server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
-        /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
-elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Debian 10'`" != "" ] )
-    then
-        /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image linode/debian10 --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
-        server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
-        /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
+            /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image ${snapshot_id} --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
+            server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
+            /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
+    else
+        if ( [ "`/bin/echo ${distribution} | /bin/grep 'Ubuntu 18.04'`" != "" ] )
+        then
+            /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image linode/ubuntu18.04 --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
+            server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
+            /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
+        elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Ubuntu 20.04'`" != "" ] )
+        then
+            /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image linode/ubuntu20.04 --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
+            server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
+            /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
+        elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Debian 9'`" != "" ] )
+        then
+            /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image linode/debian9 --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
+            server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
+            /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
+        elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Debian 10'`" != "" ] )
+        then
+            /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image linode/debian10 --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
+            server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
+            /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
+        fi
     fi
 fi
-
 
 os_choice="${1}"
 region="${2}"
