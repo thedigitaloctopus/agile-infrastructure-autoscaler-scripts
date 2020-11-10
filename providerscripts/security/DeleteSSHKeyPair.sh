@@ -44,7 +44,7 @@ then
 fi
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-    :
+    /usr/local/bin/linode-cli sshkeys delete ${key_name} 
 fi
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
