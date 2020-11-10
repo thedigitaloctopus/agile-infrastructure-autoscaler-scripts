@@ -106,7 +106,6 @@ key="${5}"
 cloudhost="${6}"
 username="${7}"
 password="${8}"
-snapshot_id="${10}"
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
@@ -114,12 +113,26 @@ then
     then
         password="156432wdfpdaiI"
     fi
+    
+    snapshot_id="`/bin/ls ${HOME}/.ssh/SNAPSHOTID:* | /usr/bin/awk -F':' '{print $NF}'`"
 
-    if ( [ "${snapshot_id}" != "" ] )
+    if ( [ "${snapshot_id}" = "" ] )
     then
-            /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image ${snapshot_id} --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
-            server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
-            /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
+        /bin/rm ${HOME}/.ssh/SNAPAUTOSCALE:*
+        /bin/touch ${HOME}/.ssh/SNAPAUTOSCALE:0
+    fi
+
+    #Linode supports snapshots, so decide if we are building from a snapshot
+    if ( [ "${snapshot_id}" != "" ] && [ -f ${HOME}/.ssh/SNAPAUTOSCALE:1 ] )
+    then
+        #If we are here, then we are building from a snapshot, so, get the snapshot id and pass it in to the server create command
+        #Note 164 is a special os id to say that we are building from a snapshot and not a standard image
+        snapshot_id="`/bin/ls ${HOME}/.ssh/SNAPSHOT* | /usr/bin/awk -F':' '{print $NF}'`"
+
+        /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image ${snapshot_id} --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
+        server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
+        /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
+        /bin/echo "SNAPPED"
     else
         if ( [ "`/bin/echo ${distribution} | /bin/grep 'Ubuntu 18.04'`" != "" ] )
         then
