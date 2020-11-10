@@ -34,7 +34,7 @@ then
 fi
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-    /bin/cat ${HOME}/.linodecli/config | /bin/grep api | /usr/bin/awk '{print $2}'
+    /usr/local/bin/linode-cli --text sshkeys list | /bin/grep "${public_key_name}" | /usr/bin/awk '{print $1}'
 fi
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
