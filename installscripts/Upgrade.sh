@@ -27,10 +27,10 @@ fi
 
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
-    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y upgrade
+    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y dist-upgrade
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
-    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y upgrade
+    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y dist-upgrade
 fi
