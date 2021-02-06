@@ -28,12 +28,12 @@ fi
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
     /usr/bin/yes | /usr/bin/dpkg --configure -a
-    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y update
+    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y update --allow-change-held-packages
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
     /usr/bin/yes | /usr/bin/dpkg --configure -a
-    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y update
+    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y update --allow-change-held-packages
 fi
 
