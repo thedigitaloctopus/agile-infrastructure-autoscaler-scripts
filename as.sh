@@ -96,9 +96,6 @@ then
     /bin/chmod 700 ${HOME}/runtime
 fi
 
-#Ensure permissions are correctly adjusted for our scripts
-#/bin/chmod -R 755 ${HOME}/autoscaler ${HOME}/cron ${HOME}/installscripts ${HOME}/providerscripts ${HOME}/security
-
 /bin/echo "${0} `/bin/date`: Set the Autoscaler hostname" >> ${HOME}/logs/MonitoringLog.log
 # Set the hostname for the machine
 /bin/echo "${WEBSITE_NAME}AS" > /etc/hostname
