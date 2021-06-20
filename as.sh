@@ -44,12 +44,13 @@ exec 1>>${HOME}/logs/${OUT_FILE}
 ERR_FILE="autoscaler-build-err-`/bin/date | /bin/sed 's/ //g'`"
 exec 2>>${HOME}/logs/${ERR_FILE}
 
-
-
+if ( [ "$1" = "" ] )
+then
+    /bin/echo "${0} Usage: ./as.sh <server user>" >> ${HOME}/logs/WEBSERVER_BUILD.log
+    exit
+fi
 
 SERVER_USER="${1}"
-
-
 
 /bin/echo "${0} `/bin/date`: Beginning the build of the autoscaler" >> ${HOME}/logs/MonitoringLog.log
 #Load the parts of the configuration that we need into memory
