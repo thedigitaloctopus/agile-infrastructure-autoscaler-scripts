@@ -37,8 +37,8 @@ export HOMEDIR=${HOME}
 
 #First thing is to tighten up permissions in case theres any wronguns. 
 
-/usr/bin/find ${HOME} -type d -exec chmod 755 {} \;
-/usr/bin/find ${HOME} -type f -exec chmod 644 {} \;
+#Ensure permissions are correctly adjusted for our scripts
+/bin/chmod -R 750 ${HOME}/autoscaler ${HOME}/cron ${HOME}/installscripts ${HOME}/providerscripts ${HOME}/security
 
 if ( [ ! -d ${HOME}/logs ] )
 then
@@ -97,7 +97,7 @@ then
 fi
 
 #Ensure permissions are correctly adjusted for our scripts
-/bin/chmod -R 755 ${HOME}/autoscaler ${HOME}/cron ${HOME}/installscripts ${HOME}/providerscripts ${HOME}/security
+#/bin/chmod -R 755 ${HOME}/autoscaler ${HOME}/cron ${HOME}/installscripts ${HOME}/providerscripts ${HOME}/security
 
 /bin/echo "${0} `/bin/date`: Set the Autoscaler hostname" >> ${HOME}/logs/MonitoringLog.log
 # Set the hostname for the machine
