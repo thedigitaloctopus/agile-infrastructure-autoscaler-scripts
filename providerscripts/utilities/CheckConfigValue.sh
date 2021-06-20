@@ -1,3 +1,5 @@
+#!/bin/sh
+
 export HOME="`/bin/cat /home/homedir.dat`"
 
 if ( [ "`/bin/grep "${1}:" ${HOME}/.ssh/autoscaler_configuration_settings.dat | /usr/bin/awk -F':' '{print $NF}'`" = "${2}" ] )
