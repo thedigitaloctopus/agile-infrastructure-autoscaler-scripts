@@ -21,8 +21,6 @@
 
 #set -x
 
-SERVER_USER="${1}"
-
 #If there is a problem with building an autoscaler, you can uncomment the set -x command and debug output will be
 #presented on the screen as your autoscaler is built
 
@@ -45,6 +43,13 @@ OUT_FILE="autoscaler-build-out-`/bin/date | /bin/sed 's/ //g'`"
 exec 1>>${HOME}/logs/${OUT_FILE}
 ERR_FILE="autoscaler-build-err-`/bin/date | /bin/sed 's/ //g'`"
 exec 2>>${HOME}/logs/${ERR_FILE}
+
+
+
+
+SERVER_USER="${1}"
+
+
 
 /bin/echo "${0} `/bin/date`: Beginning the build of the autoscaler" >> ${HOME}/logs/MonitoringLog.log
 #Load the parts of the configuration that we need into memory
