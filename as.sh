@@ -35,6 +35,11 @@ export HOME="/home/${USER_HOME}"
 export HOMEDIR=${HOME}
 /bin/echo "${HOMEDIR}" > /home/homedir.dat
 
+#First thing is to tighten up permissions in case theres any wronguns. 
+
+/usr/bin/find ${HOME} -type d -exec chmod 755 {} \;
+/usr/bin/find ${HOME} -type f -exec chmod 644 {} \;
+
 if ( [ ! -d ${HOME}/logs ] )
 then
     /bin/mkdir ${HOME}/logs
