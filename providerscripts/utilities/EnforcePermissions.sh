@@ -20,3 +20,4 @@
 #!/bin/sh
 
 /bin/chmod -R 700 ${HOME}/.ssh/*
+/bin/chmod 400 ${HOME}/.ssh/Super.sh
