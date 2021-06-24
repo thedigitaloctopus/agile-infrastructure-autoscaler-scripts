@@ -33,7 +33,8 @@ if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
        #ORIGINAL /usr/local/bin/cs listVirtualMachines | /usr/bin/jq '.virtualmachine[] | .nic[].ipaddress + " " + .displayname' | /bin/grep ".*${server_type}" | /bin/sed 's/"//g' | /usr/bin/awk '{print $1}'
      display_name="${server_type}"
-     ip="`/usr/local/bin/cs listVirtualMachines | /usr/bin/jq --arg tmp_display_name "${display_name}" '(.virtualmachine[] | select(.displayname == $tmp_display_name) | .publicip)' | /bin/sed 's/"//g'`"
+     #ip="`/usr/local/bin/cs listVirtualMachines | /usr/bin/jq --arg tmp_display_name "${display_name}" '(.virtualmachine[] | select(.displayname == $tmp_display_name) | .publicip)' | /bin/sed 's/"//g'`"
+     ip="`/usr/local/bin/cs listVirtualMachines | /usr/bin/jq --arg tmp_display_name "${display_name}" '(.virtualmachine[] | select(.displayname | contains ($tmp_display_name)) | .publicip)' | /bin/sed 's/"//g'`"
      /bin/echo ${ip}
 fi
 
