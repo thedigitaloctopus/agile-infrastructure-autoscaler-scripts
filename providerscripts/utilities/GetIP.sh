@@ -25,6 +25,12 @@
 BUILDOS="`/bin/ls ${HOME}/.ssh/BUILDOS:* | /usr/bin/awk -F':' '{print $NF}'`"
 BUILDOSVERSION="`/bin/ls ${HOME}/.ssh/BUILDOSVERSION:* | /usr/bin/awk -F':' '{print $NF}'`"
 
+if ( [ -f ${HOME}/EXOSCALE ] && [ ! -f ${HOME}/runtime/PRIVATEIPAVAILABLE ] )
+then
+    /usr/sbin/dhclient
+    /bin/touch ${HOME}/runtime/PRIVATEIPAVAILABLE
+fi
+
 if ( [ -f ${HOME}/VULTR ] && [ ! -f ${HOME}/runtime/NETCONFIGURED ] )
 then
     ip="`/bin/ls ${HOME}/.ssh/MYIP:* | /usr/bin/awk -F':' '{print $NF}'`"
