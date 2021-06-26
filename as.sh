@@ -128,16 +128,6 @@ fi
 /bin/echo "vm.panic_on_oom=1
 kernel.panic=10" >> /etc/sysctl.conf
 
-#Double down on preventing logins as root. We already tried, but, make absolutely sure because we can't guarantee format of /etc/ssh/sshd_config
-
-if ( [ "`/bin/grep '^#PermitRootLogin' /etc/ssh/sshd_config`" != "" ] || [ "`/bin/grep '^PermitRootLogin' /etc/ssh/sshd_config`" != "" ] )
-then
-    /bin/sed -i "s/^PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config
-    /bin/sed -i "s/^#PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config
-else
-    /bin/echo "PermitRootLogin no" >> /etc/ssh/sshd_config
-fi
-
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} `/bin/date`: Updating the repositories" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
@@ -221,19 +211,76 @@ ${HOME}/bootstrap/GitPull.sh ${INFRASTRUCTURE_REPOSITORY_PROVIDER} ${INFRASTRUCT
 
 . ${HOME}/providerscripts/datastore/InstallDatastoreTools.sh
 
-#Set the port for SSH and harden the autentication to be ssh keys only from now on
-/bin/sed -i "s/22/${SSH_PORT}/g" /etc/ssh/sshd_config
-/bin/sed -i 's/^#Port/Port/' /etc/ssh/sshd_config
-/bin/sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
-/bin/sed -i 's/.*PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} `/bin/date`: Configuring our SSH settings" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 
-#Make sure that client connections to our shh daemon are long lasting
+#Set the ssh port we want to use
+#/bin/sed -i "s/22/${SSH_PORT}/g" /etc/ssh/sshd_config
+#/bin/sed -i 's/^#Port/Port/' /etc/ssh/sshd_config
+
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} `/bin/date`: Disabling password authentication" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+
+/bin/sed -i 's/^PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+/bin/sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} `/bin/date`: Changing to our preferred SSH port" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+
+if ( [ "`/bin/grep '^#Port' /etc/ssh/sshd_config`" != "" ] || [ "`/bin/grep '^Port' /etc/ssh/sshd_config`" != "" ] )
+then
+    /bin/sed -i "s/^Port.*/Port ${SSH_PORT}/g" /etc/ssh/sshd_config
+    /bin/sed -i "s/^#Port.*/Port ${SSH_PORT}/g" /etc/ssh/sshd_config
+else
+    /bin/echo "PermitRootLogin no" >> /etc/ssh/sshd_config
+fi
+
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} `/bin/date`: Preventing root logins" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+
+#Double down on preventing logins as root. We already tried, but, make absolutely sure because we can't guarantee format of /etc/ssh/sshd_config
+
+if ( [ "`/bin/grep '^#PermitRootLogin' /etc/ssh/sshd_config`" != "" ] || [ "`/bin/grep '^PermitRootLogin' /etc/ssh/sshd_config`" != "" ] )
+then
+    /bin/sed -i "s/^PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config
+    /bin/sed -i "s/^#PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config
+else
+    /bin/echo "PermitRootLogin no" >> /etc/ssh/sshd_config
+fi
+
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} `/bin/date`: Ensuring SSH connections are long lasting" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+
+#Make sure that client connections to sshd are long lasting
 if ( [ "`/bin/cat /etc/ssh/sshd_config | /bin/grep 'ClientAliveInterval 200' 2>/dev/null`" = "" ] )
 then
     /bin/echo "
 ClientAliveInterval 200
     ClientAliveCountMax 10" >> /etc/ssh/sshd_config
 fi
+
+
+
+
+#Set the port for SSH and harden the autentication to be ssh keys only from now on
+#/bin/sed -i "s/22/${SSH_PORT}/g" /etc/ssh/sshd_config
+#/bin/sed -i 's/^#Port/Port/' /etc/ssh/sshd_config
+#/bin/sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+#/bin/sed -i 's/.*PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+
+#Make sure that client connections to our shh daemon are long lasting
+#if ( [ "`/bin/cat /etc/ssh/sshd_config | /bin/grep 'ClientAliveInterval 200' 2>/dev/null`" = "" ] )
+#then
+#    /bin/echo "
+#ClientAliveInterval 200
+#    ClientAliveCountMax 10" >> /etc/ssh/sshd_config
+#fi
+
 /usr/sbin/service sshd restart
 
 DEVELOPMENT="`/bin/ls ${HOME}/.ssh/DEVELOPMENT:* | /usr/bin/awk -F':' '{print $NF}'`"
