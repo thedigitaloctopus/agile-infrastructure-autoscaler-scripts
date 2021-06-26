@@ -52,13 +52,18 @@ exec 2>>${HOME}/logs/${ERR_FILE}
 
 if ( [ "$1" = "" ] )
 then
-    /bin/echo "${0} Usage: ./as.sh <server user>" >> ${HOME}/logs/WEBSERVER_BUILD.log
+    /bin/echo "${0} Usage: ./as.sh <server user>" >> ${HOME}/logs/AUTOSCALER_BUILD.log
     exit
 fi
 
 SERVER_USER="${1}"
 
-/bin/echo "${0} `/bin/date`: Beginning the build of the autoscaler" >> ${HOME}/logs/MonitoringLog.log
+/bin/echo "${0} `/bin/date`: Beginning the build of the autoscaler" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} `/bin/date`: Building a new webserver" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} `/bin/date`: Setting up the build parameters" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+
 #Load the parts of the configuration that we need into memory
 WEBSITE_URL="`/bin/ls ${HOME}/.ssh/WEBSITEURL:* | /usr/bin/awk -F':' '{print $NF}'`"
 ROOT_DOMAIN="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{$1=""}1' | /bin/sed 's/^ //g' | /bin/sed 's/ /./g'`"
@@ -96,7 +101,9 @@ then
     /bin/chmod 700 ${HOME}/runtime
 fi
 
-/bin/echo "${0} `/bin/date`: Set the Autoscaler hostname" >> ${HOME}/logs/MonitoringLog.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} `/bin/date`: Setting the autoscaler hostname" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 # Set the hostname for the machine
 /bin/echo "${WEBSITE_NAME}AS" > /etc/hostname
 /bin/hostname -F /etc/hostname
@@ -131,7 +138,9 @@ else
     /bin/echo "PermitRootLogin no" >> /etc/ssh/sshd_config
 fi
 
-/bin/echo "${0} `/bin/date`: Updated the repositories" >> ${HOME}/logs/MonitoringLog.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} `/bin/date`: Updating the repositories" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/rm /var/lib/dpkg/lock
 /bin/rm /var/cache/apt/archives/lock
 
@@ -158,7 +167,9 @@ fi
 
 ${HOME}/providerscripts/utilities/InstallMonitoringGear.sh
 
-/bin/echo "${0}: Setting timezone" >> ${HOME}/logs/MonitoringLog.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} `/bin/date`: Setting timezone" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 #Set the time on the machine
 /usr/bin/timedatectl set-timezone ${SERVER_TIMEZONE_CONTINENT}/${SERVER_TIMEZONE_CITY}
 /bin/touch ${HOME}/.ssh/SERVERTIMEZONECONTINENT:${SERVER_TIMEZONE_CONTINENT}
@@ -174,9 +185,16 @@ else
     exit
 fi
 
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} `/bin/date`: Installing cloudtools" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 #Install the tools for our particular cloudhost provider
 . ${HOME}/providerscripts/cloudhost/InstallCloudhostTools.sh
 
+
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} `/bin/date`: Getting infrastructure repositories from git" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 #Setup git in the root directory - where the configuration scripts are kept
 cd ${HOME}
 /usr/bin/git init
@@ -191,8 +209,15 @@ ${HOME}/bootstrap/GitPull.sh ${INFRASTRUCTURE_REPOSITORY_PROVIDER} ${INFRASTRUCT
 /usr/bin/find ${HOME} -not -path '*/\.*' -type d -print0 | xargs -0 chmod 0755 # for directories
 /usr/bin/find ${HOME} -not -path '*/\.*' -type f -print0 | xargs -0 chmod 0755 # for files
 
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} `/bin/date`: Setting up the script which allows us to root" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/mv ${HOME}/providerscripts/utilities/Super.sh ${HOME}/.ssh
 /bin/chmod 400 ${HOME}/.ssh/Super.sh
+
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} `/bin/date`: Installing Datastore tools" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 
 . ${HOME}/providerscripts/datastore/InstallDatastoreTools.sh
 
@@ -214,6 +239,10 @@ fi
 DEVELOPMENT="`/bin/ls ${HOME}/.ssh/DEVELOPMENT:* | /usr/bin/awk -F':' '{print $NF}'`"
 PRODUCTION="`/bin/ls ${HOME}/.ssh/PRODUCTION:* | /usr/bin/awk -F':' '{print $NF}'`"
 
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} `/bin/date`: Initialising cron" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+
 #Initialise the cron scripts. If you want to add cron jobs, modify this script to include them
 . ${HOME}/providerscripts/utilities/InitialiseCron.sh
 
@@ -225,7 +254,9 @@ ${HOME}/providerscripts/utilities/GetIP.sh
 #Write the flag to say that the autoscaler has been built correctly
 /bin/touch ${HOME}/runtime/AUTOSCALER_READY
 
-/bin/echo "${0} `/bin/date`: Rebooting the autoscaler post installation" >> ${HOME}/logs/MonitoringLog.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} `/bin/date`: Enabling the firewall" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 
 #/bin/sed -i "s/IPV6=yes/IPV6=no/g" /etc/default/ufw
 #Switch logging off on the firewall
@@ -237,6 +268,10 @@ ${HOME}/providerscripts/utilities/GetIP.sh
 /usr/sbin/ufw --force enable
 
 /bin/chown -R ${SERVER_USER}.${SERVER_USER} ${HOME}
+
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} `/bin/date`: Rebooting the autoscaler post installation" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+/bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 
 ${HOME}/providerscripts/email/SendEmail.sh "A NEW AUTOSCALER HAS BEEN SUCCESSFULLY BUILT" "A new autoscaler machine has been built and is now going to reboot before coming available"
 
