@@ -126,15 +126,15 @@ DB_PORT="`/bin/ls ${HOME}/.ssh/DB_PORT:* | /usr/bin/awk -F':' '{print $NF}'`"
 # webserver 5 would use remote proxy 2
 #and so on so, here is where we define the index for which proxy machine to use
 
-proxyips="`/bin/ls ${HOME}/.ssh/DBaaSREMOTESSHPROXYIP:* | /usr/bin/awk -F':' '{$1=""}1'`"
-if ( [ "${proxyips}" != "" ] )
-then
-    noproxyips="`/bin/echo "${proxyips}" | /usr/bin/wc -w`"
-    index="`/usr/bin/expr ${SERVER_NUMBER} % ${noproxyips}`"
-    index="`/usr/bin/expr ${index} + 1`"
-    /bin/rm ${HOME}/.ssh/DBaaSREMOTESSHPROXYIPINDEX:*
-    /bin/touch ${HOME}/.ssh/DBaaSREMOTESSHPROXYIPINDEX:${index}
-fi
+#proxyips="`/bin/ls ${HOME}/.ssh/DBaaSREMOTESSHPROXYIP:* | /usr/bin/awk -F':' '{$1=""}1'`"
+#if ( [ "${proxyips}" != "" ] )
+#then
+#    noproxyips="`/bin/echo "${proxyips}" | /usr/bin/wc -w`"
+#    index="`/usr/bin/expr ${SERVER_NUMBER} % ${noproxyips}`"
+#    index="`/usr/bin/expr ${index} + 1`"
+#    /bin/rm ${HOME}/.ssh/DBaaSREMOTESSHPROXYIPINDEX:*
+#    /bin/touch ${HOME}/.ssh/DBaaSREMOTESSHPROXYIPINDEX:${index}
+#fi
 
 #What type of machine are we building - this will determine the size and so on with the cloudhost
 SERVER_TYPE_ID="`${HOME}/providerscripts/server/GetServerTypeID.sh ${SIZE} "${SERVER_TYPE}" ${CLOUDHOST}`"
@@ -297,10 +297,10 @@ then
     #If we are building for use of an ssh tunnel, then the webserver needs to know the private key of the remote proxy machine.
     #We have it on the autoscaler file system, so we simply pass it over to our new webserver which will know where to look and
     #what to do with it
-    if ( [ -f ${HOME}/.ssh/DATABASEINSTALLATIONTYPE:DBaaS-secured ] )
-    then
-        /usr/bin/scp -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${HOME}/.ssh/dbaas_server_key.pem ${SERVER_USER}@${ip}:${HOME}/.ssh/dbaas_server_key.pem
-    fi
+  #  if ( [ -f ${HOME}/.ssh/DATABASEINSTALLATIONTYPE:DBaaS-secured ] )
+  #  then
+  #      /usr/bin/scp -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${HOME}/.ssh/dbaas_server_key.pem ${SERVER_USER}@${ip}:${HOME}/.ssh/dbaas_server_key.pem
+  #  fi
 
     #Configure the provider details
     ${HOME}/providerscripts/cloudhost/ConfigureProvider.sh ${CLOUDHOST} ${BUILD_IDENTIFIER} ${ALGORITHM} ${ip} ${SERVER_USER}
@@ -437,15 +437,15 @@ else
     # webserver 5 would use remote proxy 2
     # and so on so, here is where we define the index for which proxy machine to use
 
-    proxyips="`/bin/ls ${HOME}/.ssh/DBaaSREMOTESSHPROXYIP:* | /usr/bin/awk -F':' '{$1=""}1'`"
-    if ( [ "${proxyips}" != "" ] )
-    then
-        noproxyips="`/bin/echo "${proxyips}" | /usr/bin/wc -w`"
-        index="`/usr/bin/expr ${SERVER_NUMBER} % ${noproxyips} 2>/dev/null`"
-        index="`/usr/bin/expr ${index} + 1`"
-        /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /bin/rm /home/${SERVER_USER}/.ssh/DBaaSREMOTESSHPROXYIPINDEX:* /home/${SERVER_USER}/.ssh/DBaaSREMOTESSHPROXYIP:*"
-        /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /bin/touch /home/${SERVER_USER}/.ssh/DBaaSREMOTESSHPROXYIPINDEX:${index} /home/${SERVER_USER}/.ssh/DBaaSREMOTESSHPROXYIP:`/bin/echo ${proxyips} | /bin/sed 's/ /:/g'`"
-    fi
+  #  proxyips="`/bin/ls ${HOME}/.ssh/DBaaSREMOTESSHPROXYIP:* | /usr/bin/awk -F':' '{$1=""}1'`"
+  #  if ( [ "${proxyips}" != "" ] )
+  #  then
+  #      noproxyips="`/bin/echo "${proxyips}" | /usr/bin/wc -w`"
+  #      index="`/usr/bin/expr ${SERVER_NUMBER} % ${noproxyips} 2>/dev/null`"
+   #     index="`/usr/bin/expr ${index} + 1`"
+   #     /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /bin/rm /home/${SERVER_USER}/.ssh/DBaaSREMOTESSHPROXYIPINDEX:* /home/${SERVER_USER}/.ssh/DBaaSREMOTESSHPROXYIP:*"
+   #     /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /bin/touch /home/${SERVER_USER}/.ssh/DBaaSREMOTESSHPROXYIPINDEX:${index} /home/${SERVER_USER}/.ssh/DBaaSREMOTESSHPROXYIP:`/bin/echo ${proxyips} | /bin/sed 's/ /:/g'`"
+   # fi
     
     /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/InitialSyncFromWebrootTunnel.sh"
     /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/applicationscripts/SyncLatestApplication.sh ${APPLICATION_REPOSITORY_PROVIDER} ${APPLICATION_REPOSITORY_USERNAME} ${APPLICATION_REPOSITORY_PASSWORD} ${APPLICATION_REPOSITORY_OWNER} ${BUILD_ARCHIVE} ${DATASTORE_CHOICE} ${BUILD_IDENTIFIER} ${WEBSITE_NAME}"
