@@ -33,7 +33,7 @@ iswebserverup ()
     loop="0"
     while ( [ "${loop}" -lt "5" ] )
     do
-        if ( [ -f ${HOME}/.ssh/APPLICATIONLANGUAGE:PHP ] )
+        if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh APPLICATIONLANGUAGE:PHP`" = "1" ] )
         then
             file="index.php"
         else
