@@ -25,7 +25,7 @@ then
     :
 fi
 
-region="`/bin/ls ${HOME}/.ssh/DNSREGION:* | /usr/bin/awk -F':' '{print $NF}'`"
+region="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DNSREGION'`"
 username="${1}"
 apikey="${2}"
 websiteurl="`/bin/echo ${3} | /usr/bin/cut -d'.' -f2-`"
