@@ -22,8 +22,8 @@
 
 server_ip="${1}"
 cloudhost="${2}"
-BUILD_IDENTIFIER="`/bin/ls ${HOME}/.ssh/BUILDIDENTIFIER:* | /usr/bin/awk -F':' '{print $NF}'`"
-algorithm="`/bin/ls ${HOME}/.ssh | /bin/grep 'ALGORITHM' | /usr/bin/awk -F':' '{print $NF}'`"
+BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
+algorithm="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ALGORITHM'`"
 private_server_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddressByIP.sh ${server_ip} ${cloudhost}`"
 
 if ( [ "`/bin/echo ${server_ip} | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`" = "" ] )
@@ -146,7 +146,8 @@ fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
-    export VULTR_API_KEY="`/bin/ls ${HOME}/.ssh/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
+    export VULTR_API_KEY="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'VULTRAPIKEY'`"
+
     if ( [ "${server_ip}" != "" ] )
     then
         /bin/rm ${HOME}/config/webserverips/${private_server_ip}
