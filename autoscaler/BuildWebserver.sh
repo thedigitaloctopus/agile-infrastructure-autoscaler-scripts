@@ -533,7 +533,6 @@ then
     /bin/echo "${0} `/bin/date`: ${ip} is being destroyed because it didn't come online" >> ${HOME}/logs/MonitoringWebserverBuildLog.log
     ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
     
-    DBaaS_DBSECURITYGROUP="`/bin/ls ${HOME}/.ssh/DBaaSDBSECURITYGROUP:* | /usr/bin/awk -F':' '{print $NF}'`"
     DBaaS_DBSECURITYGROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaSDBSECURITYGROUP'`"
 
     if ( [ "${DBaaS_DBSECURITYGROUP}" != "" ] )
