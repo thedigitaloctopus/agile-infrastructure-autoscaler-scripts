@@ -44,7 +44,7 @@ iswebserverup ()
     loop="0"
     while ( [ "${loop}" -lt "5" ] )
     do
-        if ( [ -f ${HOME}/.ssh/APPLICATIONLANGUAGE:PHP ] )
+        if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh APPLICATIONLANGUAGE:PHP`" = "1" ] )
         then
             file="index.php"
         else
@@ -54,7 +54,7 @@ iswebserverup ()
         test1="`/usr/bin/wget --timeout=10 --tries=3 --spider --no-check-certificate https://${ip}/${file}`" 
 	   
        #cludge because of wordpress problem with particular app
-        if ( [ -f ${HOME}/.ssh/APPLICATION:wordpress ] )
+        if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh APPLICATION:wordpress`" = "1" ] )
         then
 	        test2="`/usr/bin/wget --timeout=10 --tries=3 --spider --no-check-certificate https://${ip}/wp-login.php`"
         fi
