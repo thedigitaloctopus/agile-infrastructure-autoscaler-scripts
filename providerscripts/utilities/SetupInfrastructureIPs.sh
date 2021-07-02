@@ -20,8 +20,10 @@
 #######################################################################################################
 #set -x
 
-export DATABASE_IP="`/bin/ls ${HOME}/.ssh | /bin/grep DBIP | /usr/bin/awk -F':' '{print $NF}'`"
-export BUILD_CLIENT_IP="`/bin/ls ${HOME}/.ssh | /bin/grep BUILDCLIENTIP | /usr/bin/awk -F':' '{print $NF}'`"
-export WEBSERVER_IP="`/bin/ls ${HOME}/.ssh | /bin/grep WSIP | /usr/bin/awk -F':' '{print $NF}'`"
+export DATABASE_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBIP'`"
+export BUILD_CLIENT_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDCLIENTIP'`"
+export WEBSERVER_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WSIP'`"
 export AUTOSCALER_IP="`${HOME}/providerscripts/utilities/GetIP.sh`"
+
+
 
