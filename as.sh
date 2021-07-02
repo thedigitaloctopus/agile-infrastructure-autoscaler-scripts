@@ -299,8 +299,8 @@ fi
 
 /usr/sbin/service sshd restart
 
-DEVELOPMENT="`/bin/ls ${HOME}/.ssh/DEVELOPMENT:* | /usr/bin/awk -F':' '{print $NF}'`"
-PRODUCTION="`/bin/ls ${HOME}/.ssh/PRODUCTION:* | /usr/bin/awk -F':' '{print $NF}'`"
+DEVELOPMENT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DEVELOPMENT'`"
+PRODUCTION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'PRODUCTION'`"
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} `/bin/date`: Initialising cron" >> ${HOME}/logs/AUTOSCALER_BUILD.log
