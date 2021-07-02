@@ -26,9 +26,9 @@
 #being online. If we don't disable the firewall to begin with, then, initial requests will be
 #blocked leading to timeouts for the user.
 
-BUILDOS="`/bin/ls ${HOME}/.ssh/BUILDOS:* | /usr/bin/awk -F':' '{print $NF}'`"
-BUILDOSVERSION="`/bin/ls ${HOME}/.ssh/BUILDOSVERSION:* | /usr/bin/awk -F':' '{print $NF}'`"
-CLOUDHOST="`/bin/ls ${HOME}/.ssh/CLOUDHOST:* | /usr/bin/awk -F':' '{print $NF}'`"
+BUILDOS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOS'`"
+BUILDOSVERSION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOSVERSION'`"
+CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
 
 if ( [ "${CLOUDHOST}" = "vultr" ] )
 then
@@ -36,7 +36,7 @@ then
     then
         if ( [ "${BUILDOSVERSION}" = "18.04" ] || [ "${BUILDOSVERSION}" = "20.04" ] )
 	then
-            ip="`/bin/ls ${HOME}/.ssh/MYIP:* | /usr/bin/awk -F':' '{print $NF}'`"
+	    ip="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MYIP'`"
 	    /bin/sed -i "s/addresses.*/addresses: [${ip}\/16]/" /etc/netplan/10-ens7.yaml
             if ( [ -f /etc/netplan/10-ens3.yaml ] )
             then
@@ -56,7 +56,7 @@ then
     then
         if ( [ "${BUILDOSVERSION}" = "9" ] || [ "${BUILDOSVERSION}" = "10" ] )
             then
-            ip="`/bin/ls ${HOME}/.ssh/MYIP:* | /usr/bin/awk -F':' '{print $NF}'`"
+	    ip="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MYIP'`"
             /bin/sed -i "s/address.*/address ${ip}/" /etc/network/interfaces
             /sbin/ifup ens7
         fi
