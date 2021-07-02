@@ -21,7 +21,8 @@
 #####################################################################################
 #set -x
 
-home="/home/`/bin/ls /root/.ssh/HOMEDIRFORROOT:* | /usr/bin/awk -F':' '{print $NF}'`"
+#home="/home/`/bin/ls /root/.ssh/HOMEDIRFORROOT:* | /usr/bin/awk -F':' '{print $NF}'`"
+home="`/bin/cat /home/homedir.dat`"
 domainurl="`/bin/ls ${home}/.ssh/WEBSITEURL:* | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/cut -d'.' -f2-`"
 recordid="${2}"
 dns="${5}"
