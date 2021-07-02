@@ -24,7 +24,7 @@
 exec >${HOME}/logs/FIREWALL_CONFIGURATION.log
 exec 2>&1
 
-SSH_PORT="`/bin/ls ${HOME}/.ssh/SSH_PORT:* | /usr/bin/awk -F':' '{print $NF}'`"
+SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSH_PORT'`"
 
 if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" = "" ] )
 then
@@ -33,7 +33,7 @@ fi
 
 . ${HOME}/providerscripts/utilities/SetupInfrastructureIPs.sh
 
-SERVER_USER_PASSWORD="`/bin/ls ${HOME}/.ssh/SERVERUSERPASSWORD:* | /usr/bin/awk -F':' '{print $NF}'`"
+SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
 
 if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep eth1 | /bin/grep ALLOW`" = "" ] )
 then
