@@ -22,9 +22,11 @@
 
 BUILDOS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOS'`"
 
-if ( [ -f ${HOME}/.ssh/DATASTORECHOICE:amazonS3 ]  || [ -f ${HOME}/.ssh/DATASTORECHOICE:digitalocean ] || [ -f ${HOME}/.ssh/DATASTORECHOICE:exoscale ] ||  [ -f ${HOME}/.ssh/DATASTORECHOICE:linode ] || [ -f ${HOME}/.ssh/DATASTORECHOICE:vultr ] )
-then
+        if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh DATASTORECHOICE:amazonS3`" = "1" ] )
 
+
+if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh DATASTORECHOICE:amazonS3`" = "1" ]  || [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh DATASTORECHOICE:digitalocean`" = "1" ] || [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh DATASTORECHOICE:exoscale`" = "1" ] || [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh DATASTORECHOICE:linode`" = "1" ] || [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh DATASTORECHOICE:vultr`" = "1" ] )
+then
     if ( [ -f /usr/bin/python ] )
     then
         ${HOME}/installscripts/PurgePython.sh ${BUILDOS}
