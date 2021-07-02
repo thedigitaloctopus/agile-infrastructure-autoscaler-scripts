@@ -48,7 +48,7 @@ then
     
     if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" = "" ] )
     then
-       if ( [ -f ${HOME}/.ssh/ENABLEEFS:1 ] )
+       if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh ENABLEEFS:1`" = "1" ] )
        then
            aws_region="`/bin/cat ${HOME}/.aws/config | /bin/grep region | /usr/bin/awk '{print $NF}'`"
            /bin/mkdir ~/.aws 2>/dev/null
