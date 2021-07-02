@@ -27,7 +27,7 @@ then
     exit
 fi
 
-CLOUDHOST="`/bin/ls ${HOME}/.ssh/CLOUDHOST:* | /usr/bin/awk -F':' '{print $NF}'`"
+CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
 
 #So, when a webserver is built, we set the 'being built' flag. Basically a machine is given 30 minutes to be built and then we consider it a
 #slow build and something must be wrong, so, we destroy it
@@ -46,15 +46,17 @@ do
     /bin/echo "${0} `/bin/date` : ${ip} is being destroyed because it was a slow build" >> ${HOME}/logs/MonitoringLog.log
     ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
     
-    DBaaS_DBSECURITYGROUP="`/bin/ls ${HOME}/.ssh/DBaaSDBSECURITYGROUP:* | /usr/bin/awk -F':' '{print $NF}'`"
+    
+    DBaaS_DBSECURITYGROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaSDBSECURITYGROUP'`"
+
     if ( [ "${DBaaS_DBSECURITYGROUP}" != "" ] )
     then
         IP_TO_DENY="${ip}"
         . ${HOME}/providerscripts/server/DenyDBAccess.sh
     fi
     
-    INMEMORYCACHING_SECURITY_GROUP="`/bin/ls ${HOME}/.ssh/INMEMORYCACHINGSECURITYGROUP:* | /usr/bin/awk -F':' '{print $NF}'`"
-    INMEMORYCACHING_PORT="`/bin/ls ${HOME}/.ssh/INMEMORYCACHINGPORT:* | /usr/bin/awk -F':' '{print $NF}'`"
+    INMEMORYCACHING_SECURITY_GROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INMEMORYCACHINGSECURITYGROUP'`"
+    INMEMORYCACHING_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INMEMORYCACHINGPORT'`"
 
     if ( [ "${INMEMORYCACHING_SECURITY_GROUP}" != "" ] )
     then
