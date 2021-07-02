@@ -46,7 +46,7 @@ then
     /usr/bin/curl -X POST "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records" -H "X-Auth-Email: ${email}" -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json" --data "{\"type\":\"A\",\"name\":\"${websiteurl}\",\"content\":\"${ip}\",\"ttl\":120,\"proxiable\":true,\"proxied\":true,\"ttl\":120}"
 fi
 
-region="`/bin/ls ${HOME}/.ssh/DNSREGION:* | /usr/bin/awk -F':' '{print $NF}'`"
+region="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DNSREGION'`"
 username="${2}"
 apikey="${3}"
 websiteurl="${4}"
