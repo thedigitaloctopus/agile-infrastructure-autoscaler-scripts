@@ -39,7 +39,8 @@ done
 #################################################ESSENTIAL#########################################################
 
 SCALING_MODE="static"
-NO_WEBSERVERS="`/bin/ls ${HOME}/.ssh/NUMBERWS:* | /usr/bin/awk -F':' '{print $NF}'`"
+
+NO_WEBSERVERS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'NUMBERWS'`"
 
 if ( [ ! -f ${HOME}/config/scalingprofile/profile.cnf ] )
 then
@@ -66,16 +67,16 @@ then
     exit
 fi
 
-CLOUDHOST="`/bin/ls ${HOME}/.ssh/CLOUDHOST:* | /usr/bin/awk -F':' '{print $NF}'`"
-BUILD_IDENTIFIER="`/bin/ls ${HOME}/.ssh/BUILDIDENTIFIER:* | /usr/bin/awk -F':' '{print $NF}'`"
-ALGORITHM="`/bin/ls ${HOME}/.ssh/ALGORITHM:* | /usr/bin/awk -F':' '{print $NF}'`"
-SSH_PORT="`/bin/ls ${HOME}/.ssh/SSH_PORT:* | /usr/bin/awk -F':' '{print $NF}'`"
-SERVER_USER="`/bin/ls ${HOME}/.ssh/SERVERUSER:* | /usr/bin/awk -F':' '{print $NF}'`"
-SERVER_USER_PASSWORD="`/bin/ls ${HOME}/.ssh/SERVERUSERPASSWORD:* | /usr/bin/awk -F':' '{print $NF}'`"
+CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
+BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
+ALGORITHM="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ALGORITHM'`"
+SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSH_PORT'`"
+SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
+SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
+
 SUDO=" DEBIAN_FRONTEND=noninteractive /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E "
 
 /bin/echo "${0} `/bin/date`: ##########################################################################" >> ${HOME}/logs/ScalingEventsLog.log
-
 
 # Sometimes we get back a zero when it shouldn't be possibly because of a network glitch, so we try a few times to give us a good chance
 # of getting it right
@@ -190,15 +191,16 @@ then
             /bin/echo "${0} `/bin/date` : ${ip} is being destroyed because it was excess to requirements" >> ${HOME}/logs/MonitoringLog.log
             ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
             
-            DBaaS_DBSECURITYGROUP="`/bin/ls ${HOME}/.ssh/DBaaSDBSECURITYGROUP:* | /usr/bin/awk -F':' '{print $NF}'`"
+            DBaaS_DBSECURITYGROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaSDBSECURITYGROUP'`"
+
             if ( [ "${DBaaS_DBSECURITYGROUP}" != "" ] )
             then
                 IP_TO_DENY="${ip}"
                 . ${HOME}/providerscripts/server/DenyDBAccess.sh
             fi
             
-            INMEMORYCACHING_SECURITY_GROUP="`/bin/ls ${HOME}/.ssh/INMEMORYCACHINGSECURITYGROUP:* | /usr/bin/awk -F':' '{print $NF}'`"
-            INMEMORYCACHING_PORT="`/bin/ls ${HOME}/.ssh/INMEMORYCACHINGPORT:* | /usr/bin/awk -F':' '{print $NF}'`"
+            INMEMORYCACHING_SECURITY_GROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INMEMORYCACHINGSECURITYGROUP'`"
+            INMEMORYCACHING_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INMEMORYCACHINGPORT'`"
 
             if ( [ "${INMEMORYCACHING_SECURITY_GROUP}" != "" ] )
             then
