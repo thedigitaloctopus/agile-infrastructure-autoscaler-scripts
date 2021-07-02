@@ -312,9 +312,9 @@ ${HOME}/providerscripts/utilities/GetIP.sh
 /usr/sbin/ufw logging off
 #The firewall is down until the initial configuration steps are completed. We set our restrictive rules as soon as possible
 #and pull our knickers up fully after 10 minutes with a call from cron
-#/usr/sbin/ufw default allow incoming
-#/usr/sbin/ufw default allow outgoing
-#/usr/sbin/ufw --force enable
+/usr/sbin/ufw default allow incoming
+/usr/sbin/ufw default allow outgoing
+/usr/sbin/ufw --force enable
 
 /bin/chown -R ${SERVER_USER}.${SERVER_USER} ${HOME}
 
