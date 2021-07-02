@@ -31,11 +31,11 @@ then
     /usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/zones?name=${zonename}&status=active&page=1&per_page=20&order=status&direction=desc&match=all" -H "X-Auth-Email: ${email}" -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json" | /usr/bin/jq '.result[].id' | /bin/sed 's/"//g'
 fi
 
-region="`/bin/ls ${HOME}/.ssh/DNSREGION:* | /usr/bin/awk -F':' '{print $NF}'`"
+region="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DNSREGION'`"
 username="${2}"
 apikey="${3}"
 dns="${4}"
-domainurl="`/bin/ls ${HOME}/.ssh/WEBSITEURL:* | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk -F'.' '{$1="";print}' | /bin/sed 's/^ //' | /bin/sed 's/ /\./g'`"
+domainurl="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL' | /usr/bin/awk -F'.' '{$1="";print}' | /bin/sed 's/^ //' | /bin/sed 's/ /\./g'`"
 
 if ( [ "${dns}" = "rackspace" ] )
 then
