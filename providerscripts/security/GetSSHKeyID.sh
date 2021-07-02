@@ -38,7 +38,7 @@ then
 fi
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
-    export VULTR_API_KEY="`/bin/ls ${HOME}/.ssh/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
+    export VULTR_API_KEY="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'VULTRAPIKEY'`"
     public_key_name="`/bin/echo ${public_key_name} | /usr/bin/cut -c 1-30`"
     /bin/sleep 1
     /usr/bin/vultr sshkey list | /bin/grep "${public_key_name}" | /usr/bin/awk '{print $1}'
