@@ -37,8 +37,7 @@ then
 
     if ( [ "${snapshotid}" = "" ] )
     then
-        /bin/rm ${HOME}/.ssh/SNAPAUTOSCALE:*
-        /bin/touch ${HOME}/.ssh/SNAPAUTOSCALE:0
+        ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '0'
     fi
 
     #Digital ocean supports snapshots so, we test to see if we want to use them
@@ -119,8 +118,7 @@ then
 
     if ( [ "${snapshot_id}" = "" ] )
     then
-        /bin/rm ${HOME}/.ssh/SNAPAUTOSCALE:*
-        /bin/touch ${HOME}/.ssh/SNAPAUTOSCALE:0
+        ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '0'
     fi
 
     #Linode supports snapshots, so decide if we are building from a snapshot
@@ -173,8 +171,7 @@ then
 
     if ( [ "${snapshot_id}" = "" ] )
     then
-        /bin/rm ${HOME}/.ssh/SNAPAUTOSCALE:*
-        /bin/touch ${HOME}/.ssh/SNAPAUTOSCALE:0
+        ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '0'
     fi
 
     #Vultr supports snapshots, so decide if we are building from a snapshot
@@ -226,8 +223,7 @@ then
     
     if ( [ "${snapshot_id}" = "" ] )
     then
-        /bin/rm ${HOME}/.ssh/SNAPAUTOSCALE:*
-        /bin/touch ${HOME}/.ssh/SNAPAUTOSCALE:0
+        ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '0'
     fi
    
     if ( [ "${snapshot_id}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
