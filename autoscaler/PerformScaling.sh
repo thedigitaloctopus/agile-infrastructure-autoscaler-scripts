@@ -119,7 +119,7 @@ then
 
     if ( [ "${noallips}" -lt "${NO_WEBSERVERS}" ] )
     then
-        if ( [ -f ${HOME}/.ssh/SNAPAUTOSCALE:1 ] )
+        if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
         then
             /bin/echo "${0} `/bin/date`: A new webserver is being provisioned (spun up) from a snapshot" >> ${HOME}/logs/ScalingEventsLog.log
             ${HOME}/autoscaler/BuildWebserver.sh
