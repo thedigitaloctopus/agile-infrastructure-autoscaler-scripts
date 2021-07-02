@@ -22,8 +22,8 @@
 #######################################################################################################
 #set -x
 
-SERVER_USER_PASSWORD="`/bin/ls ${HOME}/.ssh/SERVERUSERPASSWORD:* | /usr/bin/awk -F':' '{print $NF}'`"
-WEBSITE_URL="`/bin/ls ${HOME}/.ssh/WEBSITEURL:* | /usr/bin/awk -F':' '{print $NF}'`"
+SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
+WEBSITE_URL="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL'`"
 
 if ( [ "`/usr/bin/diff ${HOME}/config/ssl/fullchain.pem ${HOME}/.ssh/fullchain.pem`" != "" ] ||
     [ "`/usr/bin/diff ${HOME}/config/ssl/privkey.pem ${HOME}/.ssh/privkey.pem`" != "" ] ||
