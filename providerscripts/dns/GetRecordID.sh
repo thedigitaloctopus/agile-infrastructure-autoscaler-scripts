@@ -52,7 +52,7 @@ then
     /usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records?type=A&name=${websiteurl}&content=${ip}&page=1&per_page=20&order=type&direction=desc&match=all" -H "X-Auth-Email: ${email}" -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json" | /usr/bin/jq '.result[].id' | /bin/sed 's/"//g'
 fi
 
-region="`/bin/ls ${HOME}/.ssh/DNSREGION:* | /usr/bin/awk -F':' '{print $NF}'`"
+region="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DNSREGION'`"
 websiteurl="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
 ip="${3}"
 username="${4}"
