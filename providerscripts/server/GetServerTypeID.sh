@@ -23,8 +23,10 @@
 server_size="${1}"
 server_type="${2}"
 cloudhost="${3}"
-BUILDOS="`/bin/ls ${HOME}/.ssh/BUILDOS:* | /usr/bin/awk -F':' '{print $NF}'`"
-BUILDOSVERSION="`/bin/ls ${HOME}/.ssh/BUILDOSVERSION:* | /usr/bin/awk -F':' '{print $NF}'`"
+
+BUILDOS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOS'`"
+BUILDOSVERSION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOSVERSION'`"
+
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
@@ -57,7 +59,7 @@ fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
-    export VULTR_API_KEY="`/bin/ls ${HOME}/.ssh/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
+    export VULTR_API_KEY="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'VULTRAPIKEY'`"
     /bin/sleep 1
     /usr/bin/vultr plans | grep "${server_size}" | grep SSD | /usr/bin/awk '{print $1}' | /usr/bin/sort | /usr/bin/tail -1
 fi
