@@ -152,7 +152,7 @@ ${HOME}/installscripts/InstallSSHFS.sh ${BUILDOS}
 ${HOME}/installscripts/InstallS3FS.sh ${BUILDOS}
 ${HOME}/installscripts/InstallRsync.sh ${BUILDOS}
 
-if ( [ -f ${HOME}/.ssh/ENABLEEFS:1 ] )
+if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh ENABLEEFS:1`" = "1" ] )
 then
     ${HOME}/installscripts/InstallNFS.sh ${BUILDOS}
 fi
