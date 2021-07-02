@@ -22,8 +22,10 @@
 
 instance_size="${1}"
 cloudhost="${2}"
-BUILDOS="`/bin/ls ${HOME}/.ssh/BUILDOS:* | /usr/bin/awk -F':' '{print $NF}'`"
-BUILDOSVERSION="`/bin/ls ${HOME}/.ssh/BUILDOSVERSION:* | /usr/bin/awk -F':' '{print $NF}'`"
+
+BUILDOS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOS'`"
+BUILDOSVERSION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOSVERSION'`"
+
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
@@ -74,5 +76,5 @@ fi
 
 if ( [ -f ${HOME}/AWS ] || [ "${cloudhost}" = "aws" ] )
 then
-    /bin/echo "`/bin/ls ${HOME}/.ssh/OSTYPE:* | /usr/bin/awk -F':' '{print $NF}'`"
+    /bin/echo "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'OSTYPE'`"
 fi
