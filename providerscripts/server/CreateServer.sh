@@ -33,7 +33,7 @@ cloudhost="${6}"
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
-    snapshotid="`/bin/ls ${HOME}/.ssh/SNAPSHOTID:* | /usr/bin/awk -F':' '{print $NF}'`"
+    snapshotid="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
 
     if ( [ "${snapshotid}" = "" ] )
     then
@@ -45,10 +45,11 @@ then
     if ( [ "S{snapshotid}" != "" ] && [ -f ${HOME}/.ssh/SNAPAUTOSCALE:1 ] )
     then
         #If we get to here, then we are building from a snapshot and we pass the snapshotid in as the oschoice parameter
-        snapshotid="`/bin/ls ${HOME}/.ssh/SNAPSHOTID:* | /usr/bin/awk -F':' '{print $NF}'`"
-        os_choice="${snapshotid}"
-        key_id="`/bin/ls ${HOME}/.ssh/KEYID:* | /usr/bin/awk -F':' '{print $NF}'`"
+        snapshotid="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
 
+        os_choice="${snapshotid}"
+        key_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'KEYID'`"
+        
         /usr/local/bin/doctl compute droplet create "${server_name}" --size "${server_size}" --image "${os_choice}"  --region "${region}" --ssh-keys "${key_id}" --enable-private-networking
         #We pass back a string as a token to say that we built from a snapshot
         /bin/echo "SNAPPED"
@@ -113,8 +114,8 @@ then
     then
         password="156432wdfpdaiI"
     fi
-    
-    snapshot_id="`/bin/ls ${HOME}/.ssh/SNAPSHOTID:* | /usr/bin/awk -F':' '{print $NF}'`"
+   
+    snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
 
     if ( [ "${snapshot_id}" = "" ] )
     then
@@ -167,9 +168,8 @@ cloudhost="${6}"
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
-    export VULTR_API_KEY="`/bin/ls ${HOME}/.ssh/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-    
-    snapshot_id="`/bin/ls ${HOME}/.ssh/SNAPSHOTID:* | /usr/bin/awk -F':' '{print $NF}'`"
+    export VULTR_API_KEY="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'VULTRAPIKEY'`"
+    snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
 
     if ( [ "${snapshot_id}" = "" ] )
     then
@@ -209,7 +209,7 @@ cloudhost="${6}"
 
 if ( [ -f ${HOME}/AWS ] || [ "${cloudhost}" = "aws" ] )
 then
-    subnet_id="`/bin/ls ${HOME}/.ssh/SUBNETID:* | /usr/bin/awk -F':' '{print $NF}'`"
+    subnet_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SUBNETID'`"
     vpc_id="`/usr/bin/aws ec2 describe-subnets | /usr/bin/jq '.Subnets[] | .SubnetId + " " + .VpcId' | /bin/sed 's/\"//g' | /bin/grep ${subnet_id}  | /usr/bin/awk '{print $2}'`"
     security_group_id="`/usr/bin/aws ec2 describe-security-groups | /usr/bin/jq '.SecurityGroups[] | .GroupName + " " + .GroupId' | /bin/grep AgileDeploymentToolkitSecurityGroup | /bin/sed 's/\"//g' | /usr/bin/awk '{print $NF}'`"
 
@@ -222,7 +222,7 @@ then
     /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=0,ToPort=65535,IpRanges='[{CidrIp=0.0.0.0/0}]'
     /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=icmp,FromPort=-1,ToPort=-1,IpRanges='[{CidrIp=0.0.0.0/0}]'
   
-    snapshot_id="`/bin/ls ${HOME}/.ssh/SNAPSHOT* | /usr/bin/awk -F':' '{print $NF}'`"
+    snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
     
     if ( [ "${snapshot_id}" = "" ] )
     then
