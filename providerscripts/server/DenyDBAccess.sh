@@ -46,7 +46,7 @@ if ( [ "${CLOUDHOST}" = "aws" ] )
 then
     if ( [ "${DBaaS_DBSECURITYGROUP}" != "" ] )
     then
-        DB_PORT="`/bin/ls ${HOME}/.ssh/DB_PORT:* | /usr/bin/awk -F':' '{print $NF}'`"
+        DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DB_PORT'`"
         /usr/bin/aws ec2 revoke-security-group-ingress --group-id ${DBaaS_DBSECURITYGROUP} --protocol tcp --port ${DB_PORT} --cidr ${IP_TO_DENY}/32
     fi
 fi
