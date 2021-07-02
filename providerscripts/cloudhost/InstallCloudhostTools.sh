@@ -23,7 +23,7 @@
 #Configure the machine for the current provider. Each new provider that is added will need a config process like these to be added
 #here
 
-BUILDOS="`/bin/ls ${HOME}/.ssh/BUILDOS:* | /usr/bin/awk -F':' '{print $NF}'`"
+BUILDOS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOS'`"
 
 if ( [ "${CLOUDHOST}" = "exoscale" ] )
 then
