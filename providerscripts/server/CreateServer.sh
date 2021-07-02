@@ -128,7 +128,7 @@ then
     then
         #If we are here, then we are building from a snapshot, so, get the snapshot id and pass it in to the server create command
         #Note 164 is a special os id to say that we are building from a snapshot and not a standard image
-        snapshot_id="`/bin/ls ${HOME}/.ssh/SNAPSHOT* | /usr/bin/awk -F':' '{print $NF}'`"
+        snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
 
         /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image "private/${snapshot_id}" --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
         server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
@@ -182,7 +182,7 @@ then
     then
         #If we are here, then we are building from a snapshot, so, get the snapshot id and pass it in to the server create command
         #Note 164 is a special os id to say that we are building from a snapshot and not a standard image
-        snapshot_id="`/bin/ls ${HOME}/.ssh/SNAPSHOT* | /usr/bin/awk -F':' '{print $NF}'`"
+        snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
         /usr/bin/vultr server create --name="${server_name}" --region="${region}" --plan="${server_plan}" --os="164" --private-networking=true --ipv6=false -k ${key_id} --snapshot="${snapshot_id}"
         #Pass back a token to say we built from a snapshot
         /bin/echo "SNAPPED"
