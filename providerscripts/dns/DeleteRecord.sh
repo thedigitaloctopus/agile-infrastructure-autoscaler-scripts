@@ -23,7 +23,7 @@
 
 #home="/home/`/bin/ls /root/.ssh/HOMEDIRFORROOT:* | /usr/bin/awk -F':' '{print $NF}'`"
 home="`/bin/cat /home/homedir.dat`"
-domainurl="`/bin/ls ${home}/.ssh/WEBSITEURL:* | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/cut -d'.' -f2-`"
+domainurl="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL' | /usr/bin/cut -d'.' -f2-`"
 recordid="${2}"
 dns="${5}"
 
@@ -45,12 +45,12 @@ then
     /usr/bin/curl -X DELETE "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records/${recordid}" -H "X-Auth-Email: ${email}"  -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json"
 fi
 
-region="`/bin/ls ${HOME}/.ssh/DNSREGION:* | /usr/bin/awk -F':' '{print $NF}'`"
+region="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'DNSREGION'`"
 recordid="${2}"
 username="${3}"
 apikey="${4}"
 dns="${5}"
-domainurl="`/bin/ls ${HOME}/.ssh/WEBSITEURL:* | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk -F'.' '{$1="";print}' | /bin/sed 's/^ //' | /bin/sed 's/ /\./g'`"
+domainurl="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL' | /usr/bin/awk -F'.' '{$1="";print}' | /bin/sed 's/^ //' | /bin/sed 's/ /\./g'`"
 
 if ( [ "${dns}" = "rackspace" ] )
 then
