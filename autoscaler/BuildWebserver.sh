@@ -31,10 +31,9 @@ then
     exit
 fi
 
-SERVER_USER="`/bin/ls ${HOME}/.ssh/SERVERUSER:* | /usr/bin/awk -F':' '{print $NF}'`"
-SERVER_USER_PASSWORD="`/bin/ls ${HOME}/.ssh/SERVERUSERPASSWORD:* | /usr/bin/awk -F':' '{print $NF}'`"
-
-DEFAULT_USER="`/bin/ls ${HOME}/.ssh/DEFAULTUSER:* | /usr/bin/awk -F':' '{print $NF}'`"
+SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
+SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
+DEFAULT_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DEFAULTUSER'`"
 
 if ( [ "${DEFAULT_USER}" = "root" ] )
 then
@@ -62,40 +61,45 @@ ip=""
 TRIES=0
 
 #Pull the configuration into memory for easy access
-KEY_ID="`/bin/ls ${HOME}/.ssh/KEYID:* | /usr/bin/awk -F':' '{print $NF}'`"
-BUILD_CHOICE="`/bin/ls ${HOME}/.ssh/BUILDCHOICE:* | /usr/bin/awk -F':' '{print $NF}'`"
-REGION="`/bin/ls ${HOME}/.ssh/REGION:* | /usr/bin/awk -F':' '{print $NF}'`"
-SIZE="`/bin/ls ${HOME}/.ssh/SIZE:* | /usr/bin/awk -F':' '{print $NF}'`"
-BUILD_IDENTIFIER="`/bin/ls ${HOME}/.ssh/BUILDIDENTIFIER:* | /usr/bin/awk -F':' '{print $NF}'`"
-CLOUDHOST="`/bin/ls ${HOME}/.ssh/CLOUDHOST:* | /usr/bin/awk -F':' '{print $NF}'`"
-ALGORITHM="`/bin/ls ${HOME}/.ssh/ALGORITHM:* | /usr/bin/awk -F':' '{print $NF}'`"
-WEBSITE_URL="`/bin/ls ${HOME}/.ssh/WEBSITEURL:* | /usr/bin/awk -F':' '{print $NF}'`"
+KEY_ID="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'KEYID'`"
+BUILD_CHOICE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDCHOICE'`"
+REGION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
+SIZE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SIZE'`"
+BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
+CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
+ALGORITHM="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ALGORITHM'`"
+WEBSITE_URL="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL'`"
+DNS_CHOICE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DNSCHOICE'`"
+DNS_SECURITY_KEY="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DNSSECURITYKEY'`"
+DNS_USERNAME="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DNSUSERNAME'`"
+GIT_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'GITUSER'`"
+GIT_EMAIL_ADDRESS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'GITEMAILADDRESS'`"
+INFRASTRUCTURE_REPOSITORY_PROVIDER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INFRASTRUCTUREREPOSITORYPROVIDER'`"
+INFRASTRUCTURE_REPOSITORY_USERNAME="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INFRASTRUCTUREREPOSITORYUSERNAME'`"
+INFRASTRUCTURE_REPOSITORY_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INFRASTRUCTUREREPOSITORYPASSWORD'`"
+INFRASTRUCTURE_REPOSITORY_OWNER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INFRASTRUCTUREREPOSITORYOWNER'`"
+APPLICATION_REPOSITORY_PROVIDER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'APPLICATIONREPOSITORYPROVIDER'`"
+APPLICATION_REPOSITORY_OWNER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INFRASTRUCTUREREPOSITORYOWNER'`"
+APPLICATION_REPOSITORY_USERNAME="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'APPLICATIONREPOSITORYUSERNAME'`"
+APPLICATION_REPOSITORY_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'APPLICATIONREPOSITORYPASSWORD'`"
+APPLICATION_REPOSITORY_TOKEN="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'APPLICATIONREPOSITORYTOKEN'`"
+CLOUDHOST_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOSTPASSWORD'`"
+BUILD_ARCHIVE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDARCHIVE'`"
+DATASTORE_CHOICE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DATASTORECHOICE'`"
+WEBSERVER_CHOICE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSERVERCHOICE'`"
+APPLICATION_IDENTIFIER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'APPLICATIONIDENTIFIER'`"
+APPLICATION_LANGUAGE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'APPLICATIONLANGUAGE'`"
+SOURCECODE_REPOSITORY="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'APPLICATIONBASELINESOURCECODEREPOSITORY'`"
+SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSH_PORT'`"
+DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DB_PORT'`"
+
+
+#Non standard Variable assignments
 WEBSITE_NAME="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{print $2}'`"
 z="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{$1=""}1' | /bin/sed 's/^ //g' | /bin/sed 's/ /./g'`"
 name="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{print $1}'`"
-WEBSITE_DISPLAY_NAME="`/bin/ls ${HOME}/.ssh/WEBSITEDISPLAYNAME:* | /bin/sed 's/_/ /g' | /usr/bin/awk -F':' '{print $NF}'`"
-DNS_CHOICE="`/bin/ls ${HOME}/.ssh/DNSCHOICE:* | /usr/bin/awk -F':' '{print $NF}'`"
-DNS_SECURITY_KEY="`/bin/ls ${HOME}/.ssh/DNSSECURITYKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-DNS_USERNAME="`/bin/ls ${HOME}/.ssh/DNSUSERNAME:* | /usr/bin/awk -F':' '{print $NF}'`"
-GIT_USER="`/bin/ls ${HOME}/.ssh/GITUSER:* | /usr/bin/awk -F':' '{print $NF}'`"
-GIT_EMAIL_ADDRESS="`/bin/ls ${HOME}/.ssh/GITEMAILADDRESS:* | /usr/bin/awk -F':' '{print $NF}'`"
+WEBSITE_DISPLAY_NAME="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEDISPLAYNAME' | /bin/sed 's/_/ /g'`"
 
-INFRASTRUCTURE_REPOSITORY_PROVIDER="`/bin/ls ${HOME}/.ssh/INFRASTRUCTUREREPOSITORYPROVIDER:* | /usr/bin/awk -F':' '{print $NF}'`"
-INFRASTRUCTURE_REPOSITORY_USERNAME="`/bin/ls ${HOME}/.ssh/INFRASTRUCTUREREPOSITORYUSERNAME:* | /usr/bin/awk -F':' '{print $NF}'`"
-INFRASTRUCTURE_REPOSITORY_PASSWORD="`/bin/ls ${HOME}/.ssh/INFRASTRUCTUREREPOSITORYPASSWORD:* | /usr/bin/awk -F':' '{print $NF}'`"
-INFRASTRUCTURE_REPOSITORY_OWNER="`/bin/ls ${HOME}/.ssh/INFRASTRUCTUREREPOSITORYOWNER:* | /usr/bin/awk -F':' '{print $NF}'`"
-APPLICATION_REPOSITORY_PROVIDER="`/bin/ls ${HOME}/.ssh/APPLICATIONREPOSITORYPROVIDER:* | /usr/bin/awk -F':' '{print $NF}'`"
-APPLICATION_REPOSITORY_OWNER="`/bin/ls ${HOME}/.ssh/APPLICATIONREPOSITORYOWNER:* | /usr/bin/awk -F':' '{print $NF}'`"
-APPLICATION_REPOSITORY_USERNAME="`/bin/ls ${HOME}/.ssh/APPLICATIONREPOSITORYUSERNAME:* | /usr/bin/awk -F':' '{print $NF}'`"
-APPLICATION_REPOSITORY_PASSWORD="`/bin/ls ${HOME}/.ssh/APPLICATIONREPOSITORYPASSWORD:* | /usr/bin/awk -F':' '{print $NF}'`"
-APPLICATION_REPOSITORY_TOKEN="`/bin/ls ${HOME}/.ssh/APPLICATIONREPOSITORYTOKEN:* | /usr/bin/awk -F':' '{print $NF}'`"
-CLOUDHOST_PASSWORD="`/bin/ls ${HOME}/.ssh/CLOUDHOSTPASSWORD:* | /usr/bin/awk -F':' '{print $NF}'`"
-BUILD_ARCHIVE="`/bin/ls ${HOME}/.ssh/BUILDARCHIVE:* | /usr/bin/awk -F':' '{print $NF}'`"
-DATASTORE_CHOICE="`/bin/ls ${HOME}/.ssh/DATASTORECHOICE:* | /usr/bin/awk -F':' '{print $NF}'`"
-WEBSERVER_CHOICE="`/bin/ls ${HOME}/.ssh/WEBSERVERCHOICE:* | /usr/bin/awk -F':' '{print $NF}'`"
-APPLICATION_IDENTIFIER="`/bin/ls ${HOME}/.ssh/APPLICATIONIDENTIFIER:* | /usr/bin/awk -F':' '{print $NF}'`"
-APPLICATION_LANGUAGE="`/bin/ls ${HOME}/.ssh/APPLICATIONLANGUAGE:* | /usr/bin/awk -F':' '{print $NF}'`"
-SOURCECODE_REPOSITORY="`/bin/ls ${HOME}/.ssh/APPLICATIONBASELINESOURCECODEREPOSITORY:* | /usr/bin/awk -F':' '{print $NF}'`"
 
 ##/bin/touch ${HOME}/.ssh/ASIP:`${HOME}/providerscripts/utilities/GetIP.sh`
 ##/bin/touch ${HOME}/.ssh/ASPUBLICIP:`${HOME}/providerscripts/utilities/GetPublicIP.sh`
@@ -108,11 +112,9 @@ SOURCECODE_REPOSITORY="`/bin/ls ${HOME}/.ssh/APPLICATIONBASELINESOURCECODEREPOSI
 RND="`/bin/cat /dev/urandom | /usr/bin/tr -dc 'a-zA-Z0-9' | /usr/bin/fold -w 4 | /usr/bin/head -n 1`"
 SERVER_TYPE="webserver"
 SERVER_NUMBER="`${HOME}/providerscripts/server/NumberOfServers.sh "${SERVER_TYPE}" ${CLOUDHOST}`"
-WEBSITE_URL="`/bin/ls ${HOME}/.ssh | grep WEBSITEURL | /usr/bin/awk -F':' '{print $NF}'`"
+#WEBSITE_URL="`/bin/ls ${HOME}/.ssh | grep WEBSITEURL | /usr/bin/awk -F':' '{print $NF}'`"
 webserver_name="webserver-${RND}-${WEBSITE_NAME}-${BUILD_IDENTIFIER}"
 SERVER_INSTANCE_NAME="`/bin/echo ${webserver_name} | /usr/bin/cut -c -32 | /bin/sed 's/-$//g'`"
-SSH_PORT="`/bin/ls ${HOME}/.ssh/SSH_PORT:* | /usr/bin/awk -F':' '{print $NF}'`"
-DB_PORT="`/bin/ls ${HOME}/.ssh/DB_PORT:* | /usr/bin/awk -F':' '{print $NF}'`"
 
 
 #If we have deployed to use DBaaS-secured, then we need to have an ssh tunnel setup.
@@ -182,16 +184,18 @@ then
     /bin/echo "${0} `/bin/date`: Server didn't come online " >> ${HOME}/logs/MonitoringWebserverBuildLog.log
     exit
 fi
-DBaaS_DBSECURITYGROUP="`/bin/ls ${HOME}/.ssh/DBaaSDBSECURITYGROUP:* | /usr/bin/awk -F':' '{print $NF}'`"
+
+DBaaS_DBSECURITYGROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaSDBSECURITYGROUP'`"
+
 if ( [ "${DBaaS_DBSECURITYGROUP}" != "" ] )
 then
     IP_TO_ALLOW="${ip}"
     . ${HOME}/providerscripts/server/AllowDBAccess.sh
 fi
 
-INMEMORYCACHING_SECURITY_GROUP="`/bin/ls ${HOME}/.ssh/INMEMORYCACHINGSECURITYGROUP:* | /usr/bin/awk -F':' '{print $NF}'`"
-INMEMORYCACHING_PORT="`/bin/ls ${HOME}/.ssh/INMEMORYCACHINGPORT:* | /usr/bin/awk -F':' '{print $NF}'`"
-INMEMORYCACHING_HOST="`/bin/ls ${HOME}/.ssh/INMEMORYCACHINGHOST:* | /usr/bin/awk -F':' '{print $NF}'`"
+INMEMORYCACHING_SECURITY_GROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INMEMORYCACHINGSECURITYGROUP'`"
+INMEMORYCACHING_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INMEMORYCACHINGPORT'`"
+INMEMORYCACHING_HOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INMEMORYCACHINGHOST'`"
 
 if ( [ "${INMEMORYCACHING_SECURITY_GROUP}" != "" ] )
 then
@@ -398,15 +402,16 @@ else
         /bin/echo "${0} `/bin/date` : ${ip} is being destroyed because it couldn't be connected to after spawning it from a snapshot" >> ${HOME}/logs/MonitoringLog.log
         ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
         
-        DBaaS_DBSECURITYGROUP="`/bin/ls ${HOME}/.ssh/DBaaSDBSECURITYGROUP:* | /usr/bin/awk -F':' '{print $NF}'`"
+        DBaaS_DBSECURITYGROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaSDBSECURITYGROUP'`"
+
         if ( [ "${DBaaS_DBSECURITYGROUP}" != "" ] )
         then
             IP_TO_DENY="${ip}"
             . ${HOME}/providerscripts/server/DenyDBAccess.sh
         fi
         
-        INMEMORYCACHING_SECURITY_GROUP="`/bin/ls ${HOME}/.ssh/INMEMORYCACHINGSECURITYGROUP:* | /usr/bin/awk -F':' '{print $NF}'`"
-        INMEMORYCACHING_PORT="`/bin/ls ${HOME}/.ssh/INMEMORYCACHINGPORT:* | /usr/bin/awk -F':' '{print $NF}'`"
+        INMEMORYCACHING_SECURITY_GROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INMEMORYCACHINGSECURITYGROUP'`"
+        INMEMORYCACHING_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INMEMORYCACHINGPORT'`"
 
         if ( [ "${INMEMORYCACHING_SECURITY_GROUP}" != "" ] )
         then
@@ -529,13 +534,16 @@ then
     ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
     
     DBaaS_DBSECURITYGROUP="`/bin/ls ${HOME}/.ssh/DBaaSDBSECURITYGROUP:* | /usr/bin/awk -F':' '{print $NF}'`"
+    DBaaS_DBSECURITYGROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaSDBSECURITYGROUP'`"
+
     if ( [ "${DBaaS_DBSECURITYGROUP}" != "" ] )
     then
         IP_TO_DENY="${ip}"
         . ${HOME}/providerscripts/server/DenyDBAccess.sh
     fi
-    INMEMORYCACHING_SECURITY_GROUP="`/bin/ls ${HOME}/.ssh/INMEMORYCACHINGSECURITYGROUP:* | /usr/bin/awk -F':' '{print $NF}'`"
-    INMEMORYCACHING_PORT="`/bin/ls ${HOME}/.ssh/INMEMORYCACHINGPORT:* | /usr/bin/awk -F':' '{print $NF}'`"
+    
+    INMEMORYCACHING_SECURITY_GROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INMEMORYCACHINGSECURITYGROUP'`"
+    INMEMORYCACHING_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INMEMORYCACHINGPORT'`"
 
     if ( [ "${INMEMORYCACHING_SECURITY_GROUP}" != "" ] )
     then
