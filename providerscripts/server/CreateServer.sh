@@ -42,7 +42,7 @@ then
     fi
 
     #Digital ocean supports snapshots so, we test to see if we want to use them
-    if ( [ "S{snapshotid}" != "" ] && [ -f ${HOME}/.ssh/SNAPAUTOSCALE:1 ] )
+    if ( [ "S{snapshotid}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
     then
         #If we get to here, then we are building from a snapshot and we pass the snapshotid in as the oschoice parameter
         snapshotid="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
@@ -53,7 +53,7 @@ then
         /usr/local/bin/doctl compute droplet create "${server_name}" --size "${server_size}" --image "${os_choice}"  --region "${region}" --ssh-keys "${key_id}" --enable-private-networking
         #We pass back a string as a token to say that we built from a snapshot
         /bin/echo "SNAPPED"
-elif ( [ -f ${HOME}/.ssh/SNAPAUTOSCALE:0 ] )
+elif ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:0`" = "1" ] )
     then
         #If we are here, then it is a regular build process
         #We know that if this fails, it will be called again so no need for checks
@@ -124,7 +124,7 @@ then
     fi
 
     #Linode supports snapshots, so decide if we are building from a snapshot
-    if ( [ "${snapshot_id}" != "" ] && [ -f ${HOME}/.ssh/SNAPAUTOSCALE:1 ] )
+    if ( [ "${snapshot_id}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
     then
         #If we are here, then we are building from a snapshot, so, get the snapshot id and pass it in to the server create command
         #Note 164 is a special os id to say that we are building from a snapshot and not a standard image
@@ -178,7 +178,7 @@ then
     fi
 
     #Vultr supports snapshots, so decide if we are building from a snapshot
-    if ( [ "${snapshot_id}" != "" ] && [ -f ${HOME}/.ssh/SNAPAUTOSCALE:1 ] )
+    if ( [ "${snapshot_id}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
     then
         #If we are here, then we are building from a snapshot, so, get the snapshot id and pass it in to the server create command
         #Note 164 is a special os id to say that we are building from a snapshot and not a standard image
@@ -230,7 +230,7 @@ then
         /bin/touch ${HOME}/.ssh/SNAPAUTOSCALE:0
     fi
    
-    if ( [ "${snapshot_id}" != "" ] && [ -f ${HOME}/.ssh/SNAPAUTOSCALE:1 ] )
+    if ( [ "${snapshot_id}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
     then
         /usr/bin/aws ec2 run-instances --count 1 --instance-type ${server_size} --key-name ${key_id} --tag-specifications "ResourceType=instance,Tags=[{Key=descriptiveName,Value=${server_name}}]" --subnet-id ${subnet_id} --security-group-ids ${security_group_id} --image-id ${snapshot_id}
         /bin/echo "SNAPPED"
