@@ -49,7 +49,7 @@ fi
 
 if ( [ -f ${HOME}/VULTR ] && [ "${cloudhost}" = "vultr" ] )
 then
-    export VULTR_API_KEY="`/bin/ls ${HOME}/.ssh/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
+    export VULTR_API_KEY="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'VULTRAPIKEY'`"
     region="`/bin/echo ${region} | /usr/bin/tr '[:lower:]' '[:upper:]'`"
     /bin/sleep 1
     regionid="`/usr/bin/vultr regions | /bin/grep ${region} | /usr/bin/awk '{print $1}'`"
