@@ -27,7 +27,7 @@ publicip="`${HOME}/providerscripts/utilities/GetPublicIP.sh`"
 /bin/touch ${HOME}/config/autoscalerpublicip/${publicip}
 
 #Also record build client IP address - each machine has it but for uniformity of interface, we can record it here also
+ip="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDCLIENTIP'`"
 
-ip="`/bin/ls ${HOME}/.ssh/* | /bin/grep BUILDCLIENTIP | /usr/bin/awk -F':' '{print $NF}'`"
 /bin/touch ${HOME}/config/buildclientip/${ip}
 
