@@ -22,7 +22,7 @@
 #######################################################################################
 #set -x
 
-CLOUDHOST="`/bin/ls ${HOME}/.ssh/CLOUDHOST:* | /usr/bin/awk -F':' '{print $NF}'`"
+CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
 
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 then
