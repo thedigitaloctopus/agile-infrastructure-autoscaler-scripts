@@ -27,7 +27,8 @@ CLOUDHOST="${3}"
 BUILD_IDENTIFIER="${4}"
 ALGORITHM="${5}"
 SERVER_USER="${6}"
-SERVER_USER_PASSWORD="`/bin/ls ${HOME}/.ssh/SERVERUSERPASSWORD:* | /usr/bin/awk -F':' '{print $NF}'`"
+SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
+
 
 if ( [ "${datastore_provider}" = "amazonS3" ] || [ "${datastore_provider}" = "digitalocean" ] || [ "${datastore_provider}" = "exoscale" ] ||  [ "${datastore_provider}" = "linode" ] || [ "${datastore_provider}" = "vultr" ] )
 then
