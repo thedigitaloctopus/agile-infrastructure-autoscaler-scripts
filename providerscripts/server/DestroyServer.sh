@@ -82,7 +82,7 @@ then
         /bin/rm ${HOME}/config/webserveripcouples/*${server_ip}*
         machine_id=""
         index="`/usr/local/bin/cs listVirtualMachines | /usr/bin/jq ".virtualmachine[].nic[].ipaddress,.virtualmachine[].id"  | /bin/grep -v 'null' | /bin/sed 's/\"//g' | /usr/bin/tee ${HOME}/runtime/machineIDs | /bin/grep -n ${server_ip} | /usr/bin/cut -f1 -d:`"
-        nomachines="`/bin/cat ${HOME}/runtime/machineIDs | /bin/grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | /usr/bin/wc -l`"
+        nomachines="`/bin/grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' ${HOME}/runtime/machineIDs | /usr/bin/wc -l`"
         id_index="`/usr/bin/expr ${index} + ${nomachines}`"
         machine_id="`/bin/sed "${id_index}!d" ${HOME}/runtime/machineIDs`"
 
@@ -91,7 +91,7 @@ then
         do
             /bin/echo "${0} `/bin/date` : failed in an attempt to get the machine id, trying again ...." >> ${HOME}/logs/MonitoringLog.log
             index="`/usr/local/bin/cs listVirtualMachines | /usr/bin/jq ".virtualmachine[].nic[].ipaddress,.virtualmachine[].id"  | /bin/grep -v 'null' | /bin/sed 's/\"//g' | /usr/bin/tee ${HOME}/runtime/machineIDs | /bin/grep -n ${ip} | /usr/bin/cut -f1 -d:`"
-            nomachines="`/bin/cat ${HOME}/runtime/machineIDs | /bin/grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | /usr/bin/wc -l`"
+            nomachines="`/bin/grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' ${HOME}/runtime/machineIDs | /usr/bin/wc -l`"
             id_index="`/usr/bin/expr ${index} + ${nomachines}`"
             machine_id="`/bin/sed "${id_index}!d" ${HOME}/runtime/machineIDs`"
             count="`/usr/bin/expr ${count} + 1`"
