@@ -48,14 +48,14 @@ then
     /bin/touch ${HOME}/config/scalingprofile/profile.cnf
 fi
 
-if ( [ "`/bin/cat ${HOME}/config/scalingprofile/profile.cnf | /bin/grep "NO_WEBSERVERS"`" = "" ] || [ "`/bin/cat ${HOME}/config/scalingprofile/profile.cnf | /bin/grep "SCALING_MODE"`" = "" ] )
+if ( [ "`/bin/grep "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf`" = "" ] || [ "`/bin/grep "SCALING_MODE" ${HOME}/config/scalingprofile/profile.cnf`" = "" ] )
 then
     /bin/echo  "SCALING_MODE=${SCALING_MODE}" > ${HOME}/config/scalingprofile/profile.cnf
     /bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> ${HOME}/config/scalingprofile/profile.cnf
 fi
 
-SCALING_MODE="`/bin/cat ${HOME}/config/scalingprofile/profile.cnf | /bin/grep "SCALING_MODE" | /usr/bin/awk -F'=' '{print $NF}'`"
-NO_WEBSERVERS="`/bin/cat ${HOME}/config/scalingprofile/profile.cnf | /bin/grep "NO_WEBSERVERS" | /usr/bin/awk -F'=' '{print $NF}'`"
+SCALING_MODE="`/bin/grep "SCALING_MODE" ${HOME}/config/scalingprofile/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
+NO_WEBSERVERS="`/bin/grep "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
 
 if ( [ "${SCALING_MODE}" != "static" ] )
 then
