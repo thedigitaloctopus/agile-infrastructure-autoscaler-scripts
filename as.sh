@@ -259,15 +259,12 @@ fi
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 
 #Make sure that client connections to sshd are long lasting
-if ( [ "`/bin/cat /etc/ssh/sshd_config | /bin/grep 'ClientAliveInterval 200' 2>/dev/null`" = "" ] )
+if ( [ "`/bin/grep 'ClientAliveInterval 200' /etc/ssh/sshd_config 2>/dev/null`" = "" ] )
 then
     /bin/echo "
 ClientAliveInterval 200
     ClientAliveCountMax 10" >> /etc/ssh/sshd_config
 fi
-
-
-
 
 #Set the port for SSH and harden the autentication to be ssh keys only from now on
 #/bin/sed -i "s/22/${SSH_PORT}/g" /etc/ssh/sshd_config
