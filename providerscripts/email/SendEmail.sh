@@ -22,30 +22,23 @@
 
 subject="$1"
 message="$2"
-fromaddress="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SYSTEMFROMEMAILADDRESS'`"
-toaddress="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SYSTEMTOEMAILADDRESS'`"
-username="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'EMAILUSERNAME'`"
-password="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'EMAILPASSWORD'`"
-emailprovider="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'EMAILPROVIDER'`"
+FROM_ADDRESS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SYSTEMFROMEMAILADDRESS'`"
+TO_ADDRESS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SYSTEMTOEMAILADDRESS'`"
+USERNAME="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'EMAILUSERNAME'`"
+PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'EMAILPASSWORD'`"
+EMAIL_PROVIDER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'EMAILPROVIDER'`"
 
-
-#if ( [ "${password}" = "" ] )
-#then
-#    password="`/bin/cat ${HOME}/.ssh/SYSTEMEMAILPASSWORD.dat`"
-#fi
-
-if ( [ "${emailprovider}" = "1" ] )
+if ( [ "${EMAIL_PROVIDER}" = "1" ] )
 then
-    /bin/echo "${0} `/bin/date`: Email sent via sendpulse, subject : ${subject} to: ${toaddress}" >> ${HOME}/logs/MonitoringLog.log
-    /usr/bin/sendemail -o tls=no -f ${fromaddress} -t ${toaddress} -s smtp-pulse.com:2525 -xu ${username} -xp ${password} -u "${subject} `/bin/date`" -m ${message}
-
+    /bin/echo "${0} `/bin/date`: Email sent via sendpulse, subject : ${subject} to: ${TO_ADDRESS}" >> ${HOME}/logs/MonitoringLog.log
+    /usr/bin/sendemail -o tls=no -f ${FROM_ADDRESS} -t ${TO_ADDRESS} -s smtp-pulse.com:2525 -xu ${USERNAME} -xp ${PASSWORD} -u "${subject} `/bin/date`" -m ${message}
 fi
-if ( [ "${emailprovider}" = "2" ] )
+if ( [ "${EMAIL_PROVIDER}" = "2" ] )
 then
-    /bin/echo "${0} `/bin/date`: Email sent via gmail, subject : ${subject} to: ${toaddress}" >> ${HOME}/logs/MonitoringLog.log
-    /usr/bin/sendemail -o tls=yes -f ${fromaddress} -t ${toaddress} -s smtp.gmail.com:587 -xu ${username} -xp ${password} -u "${subject} `/bin/date`" -m ${message}
+    /bin/echo "${0} `/bin/date`: Email sent via gmail, subject : ${subject} to: ${TO_ADDRESS}" >> ${HOME}/logs/MonitoringLog.log
+    /usr/bin/sendemail -o tls=yes -f ${FROM_ADDRESS} -t ${TO_ADDRESS} -s smtp.gmail.com:587 -xu ${USERNAME} -xp ${PASSWORD} -u "${subject} `/bin/date`" -m ${message}
 fi
 if ( [ "${emailprovider}" = "3" ] )
 then
-    /usr/bin/sendemail -o tls=yes -f ${fromaddress} -t ${toaddress} -s email-smtp.eu-west-1.amazonaws.com -xu ${username} -xp ${password} -u "${subject} `/bin/date`" -m ${message}
+    /usr/bin/sendemail -o tls=yes -f ${FROM_ADDRESS} -t ${TO_ADDRESS} -s email-smtp.eu-west-1.amazonaws.com -xu ${USERNAME} -xp ${PASSWORD} -u "${subject} `/bin/date`" -m ${message}
 fi
