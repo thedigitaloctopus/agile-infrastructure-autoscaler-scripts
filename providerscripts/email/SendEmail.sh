@@ -22,8 +22,8 @@
 
 subject="$1"
 message="$2"
-fromaddress="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'FROMADDRESS'`"
-toaddress="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'TOADDRESS'`"
+fromaddress="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'FROMEMAILADDRESS'`"
+toaddress="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'TOEMAILADDRESS'`"
 username="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'EMAILUSERNAME'`"
 password="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'EMAILPASSWORD'`"
 emailprovider="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'EMAILPROVIDER'`"
