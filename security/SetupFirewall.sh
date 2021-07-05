@@ -24,7 +24,7 @@
 exec >${HOME}/logs/FIREWALL_CONFIGURATION.log
 exec 2>&1
 
-SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSH_PORT'`"
+SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
 
 if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" = "" ] )
 then
