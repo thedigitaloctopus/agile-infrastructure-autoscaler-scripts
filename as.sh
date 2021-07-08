@@ -218,7 +218,7 @@ ${HOME}/bootstrap/GitPull.sh ${INFRASTRUCTURE_REPOSITORY_PROVIDER} ${INFRASTRUCT
 
 #Set the permissions as we want on all the new scripts we have pulled
 /usr/bin/find ${HOME} -not -path '*/\.*' -type d -print0 | xargs -0 chmod 0755 # for directories
-/usr/bin/find ${HOME} -not -path '*/\.*' -type f -print0 | xargs -0 chmod 0755 # for files
+/usr/bin/find ${HOME} -not -path '*/\.*' -type f -print0 | xargs -0 chmod 0500 # for files
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} `/bin/date`: Setting up the script which allows us to root" >> ${HOME}/logs/AUTOSCALER_BUILD.log
