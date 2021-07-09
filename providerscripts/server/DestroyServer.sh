@@ -79,7 +79,7 @@ then
     /bin/rm ${HOME}/config/webserveripcouples/*${server_ip}*
     server_id="`/usr/local/bin/cs listVirtualMachines | jq --arg tmp_ip_address "${server_ip}" '(.virtualmachine[] | select(.nic[].ipaddress == $tmp_ip_address) | .id)' | /bin/sed 's/\"//g'`"
     /usr/local/bin/cs destroyVirtualMachine id="${server_id}"
-    /bin/echo "${0} `/bin/date`: Destroyed a server with id ${machine_id}" >> ${HOME}/logs/MonitoringLog.log
+    /bin/echo "${0} `/bin/date`: Destroyed a server with id ${server_id}" >> ${HOME}/logs/MonitoringLog.log
     /bin/rm ${HOME}/config/webserverips/${private_server_ip}
     /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
     /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
