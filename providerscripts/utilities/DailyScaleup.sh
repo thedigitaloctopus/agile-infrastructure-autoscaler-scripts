@@ -22,5 +22,5 @@
 
 /bin/echo "${0} `/bin/date`: Running daily scale up. Scaling up to ..... $1 servers" >> ${HOME}/logs/MonitoringLog.log
 /bin/sed -i "/^NO_WEBSERVERS=/c\NO_WEBSERVERS=$1" ${HOME}/config/scalingprofile/profile.cnf 
-
+/bin/echo " " >> ${HOME}/config/scalingprofile/profile.cnf
 
