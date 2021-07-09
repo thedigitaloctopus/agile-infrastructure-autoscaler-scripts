@@ -30,7 +30,9 @@ fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
-    /usr/local/bin/cs listVirtualMachines | /usr/bin/jq ".virtualmachine[].displayname"  | /bin/grep -v 'null' | /bin/sed 's/\"//g' | /bin/grep "${instance_type}" 2>/dev/null
+    /usr/local/bin/cs listVirtualMachines | /usr/bin/jq --arg tmp_instance_type "${instance_type}" '(.virtualmachine[] | select(.displayname | contains($tmp_instance_type)) | .displayname)' | /bin/sed 's/"//g'
+
+#    /usr/local/bin/cs listVirtualMachines | /usr/bin/jq ".virtualmachine[].displayname"  | /bin/grep -v 'null' | /bin/sed 's/\"//g' | /bin/grep "${instance_type}" 2>/dev/null
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
