@@ -45,24 +45,26 @@ fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
-    numberofservers=""
-    numberofservers="`/usr/local/bin/cs listVirtualMachines | /usr/bin/jq ".virtualmachine[].displayname"  | /bin/grep -v 'null' | /bin/sed 's/\"//g' | /bin/grep "${server_type}\b" | /usr/bin/wc -l 2>/dev/null`"
-    count="0"
+    /usr/local/bin/cs listVirtualMachines | /usr/bin/jq --arg tmp_server_type "${server_type}" '(.virtualmachine[] | select(.displayname | contains($tmp_server_type)) | .id)' | /usr/bin/wc -l
 
-    while ( [ "${numberofservers}" = "" ] && [ "${count}" -lt "10" ] )
-    do
-        /bin/echo "${0} `/bin/date` : failed in an attempt to get number of servers - trying again...." >> ${HOME}/logs/MonitoringLog.log
-        numberofservers="`/usr/local/bin/cs listVirtualMachines | /usr/bin/jq ".virtualmachine[].displayname"  | /bin/grep -v 'null' | /bin/sed 's/\"//g' | /bin/grep "${server_type}\b" | /usr/bin/wc -l 2>/dev/null`"
-        count="`/usr/bin/expr ${count} + 1`"
-        /bin/sleep 5
-    done
+#    numberofservers=""
+#    numberofservers="`/usr/local/bin/cs listVirtualMachines | /usr/bin/jq ".virtualmachine[].displayname"  | /bin/grep -v 'null' | /bin/sed 's/\"//g' | /bin/grep "${server_type}\b" | /usr/bin/wc -l 2>/dev/null`"
+#    count="0"
 
-    if ( [ "${count}" -eq "10" ] )
-    then
-        /bin/echo "${0} `/bin/date` : failed in an attempt to get number of servers too many times - giving up...." >> ${HOME}/logs/MonitoringLog.log
-    else
-        /bin/echo ${numberofservers}
-    fi
+#    while ( [ "${numberofservers}" = "" ] && [ "${count}" -lt "10" ] )
+ #   do
+ #       /bin/echo "${0} `/bin/date` : failed in an attempt to get number of servers - trying again...." >> ${HOME}/logs/MonitoringLog.log
+ #       numberofservers="`/usr/local/bin/cs listVirtualMachines | /usr/bin/jq ".virtualmachine[].displayname"  | /bin/grep -v 'null' | /bin/sed 's/\"//g' | /bin/grep "${server_type}\b" | /usr/bin/wc -l 2>/dev/null`"
+  #      count="`/usr/bin/expr ${count} + 1`"
+  #      /bin/sleep 5
+  #  done
+
+  #  if ( [ "${count}" -eq "10" ] )
+  #  then
+  #      /bin/echo "${0} `/bin/date` : failed in an attempt to get number of servers too many times - giving up...." >> ${HOME}/logs/MonitoringLog.log
+  #  else
+  #      /bin/echo ${numberofservers}
+  #  fi
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
