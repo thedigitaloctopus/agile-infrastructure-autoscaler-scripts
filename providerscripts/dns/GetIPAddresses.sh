@@ -44,6 +44,16 @@ then
     /usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records?type=A&name=${websiteurl}&page=1&per_page=20&order=type&direction=desc&match=all" -H "X-Auth-Email: ${email}" -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json" | /usr/bin/jq '.result[].content' | /bin/sed 's/"//g'
 fi
 
+domainurl="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
+subdomain="`/bin/echo ${2} | /usr/bin/awk -F'.' '{print $1}'`"
+authkey="${4}"
+dns="${5}"
+
+if ( [ "${dns}" = "exoscale" ] )
+then
+    /usr/bin/curl  -H "X-DNS-Token: ${authkey}" -H 'Accept: application/json' https://api.exoscale.com/dns/v1/domains/${domainurl}/records | /usr/bin/jq --arg tmp_subdomain "${subdomain}"  '.[].record | select (.name == $tmp_subdomain ) | .content' | /bin/sed 's/"//g'
+fi
+
 region="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DNSREGION'`"
 domainurl="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
 websiteurl="${2}"
