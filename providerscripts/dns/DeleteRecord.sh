@@ -45,6 +45,16 @@ then
     /usr/bin/curl -X DELETE "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records/${recordid}" -H "X-Auth-Email: ${email}"  -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json"
 fi
 
+recordid="${2}"
+authkey="${4}"
+dns="${5}"
+domainurl="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL' | /usr/bin/cut -d'.' -f2-`"
+
+if ( [ "${dns}" = "exoscale" ] )
+then
+    /usr/bin/curl  -H "X-DNS-Token: ${authkey}"  -H 'Accept: application/json' -X DELETE  https://api.exoscale.com/dns/v1/domains/${domainurl}/records/${recordid}
+fi
+
 region="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'DNSREGION'`"
 recordid="${2}"
 username="${3}"
