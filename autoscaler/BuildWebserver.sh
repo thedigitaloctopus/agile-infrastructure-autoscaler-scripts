@@ -482,11 +482,13 @@ then
     /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=60 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "exit"
 fi
 
+/bin/echo "${0} `/bin/date`: It can take a minute or so for a new machine to initialise after it is back online post reboot, so just gonna nap for 30 seconds..." >> ${HOME}/logs/MonitoringWebserverBuildLog.log
+
+/bin/sleep 30
+
+/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/application/processing/PerformPostProcessingByApplication.sh ${SERVER_USER}"
+
 /bin/echo "${0} `/bin/date`: The main build has completed now just have to check that it's been dun right" >> ${HOME}/logs/MonitoringWebserverBuildLog.log
-
-/bin/echo "${0} `/bin/date`: It can take a minute or so for a new machine to initialise after it is back online post reboot, so just gonna nap for 60 seconds..." >> ${HOME}/logs/MonitoringWebserverBuildLog.log
-
-/bin/sleep 60
 
 #Do some checks to make sure the machine has come online and so on
 tries="0"
