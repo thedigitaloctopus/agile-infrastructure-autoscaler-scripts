@@ -27,10 +27,14 @@ fi
 
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
-    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y dist-upgrade --allow-change-held-packages
+    #DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y dist-upgrade --allow-change-held-packages
+    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq dist-upgrade -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef -y --allow-downgrades --allow-remove-essential --allow-change-held-packages
+
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
-    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y dist-upgrade --allow-change-held-packages
+  #  DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y dist-upgrade --allow-change-held-packages
+   DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq dist-upgrade -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef -y --allow-downgrades --allow-remove-essential --allow-change-held-packages
+
 fi
