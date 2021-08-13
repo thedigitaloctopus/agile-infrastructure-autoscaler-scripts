@@ -158,6 +158,7 @@ kernel.panic=10" >> /etc/sysctl.conf
 /bin/echo "${0} `/bin/date`: Installed software required by the build" >> ${HOME}/logs/MonitoringLog.log
 #Install the programs that we need to use when building the autoscaler
 ${HOME}/installscripts/Update.sh ${BUILDOS}
+${HOME}/installscripts/Upgrade.sh ${BUILDOS}
 ${HOME}/installscripts/InstallUFW.sh ${BUILDOS}
 ${HOME}/installscripts/InstallCurl.sh ${BUILDOS}
 ${HOME}/installscripts/InstallSSHPass.sh ${BUILDOS}
