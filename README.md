@@ -7,7 +7,7 @@ In production mode scaling is possible and is the full fledged "in the live" sol
 
 To configure how many webservers to spawn, please look at 
 
-**${HOME}/config/scalingprofile/profile.cnf
+**${HOME}/config/scalingprofile/profile.cnf**
 
 and adjust the parameters to your needs
 
