@@ -112,31 +112,9 @@ WEBSITE_DISPLAY_NAME="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh '
 RND="`/bin/cat /dev/urandom | /usr/bin/tr -dc 'a-zA-Z0-9' | /usr/bin/fold -w 4 | /usr/bin/head -n 1`"
 SERVER_TYPE="webserver"
 SERVER_NUMBER="`${HOME}/providerscripts/server/NumberOfServers.sh "${SERVER_TYPE}" ${CLOUDHOST}`"
-#WEBSITE_URL="`/bin/ls ${HOME}/.ssh | grep WEBSITEURL | /usr/bin/awk -F':' '{print $NF}'`"
 webserver_name="webserver-${RND}-${WEBSITE_NAME}-${BUILD_IDENTIFIER}"
 SERVER_INSTANCE_NAME="`/bin/echo ${webserver_name} | /usr/bin/cut -c -32 | /bin/sed 's/-$//g'`"
 
-
-#If we have deployed to use DBaaS-secured, then we need to have an ssh tunnel setup.
-#For scaling purposes we may have multiple remote proxy machines with our DB provider and so
-#We allocate usage of these proxy machines to our webservers in a road robin fashion.
-#In other words, if there are 3 ssh proxy machines runnning remotely, then for us,
-# webserver 1 would use remote proxy 1
-# webserver 2 would use remote proxy 2
-# webserver 3 would use remote proxy 3
-# webserver 4 would use remote proxy 1
-# webserver 5 would use remote proxy 2
-#and so on so, here is where we define the index for which proxy machine to use
-
-#proxyips="`/bin/ls ${HOME}/.ssh/DBaaSREMOTESSHPROXYIP:* | /usr/bin/awk -F':' '{$1=""}1'`"
-#if ( [ "${proxyips}" != "" ] )
-#then
-#    noproxyips="`/bin/echo "${proxyips}" | /usr/bin/wc -w`"
-#    index="`/usr/bin/expr ${SERVER_NUMBER} % ${noproxyips}`"
-#    index="`/usr/bin/expr ${index} + 1`"
-#    /bin/rm ${HOME}/.ssh/DBaaSREMOTESSHPROXYIPINDEX:*
-#    /bin/touch ${HOME}/.ssh/DBaaSREMOTESSHPROXYIPINDEX:${index}
-#fi
 
 #What type of machine are we building - this will determine the size and so on with the cloudhost
 SERVER_TYPE_ID="`${HOME}/providerscripts/server/GetServerTypeID.sh ${SIZE} "${SERVER_TYPE}" ${CLOUDHOST}`"
@@ -294,15 +272,7 @@ then
 
     /usr/bin/scp -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${SERVER_USER}@${ip}:${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY
     /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${SERVER_USER}@${ip} "/bin/chmod 400 ${HOME}/.ssh/id_${ALGORITHM}"
-
-    #If we are building for use of an ssh tunnel, then the webserver needs to know the private key of the remote proxy machine.
-    #We have it on the autoscaler file system, so we simply pass it over to our new webserver which will know where to look and
-    #what to do with it
-  #  if ( [ -f ${HOME}/.ssh/DATABASEINSTALLATIONTYPE:DBaaS-secured ] )
-  #  then
-  #      /usr/bin/scp -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${HOME}/.ssh/dbaas_server_key.pem ${SERVER_USER}@${ip}:${HOME}/.ssh/dbaas_server_key.pem
-  #  fi
-
+    
     #Configure the provider details
     ${HOME}/providerscripts/cloudhost/ConfigureProvider.sh ${CLOUDHOST} ${BUILD_IDENTIFIER} ${ALGORITHM} ${ip} ${SERVER_USER}
 
@@ -332,12 +302,6 @@ then
     /usr/bin/scp -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${HOME}/.ssh/webserver_configuration_settings.dat ${SERVER_USER}@${ip}:${HOME}/.ssh/
     /usr/bin/scp -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${HOME}/.ssh/buildstyles.dat ${SERVER_USER}@${ip}:${HOME}/.ssh/
     
-    #Copy across all our configuration values
-   # /usr/bin/scp -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${HOME}/.ssh/INMEMORYCACHINGHOST:* ${HOME}/.ssh/INMEMORYCACHING:* ${HOME}/.ssh/INMEMORYCACHINGPORT:* ${HOME}/.ssh/INMEMORYCACHINGSECURITYGROUP:* ${HOME}/.ssh/PRODUCTION:* ${HOME}/.ssh/ENABLEEFS:* ${HOME}/.ssh/BUILDOS:* ${HOME}/.ssh/BUILDOSVERSION:* ${HOME}/.ssh/BUILDCLIENTIP:* ${HOME}/.ssh/ALGORITHM:* ${HOME}/.ssh/BUILDARCHIVE:* ${HOME}/.ssh/BUILDCHOICE:* ${HOME}/.ssh/CLOUDHOST:* ${HOME}/.ssh/CLOUDHOSTPASSWORD:* ${HOME}/.ssh/DATASTORECHOICE:* ${HOME}/.ssh/INMEMORYCACHE:* ${HOME}/.ssh/KEYID:* ${HOME}/.ssh/REGION:* ${HOME}/.ssh/APPLICATIONREPOSITORYPASSWORD:* ${HOME}/.ssh/SIZE:* ${HOME}/.ssh/SNAPAUTOSCALE:* ${HOME}/.ssh/SOURCECODEREPOSITORY:* ${HOME}/.ssh/WEBSERVERCHOICE:* ${HOME}/.ssh/WEBSITEDISPLAYNAME:* ${HOME}/.ssh/APPLICATIONIDENTIFIER:* ${HOME}/.ssh/APPLICATIONLANGUAGE:* ${HOME}/.ssh/APPLICATIONBASELINESOURCECODEREPOSITORY:* ${HOME}/.ssh/GITUSER:* ${HOME}/.ssh/GITEMAILADDRESS:* ${HOME}/.ssh/BUILDIDENTIFIER:* ${HOME}/.ssh/SUPERSAFEWEBROOT:* ${HOME}/.ssh/DIRECTORIESTOMOUNT:* ${HOME}/.ssh/DB_PORT:* ${HOME}/.ssh/SSH_PORT:* ${HOME}/.ssh/SSLGENERATIONMETHOD:* ${HOME}/.ssh/SSLGENERATIONSERVICE:* ${HOME}/.ssh/DBaaSHOSTNAME:* ${HOME}/.ssh/DBaaSUSERNAME:* ${HOME}/.ssh/DBaaSPASSWORD:* ${HOME}/.ssh/DBaaSDBNAME:*  ${HOME}/.ssh/DEFAULTDBaaSOSUSER:* ${HOME}/.ssh/DATABASEDBaaSINSTALLATIONTYPE:* ${HOME}/.ssh/SERVERTIMEZONECITY:* ${HOME}/.ssh/SERVERTIMEZONECONTINENT:* ${HOME}/.ssh/PHP_VERSION:* ${HOME}/.ssh/PERSISTASSETSTOCLOUD:* ${HOME}/.ssh/DISABLEHOURLY:* ${SERVER_USER}@${ip}:${HOME}/.ssh/
-   # /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${SERVER_USER}@${ip} "/bin/touch ${HOME}/.ssh/INFRASTRUCTUREREPOSITORYPROVIDER:${INFRASTRUCTURE_REPOSITORY_PROVIDER} ; /bin/touch ${HOME}/.ssh/INFRASTRUCTUREREPOSITORYUSERNAME:${INFRASTRUCTURE_REPOSITORY_USERNAME} ; /bin/touch ${HOME}/.ssh/INFRASTRUCTUREREPOSITORYPASSWORD:${INFRASTRUCTURE_REPOSITORY_PASSWORD} ; /bin/touch ${HOME}/.ssh/INFRASTRUCTUREREPOSITORYOWNER:${INFRASTRUCTURE_REPOSITORY_OWNER} ; /bin/touch ${HOME}/.ssh/APPLICATIONREPOSITORYTOKEN:${APPLICATION_REPOSITORY_TOKEN} ; /bin/touch ${HOME}/.ssh/APPLICATIONREPOSITORYPROVIDER:${APPLICATION_REPOSITORY_PROVIDER} ; /bin/touch ${HOME}/.ssh/APPLICATIONREPOSITORYUSERNAME:${APPLICATION_REPOSITORY_USERNAME} ; /bin/touch ${HOME}/.ssh/APPLICATIONREPOSITORYPASSWORD:${APPLICATION_REPOSITORY_PASSWORD} ; /bin/touch ${HOME}/.ssh/APPLICATIONREPOSITORYOWNER:${APPLICATION_REPOSITORY_OWNER}"
-   
-   # /usr/bin/scp -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${HOME}/.ssh/WEBSITEURL:* ${HOME}/.ssh/FROMADDRESS:* ${HOME}/.ssh/TOADDRESS:* ${HOME}/.ssh/EMAILUSERNAME:* ${HOME}/.ssh/EMAILPASSWORD:* ${HOME}/.ssh/EMAILPROVIDER:* ${HOME}/.ssh/APPLICATION:* ${HOME}/.ssh/SERVERUSER:* ${HOME}/.ssh/SERVERUSERPASSWORD:* ${HOME}/.ssh/DNSUSERNAME:* ${HOME}/.ssh/DNSSECURITYKEY:* ${HOME}/.ssh/DNSCHOICE:* ${HOME}/.ssh/WEBSITEURL:* ${HOME}/.ssh/DATABASEINSTALLATIONTYPE:* ${SERVER_USER}@${ip}:${HOME}/.ssh/
-
     MACHINETYPE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MACHINETYPE'`"
     /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /usr/bin/touch ${HOME}/${MACHINETYPE}"
 
@@ -360,19 +324,19 @@ then
     if ( [ "${BUILD_CHOICE}" = "0" ] )
     then
         /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/ws.sh 'virgin' ${SERVER_USER}"
-elif ( [ "${BUILD_CHOICE}" = "1" ] )
+    elif ( [ "${BUILD_CHOICE}" = "1" ] )
     then
         /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/ws.sh 'baseline' ${SERVER_USER}"
-elif ( [ "${BUILD_CHOICE}" = "2" ] )
+    elif ( [ "${BUILD_CHOICE}" = "2" ] )
     then
         /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO}  ${HOME}/ws.sh 'hourly' ${SERVER_USER}"
-elif ( [ "${BUILD_CHOICE}" = "3" ] )
+    elif ( [ "${BUILD_CHOICE}" = "3" ] )
     then
         /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO}  ${HOME}/ws.sh 'daily' ${SERVER_USER}"
-elif ( [ "${BUILD_CHOICE}" = "4" ] )
+    elif ( [ "${BUILD_CHOICE}" = "4" ] )
     then
         /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO}  ${HOME}/ws.sh 'monthly' ${SERVER_USER}"
-elif ( [ "${BUILD_CHOICE}" = "5" ] )
+    elif ( [ "${BUILD_CHOICE}" = "5" ] )
     then
         /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO}  ${HOME}/ws.sh 'bimonthly' ${SERVER_USER}"
     fi
@@ -435,27 +399,6 @@ else
    
    
    /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /home/${SERVER_USER}/providerscripts/utilities/RefreshNetworking.sh"
-
-    #If we have deployed to use DBaaS-secured, then we need to have an ssh tunnel setup.
-    #For scaling purposes we may have multiple remote proxy machines with our DB provider and so
-    #We allocate usage of these proxy machines to our webservers in a road robin fashion.
-    #In other words, if there are 3 ssh proxy machines runnning remotely, then for us,
-    # webserver 1 would use remote proxy 1
-    # webserver 2 would use remote proxy 2
-    # webserver 3 would use remote proxy 3
-    # webserver 4 would use remote proxy 1
-    # webserver 5 would use remote proxy 2
-    # and so on so, here is where we define the index for which proxy machine to use
-
-  #  proxyips="`/bin/ls ${HOME}/.ssh/DBaaSREMOTESSHPROXYIP:* | /usr/bin/awk -F':' '{$1=""}1'`"
-  #  if ( [ "${proxyips}" != "" ] )
-  #  then
-  #      noproxyips="`/bin/echo "${proxyips}" | /usr/bin/wc -w`"
-  #      index="`/usr/bin/expr ${SERVER_NUMBER} % ${noproxyips} 2>/dev/null`"
-   #     index="`/usr/bin/expr ${index} + 1`"
-   #     /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /bin/rm /home/${SERVER_USER}/.ssh/DBaaSREMOTESSHPROXYIPINDEX:* /home/${SERVER_USER}/.ssh/DBaaSREMOTESSHPROXYIP:*"
-   #     /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /bin/touch /home/${SERVER_USER}/.ssh/DBaaSREMOTESSHPROXYIPINDEX:${index} /home/${SERVER_USER}/.ssh/DBaaSREMOTESSHPROXYIP:`/bin/echo ${proxyips} | /bin/sed 's/ /:/g'`"
-   # fi
     
     /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/InitialSyncFromWebrootTunnel.sh"
     /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/applicationscripts/SyncLatestApplication.sh ${APPLICATION_REPOSITORY_PROVIDER} ${APPLICATION_REPOSITORY_USERNAME} ${APPLICATION_REPOSITORY_PASSWORD} ${APPLICATION_REPOSITORY_OWNER} ${BUILD_ARCHIVE} ${DATASTORE_CHOICE} ${BUILD_IDENTIFIER} ${WEBSITE_NAME}"
