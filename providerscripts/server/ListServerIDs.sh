@@ -45,16 +45,6 @@ fi
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
     /usr/local/bin/cs listVirtualMachines | /usr/bin/jq --arg tmp_instance_type "${instance_type}" '(.virtualmachine[] | select(.displayname | contains($tmp_instance_type)) | .id)' | /bin/sed 's/"//g'
-
-  #  /usr/local/bin/cs listVirtualMachines | /usr/bin/jq ".virtualmachine[].displayname"  | /bin/sed 's/"//g' | /bin/grep -v 'null' | /bin/sed 's/\"//g' > ${HOME}/runtime/listofVMNames 2>/dev/null
-  #  /usr/local/bin/cs listVirtualMachines | /usr/bin/jq ".virtualmachine[].id"  | /bin/grep -v 'null' | /bin/sed 's/\"//g' > ${HOME}/runtime/listofVMIDs 2>/dev/null
-  #  server_ids=""
-  #  ip_indexes="`/bin/cat -n ${HOME}/runtime/listofVMNames | /bin/grep "${instance_type}" | /usr/bin/awk '{print $1}'`"
-  #  for ip_index in ${ip_indexes}
-  #  do
-  #      server_ids="${server_ids} `/bin/sed "${ip_index}q;d" ${HOME}/runtime/listofVMIDs`"
-  #  done
-  #  /bin/echo ${server_ids}
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
