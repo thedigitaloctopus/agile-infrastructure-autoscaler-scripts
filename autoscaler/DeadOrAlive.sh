@@ -29,10 +29,10 @@
 #set -x
 
 #Don't start killing stuff until we have settled down post build (relevant when bulding from snapshots in particular)
-#if ( [ "`/bin/cat /proc/uptime | /usr/bin/awk '{print $1}' | /bin/sed 's/\..*//g'`" -lt "1500" ] )
-#then
-#    exit
-#fi
+if ( [ "`/bin/cat /proc/uptime | /usr/bin/awk '{print $1}' | /bin/sed 's/\..*//g'`" -lt "1500" ] )
+then
+    exit
+fi
 
 status="down"
 
