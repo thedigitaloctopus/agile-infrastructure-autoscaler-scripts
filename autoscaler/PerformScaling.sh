@@ -98,14 +98,6 @@ then
     exit
 fi
 
-#count="0"
-#while ( [ "${provisionedwebservers}" = "0" ] && [ "${count}" -lt "5" ] )
-#do
-#    /bin/sleep 5
-#    provisionedwebservers="`${HOME}/autoscaler/GetDNSIPs.sh | /usr/bin/wc -w`"
-#    count="`/usr/bin/expr ${count} + 1`"
-#done
-
 /bin/echo "${0} `/bin/date`: ${provisionedwebservers} webservers are currently provisioned." >> ${HOME}/logs/ScalingEventsLog.log
 
 #If we have fewer webservers than we require, build one
