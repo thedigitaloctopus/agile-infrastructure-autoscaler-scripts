@@ -33,13 +33,11 @@ if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
     if ( [ "${BUILDOS}" = "ubuntu" ] )
     then
-        #/usr/local/bin/cs listTemplates templatefilter=featured | /usr/bin/jq '.template[].displaytext' | /bin/grep Ubuntu | /bin/grep ${BUILDOSVERSION} | /usr/bin/uniq | /bin/sed 's/"//g' | /usr/bin/awk '{print $6}' | /usr/bin/sort | /usr/bin/uniq
         /bin/echo "10G 50G 200G 300G 400G"
 
 elif ( [ "${BUILDOS}" = "debian" ] )
     then
         /bin/echo "10G 50G 200G 300G 400G"
-        #/usr/local/bin/cs listTemplates templatefilter=featured | /usr/bin/jq '.template[].displaytext' | /bin/grep Debian | /bin/grep ${BUILDOSVERSION} | /usr/bin/uniq | /bin/sed 's/"//g' | /usr/bin/awk '{print $6}' | /usr/bin/sort | /usr/bin/uniq
     fi
 fi
 
