@@ -24,11 +24,6 @@
 #If there is a problem with building an autoscaler, you can uncomment the set -x command and debug output will be
 #presented on the screen as your autoscaler is built
 
-#HOMEDIRFORROOT="`/bin/echo ${HOME} | /bin/sed 's/\///g' | /bin/sed 's/home//g'`"
-#HOMEDIRFORROOT="`/bin/ls /home | /bin/grep '^X'`"
-#/usr/bin/touch /root/.ssh/HOMEDIRFORROOT:${HOMEDIRFORROOT}
-#HOMEDIR="/home/`/bin/ls /root/.ssh/HOMEDIRFORROOT:* | /usr/bin/awk -F':' '{print $NF}'`"
-#export HOME="${HOMEDIR}"
 
 USER_HOME="`/usr/bin/awk -F: '{ print $1}' /etc/passwd | /bin/grep "X*X"`"
 export HOME="/home/${USER_HOME}" | /usr/bin/tee -a ~/.bashrc
@@ -237,10 +232,6 @@ ${HOME}/bootstrap/GitPull.sh ${INFRASTRUCTURE_REPOSITORY_PROVIDER} ${INFRASTRUCT
 /bin/echo "${0} `/bin/date`: Configuring our SSH settings" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 
-#Set the ssh port we want to use
-#/bin/sed -i "s/22/${SSH_PORT}/g" /etc/ssh/sshd_config
-#/bin/sed -i 's/^#Port/Port/' /etc/ssh/sshd_config
-
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} `/bin/date`: Disabling password authentication" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
@@ -285,20 +276,6 @@ then
 ClientAliveInterval 200
     ClientAliveCountMax 10" >> /etc/ssh/sshd_config
 fi
-
-#Set the port for SSH and harden the autentication to be ssh keys only from now on
-#/bin/sed -i "s/22/${SSH_PORT}/g" /etc/ssh/sshd_config
-#/bin/sed -i 's/^#Port/Port/' /etc/ssh/sshd_config
-#/bin/sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
-#/bin/sed -i 's/.*PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-
-#Make sure that client connections to our shh daemon are long lasting
-#if ( [ "`/bin/cat /etc/ssh/sshd_config | /bin/grep 'ClientAliveInterval 200' 2>/dev/null`" = "" ] )
-#then
-#    /bin/echo "
-#ClientAliveInterval 200
-#    ClientAliveCountMax 10" >> /etc/ssh/sshd_config
-#fi
 
 /usr/sbin/service sshd restart
 
