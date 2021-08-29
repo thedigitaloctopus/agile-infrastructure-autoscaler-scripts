@@ -50,8 +50,6 @@ fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
-  ###ORIGINAL  /usr/local/bin/cs listVirtualMachines | /usr/bin/jq '.virtualmachine[] | .nic[].ipaddress + " " + .displayname' | /bin/grep "${ip}" | /bin/sed 's/"//g' | /usr/bin/awk '{print $1}'
-
     vmid="`/usr/local/bin/cs listVirtualMachines | /usr/bin/jq --arg tmp_ip_address "${ip}" '(.virtualmachine[].nic[] | select(.ipaddress == $tmp_ip_address) | .id)' | /bin/sed 's/"//g'`"
     vmid2="`/usr/local/bin/cs listNics | /usr/bin/jq --arg tmp_virtual_machine_id "${vmid}" '(.nic[] | select(.id == $tmp_virtual_machine_id) | .virtualmachineid)' | /bin/sed 's/"//g'`"
     private_ipaddress="`/usr/local/bin/cs listNics | /usr/bin/jq --arg tmp_virtual_machine_id "${vmid2}" '(.nic[] | select(.isdefault == false and .virtualmachineid == $tmp_virtual_machine_id) | .ipaddress)' | /bin/sed 's/"//g'`"
