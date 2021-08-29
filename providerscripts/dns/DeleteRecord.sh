@@ -21,7 +21,6 @@
 #####################################################################################
 #set -x
 
-#home="/home/`/bin/ls /root/.ssh/HOMEDIRFORROOT:* | /usr/bin/awk -F':' '{print $NF}'`"
 home="`/bin/cat /home/homedir.dat`"
 domainurl="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL' | /usr/bin/cut -d'.' -f2-`"
 recordid="${2}"
