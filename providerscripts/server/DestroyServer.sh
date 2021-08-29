@@ -84,49 +84,6 @@ then
     /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
     /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
     /bin/rm ${HOME}/config/webserveripcouples/*${server_ip}*
-
-
-    #This will destroy a server by ip address and cleanup all the associated configuration settings
-   # if ( [ "${server_ip}" != "" ] )
-   # then
-   #     /bin/rm ${HOME}/config/webserverips/${private_server_ip}
-   #     /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
-   #     /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
-   #     /bin/rm ${HOME}/config/webserveripcouples/*${server_ip}*
-   #     machine_id=""
-   #     index="`/usr/local/bin/cs listVirtualMachines | /usr/bin/jq ".virtualmachine[].nic[].ipaddress,.virtualmachine[].id"  | /bin/grep -v 'null' | /bin/sed 's/\"//g' | /usr/bin/tee ${HOME}/runtime/machineIDs | /bin/grep -n ${server_ip} | /usr/bin/cut -f1 -d:`"
-   #     nomachines="`/bin/grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' ${HOME}/runtime/machineIDs | /usr/bin/wc -l`"
-   #     id_index="`/usr/bin/expr ${index} + ${nomachines}`"
-   #     machine_id="`/bin/sed "${id_index}!d" ${HOME}/runtime/machineIDs`"#
-#
-#        count="0"
-#        while ( [ "${machine_id}" = "" ] && [ "${count}" -lt "10" ] )
-#        do
-#            /bin/echo "${0} `/bin/date` : failed in an attempt to get the machine id, trying again ...." >> ${HOME}/logs/MonitoringLog.log
-#            index="`/usr/local/bin/cs listVirtualMachines | /usr/bin/jq ".virtualmachine[].nic[].ipaddress,.virtualmachine[].id"  | /bin/grep -v 'null' | /bin/sed 's/\"//g' | /usr/bin/tee ${HOME}/runtime/machineIDs | /bin/grep -n ${ip} | /usr/bin/cut -f1 -d:`"
-#            nomachines="`/bin/grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' ${HOME}/runtime/machineIDs | /usr/bin/wc -l`"
-#            id_index="`/usr/bin/expr ${index} + ${nomachines}`"
-#            machine_id="`/bin/sed "${id_index}!d" ${HOME}/runtime/machineIDs`"
-#            count="`/usr/bin/expr ${count} + 1`"
-#        done##
-#
- #       if ( [ "${count}" -eq "10" ] )
- #       then
- #           /bin/echo "${0} `/bin/date` : failed in an attempt to get the machine id too many times, giving up ...." >> ${HOME}/logs/MonitoringLog.log
- #       else
- #           if ( [ "${machine_id}" != "" ] )
- #           then
- #               /usr/local/bin/cs destroyVirtualMachine id="${machine_id}"
- #               /bin/echo "${0} `/bin/date`: Destroyed a server with id ${machine_id}" >> ${HOME}/logs/MonitoringLog.log
- #               /bin/rm ${HOME}/config/webserverips/${private_server_ip}
- #               /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
- #               /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
- #               /bin/rm ${HOME}/config/webserveripcouples/*${server_ip}*
- #           else
- #               /bin/echo "${0} `/bin/date` : Couldn't destroy a machine with ip ${ip}, giving up ...." >> ${HOME}/logs/MonitoringLog.log
- #           fi
- #       fi
- #   fi
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
