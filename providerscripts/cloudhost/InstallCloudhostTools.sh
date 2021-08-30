@@ -30,6 +30,7 @@ then
     /bin/echo "${0} `/bin/date`: Building for the Exoscale provider" >> ${HOME}/logs/MonitoringLog.log
     ${HOME}/installscripts/InstallPythonPIP.sh ${BUILDOS}
     ${HOME}/installscripts/InstallCS.sh ${BUILDOS}
+    ${HOME}/installscripts/InstallExo.sh ${BUILDOS}
     /usr/bin/pip install cs 2>/dev/null
     /bin/chmod 400 ${HOME}/.cloudstack.ini
     /usr/bin/touch ${HOME}/EXOSCALE
