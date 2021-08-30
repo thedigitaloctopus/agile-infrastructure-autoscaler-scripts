@@ -208,6 +208,8 @@ cd ${HOME}
 /bin/echo "${0} `/bin/date`: Configuring GIT" >> ${HOME}/logs/MonitoringLog.log
 /usr/bin/git config --global user.name "${GIT_USER}"
 /usr/bin/git config --global user.email ${GIT_EMAIL_ADDRESS}
+/usr/bin/git config --global init.defaultBranch master
+
 
 #Get the infrastructure code - this is the Agile Deployment Toolkit Autoscaler scripts
 ${HOME}/bootstrap/GitPull.sh ${INFRASTRUCTURE_REPOSITORY_PROVIDER} ${INFRASTRUCTURE_REPOSITORY_USERNAME} ${INFRASTRUCTURE_REPOSITORY_PASSWORD} ${INFRASTRUCTURE_REPOSITORY_OWNER} agile-infrastructure-autoscaler-scripts >/dev/null 2>&1
