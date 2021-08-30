@@ -31,7 +31,7 @@ then
     ${HOME}/installscripts/InstallPythonPIP.sh ${BUILDOS}
     ${HOME}/installscripts/InstallCS.sh ${BUILDOS}
     ${HOME}/installscripts/InstallExo.sh ${BUILDOS}
-    /usr/bin/pip install cs 2>/dev/null
+#    /usr/bin/pip install cs 2>/dev/null
     /bin/chmod 400 ${HOME}/.cloudstack.ini
     /usr/bin/touch ${HOME}/EXOSCALE
 fi
