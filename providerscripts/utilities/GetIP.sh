@@ -36,7 +36,7 @@ then
 
     if ( [ "${BUILDOS}" = "debian" ] )
     then
-        if ( [ "${BUILDOSVERSION}" = "9" ] || [ "${BUILDOSVERSION}" = "10" ] )
+        if ( [ "${BUILDOSVERSION}" = "9" ] || [ "${BUILDOSVERSION}" = "10" ] || [ "${BUILDOSVERSION}" = "11" ] )
         then
             /bin/echo "auto ens7
 iface ens7 inet static
