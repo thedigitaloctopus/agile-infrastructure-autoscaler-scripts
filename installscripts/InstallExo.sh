@@ -34,6 +34,9 @@ then
     /usr/bin/tar xvfz exoscale-cli*tar.gz -C ./exo_unpack
     /bin/mv ./exo_unpack/exo /usr/bin
     /bin/rm -r ./exo_unpack
+    /bin/mkdir -p /root/.config/exoscale
+    /bin/cp ${HOME}/.config/exoscale/exoscale.toml /root/.config/exoscale
+    /bin/chmod 400 /root/.config/exoscale/exoscale.toml
 fi
 
 if ( [ "${BUILD_OS}" = "debian" ] )
@@ -43,4 +46,7 @@ then
     /usr/bin/tar xvfz exoscale-cli*tar.gz -C ./exo_unpack
     /bin/mv ./exo_unpack/exo /usr/bin
     /bin/rm -r ./exo_unpack
+    /bin/mkdir -p /root/.config/exoscale
+    /bin/cp ${HOME}/.config/exoscale/exoscale.toml /root/.config/exoscale
+    /bin/chmod 400 /root/.config/exoscale/exoscale.toml
 fi
