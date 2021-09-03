@@ -82,13 +82,15 @@ then
 
     snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
 
-    if ( [ "${snapshot_id}" = "" ] )
+    if ( [ "${snapshot_id}" = "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
     then
-        ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '0'
         template_id="`/bin/echo "${template_id}" | /bin/sed "s/'//g"`"
+        /bin/echo "STANDARD"
     else
-        ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '1'
         template_id="${snapshot_id}"
+        /bin/echo "SNAPPED"
+    else
+        /bin/echo "MISSED"
     fi
 
     case ${service_offering_id} in
