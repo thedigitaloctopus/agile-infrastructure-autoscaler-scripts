@@ -122,7 +122,7 @@ do
         /bin/echo "${0} `/bin/date`: Webserver with ip address: ${downip} is having it's ip address removed from the DNS system" >> ${HOME}/logs/UnresponsiveWebservers.log
         ${HOME}/autoscaler/RemoveIPFromDNS.sh ${downip}
 
-        /bin/sleep 300
+        /bin/sleep 120
 
         /bin/echo "${0} `/bin/date`: Webserver with ip address: ${downip} is being shutdown" >> ${HOME}/logs/UnresponsiveWebservers.log
         /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${downip} "${SUDO} ${HOME}/providerscripts/utilities/ShutdownThisWebserver.sh"
