@@ -103,9 +103,6 @@ do
            then           
                /bin/echo "POTENTIALLY DOWN ${ip}" >> ${HOME}/runtime/POTENTIALLY_DOWN.log
            fi
-        else
-                :
-                #MOST LIKELY STILL BOOTING
         fi
     fi
 
