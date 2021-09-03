@@ -90,8 +90,6 @@ then
     else
         template_id="${snapshot_id}"
         /bin/echo "SNAPPED"
-    else
-        /bin/echo "MISSED"
     fi
 
     case ${service_offering_id} in
