@@ -80,7 +80,16 @@ then
     #We know that if this fails, it will be called again so no need for checks
     /bin/echo "${0} `/bin/date`: Building a new server" >> ${HOME}/logs/MonitoringLog.log
 
-    template_id="`/bin/echo "${template_id}" | /bin/sed "s/'//g"`"
+    snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
+
+    if ( [ "${snapshot_id}" = "" ] )
+    then
+        ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '0'
+        template_id="`/bin/echo "${template_id}" | /bin/sed "s/'//g"`"
+    else
+        ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '1'
+        template_id="${snapshot_id}"
+    fi
 
     case ${service_offering_id} in
         b6cd1ff5-3a2f-4e9d-a4d1-8988c1191fe8 ) disksize="10"
