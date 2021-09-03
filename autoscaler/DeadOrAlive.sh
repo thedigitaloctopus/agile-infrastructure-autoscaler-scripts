@@ -98,7 +98,11 @@ do
     else
         if ( [ "${status}" = "down" ] )
         then
-            /bin/echo "POTENTIALLY DOWN ${ip}" >> ${HOME}/runtime/POTENTIALLY_DOWN.log
+           #We record when we first create a machine. It might not be responding because it is still booting and intialising so protect it until it is old enough
+           if test `find "${HOME}/runtime/protectedfromtermination/${ip}" -mmin +30`
+           then           
+               /bin/echo "POTENTIALLY DOWN ${ip}" >> ${HOME}/runtime/POTENTIALLY_DOWN.log
+           fi
         else
                 :
                 #MOST LIKELY STILL BOOTING
