@@ -163,6 +163,12 @@ then
     exit
 fi
 
+if ( [ ! -d ${HOME}/runtime/protectedfromtermination ] )
+then
+    /bin/mkdir -p ${HOME}/runtime/protectedfromtermination
+    /bin/touch ${HOME}/runtime/protectedfromtermination/${ip}
+fi
+
 DBaaS_DBSECURITYGROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaSDBSECURITYGROUP'`"
 
 if ( [ "${DBaaS_DBSECURITYGROUP}" != "" ] )
