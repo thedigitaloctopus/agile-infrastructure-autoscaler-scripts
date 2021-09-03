@@ -52,7 +52,7 @@ iswebserverup ()
 
     while ( [ "${count}" != "6" ] && [ "${status}" = "down" ] )
     do
-        if ( [ "`/usr/bin/curl -m 5 --insecure -I "https://${1}:443/${file}" 2>&1 | /bin/grep \"HTTP\" | /bin/grep -w \"200\|301\"`" ] ) 
+        if ( [ "`/usr/bin/curl -m 3 --insecure -I "https://${1}:443/${file}" 2>&1 | /bin/grep \"HTTP\" | /bin/grep -w \"200\|301\"`" ] ) 
         then
             status="up"
         else
@@ -82,7 +82,7 @@ SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh '
 SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
 SUDO=" DEBIAN_FRONTEND=noninteractive /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E "
 
-no_attempts="4"
+no_attempts="2"
 
 allliveips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
 
