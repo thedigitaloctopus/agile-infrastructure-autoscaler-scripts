@@ -73,6 +73,7 @@ zone_id="${2}"
 service_offering_id="${3}"
 server_name="${4}"
 key_pair="${5}"
+cloudhost="${6}"
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
