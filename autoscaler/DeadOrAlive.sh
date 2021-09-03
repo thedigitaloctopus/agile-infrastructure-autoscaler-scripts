@@ -50,7 +50,7 @@ iswebserverup ()
         file=""
     fi
 
-    while ( [ "${count}" != "6" ] && [ "${status}" = "down" ] )
+    while ( [ "${count}" != "4" ] && [ "${status}" = "down" ] )
     do
         if ( [ "`/usr/bin/curl -m 3 --insecure -I "https://${1}:443/${file}" 2>&1 | /bin/grep \"HTTP\" | /bin/grep -w \"200\|301\"`" ] ) 
         then
