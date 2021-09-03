@@ -72,7 +72,7 @@ if ( [ "${PRODUCTION}" = "1" ] )
 then
     /bin/echo "*/1 * * * * export HOME="${HOMEDIR}" && ${HOME}/autoscaler/MonitorCPUUsage.sh" >> /var/spool/cron/crontabs/root
     /bin/echo "*/1 * * * * export HOME="${HOMEDIR}" && ${HOME}/cron/AutoscaleFromCron.sh" >> /var/spool/cron/crontabs/root
-    /bin/echo "*/5 * * * * export HOME="${HOMEDIR}" && ${HOME}/autoscaler/DeadOrAlive.sh" >> /var/spool/cron/crontabs/root
+    /bin/echo "*/2 * * * * export HOME="${HOMEDIR}" && ${HOME}/autoscaler/DeadOrAlive.sh" >> /var/spool/cron/crontabs/root
     /bin/echo "30 7 * * *  export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/DailyScaleup.sh 3" >> /var/spool/cron/crontabs/root
     /bin/echo "30 17 * * * export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/DailyScaledown.sh 2" >> /var/spool/cron/crontabs/root
 fi
