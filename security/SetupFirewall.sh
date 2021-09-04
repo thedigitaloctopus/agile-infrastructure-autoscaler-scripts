@@ -53,6 +53,16 @@ then
     /bin/sleep 5
 fi
 
+for ip in `/bin/ls ${HOME}/config/webserverips/`
+do
+    /bin/sleep 5
+    if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${ip} | /bin/grep ALLOW`" = "" ] )
+    then
+        /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${ip} to any port ${SSH_PORT}
+        /bin/sleep 5
+    fi
+done
+
 for ip in `/bin/ls ${HOME}/config/webserverpublicips/`
 do
     /bin/sleep 5
@@ -63,6 +73,15 @@ do
     fi
 done
 
+for ip in `/bin/ls ${HOME}/config/databaseip`
+do
+    /bin/sleep 5
+    if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${ip} | /bin/grep ALLOW`" = "" ] )
+    then
+        /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${ip} to any port ${SSH_PORT}
+        /bin/sleep 5
+    fi
+done
 for ip in `/bin/ls ${HOME}/config/databasepublicip`
 do
     /bin/sleep 5
