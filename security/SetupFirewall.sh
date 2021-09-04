@@ -35,17 +35,17 @@ fi
 
 SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
 
-if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep eth1 | /bin/grep ALLOW`" = "" ] )
-then
-    /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow in on eth1 to any port ${SSH_PORT}
-    /bin/sleep 5
-fi
+#if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep eth1 | /bin/grep ALLOW`" = "" ] )
+#then
+#    /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow in on eth1 to any port ${SSH_PORT}
+#    /bin/sleep 5
+#fi
 
-if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ens7 | /bin/grep ALLOW`" = "" ] )
-then
-    /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow in on ens7 to any port ${SSH_PORT}
-    /bin/sleep 5
-fi
+#if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ens7 | /bin/grep ALLOW`" = "" ] )
+#then
+#    /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow in on ens7 to any port ${SSH_PORT}
+#    /bin/sleep 5
+#fi
 
 if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${BUILD_CLIENT_IP} | /bin/grep ALLOW`" = "" ] )
 then
