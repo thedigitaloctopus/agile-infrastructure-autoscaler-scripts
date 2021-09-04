@@ -53,6 +53,24 @@ then
     /bin/sleep 5
 fi
 
+for autoscalerip in `/bin/ls ${HOME}/config/autoscalerip`
+do
+    if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${autoscalerip} | /bin/grep ALLOW`" = "" ] )
+    then
+       /bin/sleep 5
+       /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${autoscalerip}
+    fi
+done
+    
+for publicautoscalerip in `/bin/ls ${HOME}/config/autoscalerpublicip`
+do
+    if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${publicautoscalerip} | /bin/grep ALLOW`" = "" ] )
+    then
+        /bin/sleep 5
+        /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${publicautoscalerip}
+    fi
+done
+
 for ip in `/bin/ls ${HOME}/config/webserverips/`
 do
     /bin/sleep 5
