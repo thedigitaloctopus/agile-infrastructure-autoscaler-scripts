@@ -115,6 +115,8 @@ then
         then
             /bin/echo "${0} `/bin/date`: A new webserver is being provisioned (spun up) from a snapshot" >> ${HOME}/logs/ScalingEventsLog.log
             ${HOME}/autoscaler/BuildWebserver.sh
+            /bin/echo "${0} `/bin/date`:  Rebooting autoscaler before next scaling event so that memory doesn't run out which sometimes happens on small machines" >> ${HOME}/logs/ScalingEventsLog.log
+            /usr/sbin/shutdown -r now
         else
             /bin/echo "${0} `/bin/date`: A new webserver is being provisioned as a regular build" >> ${HOME}/logs/ScalingEventsLog.log
             newip="`${HOME}/autoscaler/BuildWebserver.sh`"
