@@ -52,7 +52,7 @@ then
         /usr/local/bin/doctl compute droplet create "${server_name}" --size "${server_size}" --image "${os_choice}"  --region "${region}" --ssh-keys "${key_id}" --enable-private-networking
         #We pass back a string as a token to say that we built from a snapshot
         /bin/echo "SNAPPED"
-elif ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:0`" = "1" ] )
+elif ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "0" ] )
     then
         #If we are here, then it is a regular build process
         #We know that if this fails, it will be called again so no need for checks
@@ -83,7 +83,7 @@ then
 
     snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
 
-    if ( [ "${snapshot_id}" = "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
+    if ( [ "${snapshot_id}" = "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "0" ] )
     then
         template_id="`/bin/echo "${template_id}" | /bin/sed "s/'//g"`"
         /bin/echo "STANDARD"
