@@ -187,7 +187,7 @@ then
            while ( [ "`/usr/bin/ping -c 3 ${ip} | /bin/grep '100% packet loss'`"  = "" ] )
            do
                /bin/echo "${0} `/bin/date`: Waiting for webserver ${ip} to become unresponsive after shutdown" >> ${HOME}/logs/ScalingEventsLog.log
-               /bin/sleep 5
+               /bin/sleep 26
            done
            
             /bin/echo "${0} `/bin/date`: Webserver ${ip} is being destroyed" >> ${HOME}/logs/ScalingEventsLog.log
