@@ -156,10 +156,15 @@ then
     /bin/echo "${0} `/bin/date`: There are ${nowebservers} runnning when only ${NO_WEBSERVERS} are required" >> ${HOME}/logs/ScalingEventsLog.log
 
     #we need to terminate an arbitrary webserver so get a list of candidate ones
-    ipstokill="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST}`"
+   # ipstokill="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST}`"
+   
+
     count="1"
     while ( [ "${nowebservers}" -gt "${NO_WEBSERVERS}" ] )
     do
+        contentionperiod="`/usr/bin/awk -v min=5 -v max=60 'BEGIN{srand(); print int(min+rand()*(max-min+1))}'`"
+        /bin/sleep ${contentionperiod}
+        ipstokill="`${HOME}/providerscripts/server/GetDNSIPs.sh`"
         ip="`/bin/echo ${ipstokill} | /usr/bin/cut -d " " -f ${count}`"
         /bin/touch ${HOME}/config/shuttingdownwebserverips/${ip}
 
