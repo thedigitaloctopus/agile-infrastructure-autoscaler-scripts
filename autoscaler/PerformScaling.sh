@@ -106,6 +106,14 @@ then
     #It is possible that machine builds failed in which case we may have more servers running than are added to the DNS system
     #In this case, we don't want to keep building machines, so, check for it and exit
     #Any additional or unneccesary machines will be checked for and terminated by other scripts
+    
+    autoscaler_ip="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MYPUBLICIP'`"
+    autoscaler_name="`${HOME}/providerscripts/server/GetServerName.sh ${autoscaler_ip} ${CLOUDHOST}`"
+    autoscaler_no="`/bin/echo ${autoscaler_name} | /usr/bin/awk -F'-' '{print $1}'`"
+    
+    #The reason for this sleep period is that when we build from multiple autoscalers we might build too many machines so sleep for multiples of 20 based on autoscaler number
+    
+    /bin/sleep "`/usr/bin/expr ${autoscaler_no} \* 20`"
 
     noallips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST} | /usr/bin/wc -l`"
 
