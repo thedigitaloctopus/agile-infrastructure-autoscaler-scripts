@@ -26,6 +26,7 @@
 #    exit
 #fi
 
+
 if ( [ "`/bin/ls ${HOME}/config 2>&1 | /bin/grep "Transport endpoint is not connected"`" != "" ] )
 then
     /bin/umount -f ${HOME}/config
@@ -34,6 +35,15 @@ fi
 if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] )
 then
     exit
+fi
+
+if ( [ ! -f ${HOME}/runtime/INITIALCONFIGSET ] )
+then
+    /bin/rm -r ${HOME}/config/*
+    if ( [ "$?" = "0" ] )
+    then
+        /bin/touch ${HOME}/runtime/INITIALCONFIGSET
+    fi
 fi
 
 BUILDOS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOS'`"
@@ -104,15 +114,6 @@ then
     export AWSSECRETACCESSKEY=`/bin/grep 'secret_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
     /usr/bin/s3cmd mb s3://${configbucket}
     /usr/bin/s3fs -o nonempty,allow_other,kernel_cache,use_path_request_style,sigv2 -ourl=https://${endpoint} ${configbucket} ${HOME}/config
-fi
-
-if ( [ ! -f ${HOME}/runtime/INITIALCONFIGSET ] )
-then
-    /bin/rm -r ${HOME}/config/*
-    if ( [ "$?" = "0" ] )
-    then
-        /bin/touch ${HOME}/runtime/INITIALCONFIGSET
-    fi
 fi
 
 ${HOME}/providerscripts/utilities/SetupConfigDirectories.sh
