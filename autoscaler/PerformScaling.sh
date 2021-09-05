@@ -113,7 +113,7 @@ then
     
     #The reason for this sleep period is that when we build from multiple autoscalers we might build too many machines so sleep for multiples of 20 based on autoscaler number
     
-    /bin/sleep "`/usr/bin/expr ${autoscaler_no} \* 20`"
+    /bin/sleep "`/usr/bin/expr ${autoscaler_no} \* 26`"
 
     noallips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST} | /usr/bin/wc -l`"
 
