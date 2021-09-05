@@ -26,17 +26,6 @@
 #    exit
 #fi
 
-
-if ( [ "`/bin/ls ${HOME}/config 2>&1 | /bin/grep "Transport endpoint is not connected"`" != "" ] )
-then
-    /bin/umount -f ${HOME}/config
-fi
-
-if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] )
-then
-    exit
-fi
-
 BUILDOS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOS'`"
 DATASTORE_PROVIDER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DATASTORECHOICE'`"
 WEBSITE_URL="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL'`"
@@ -45,6 +34,21 @@ configbucket="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{ for(i = 1; i <= 
 configbucket="${configbucket}-config"
 endpoint="`/bin/grep host_base ~/.s3cfg | /usr/bin/awk '{print $NF}'`"
 
+
+if ( [ "`/bin/ls ${HOME}/config 2>&1 | /bin/grep "Transport endpoint is not connected"`" != "" ] )
+then
+    /bin/umount -f ${HOME}/config
+fi
+
+if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] )
+then
+    if ( [ ! -f ${HOME}/runtime/INITIALCONFIGSET ] )
+    then
+         /usr/bin/s3cmd --recursive --force del s3://${config_bucket}/*
+        /bin/touch ${HOME}/runtime/INITIALCONFIGSET
+    fi
+    exit
+fi
 
 if ( [ "${DATASTORE_PROVIDER}" = "amazonS3" ] )
 then
@@ -105,12 +109,6 @@ then
     export AWSSECRETACCESSKEY=`/bin/grep 'secret_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
     /usr/bin/s3cmd mb s3://${configbucket}
     /usr/bin/s3fs -o nonempty,allow_other,kernel_cache,use_path_request_style,sigv2 -ourl=https://${endpoint} ${configbucket} ${HOME}/config
-fi
-
-if ( [ ! -f ${HOME}/runtime/INITIALCONFIGSET ] )
-then
-    /bin/rm -r ${HOME}/config/*
-    /bin/touch ${HOME}/runtime/INITIALCONFIGSET
 fi
 
 ${HOME}/providerscripts/utilities/SetupConfigDirectories.sh
