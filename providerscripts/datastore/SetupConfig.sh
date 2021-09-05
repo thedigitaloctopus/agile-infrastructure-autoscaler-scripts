@@ -44,10 +44,12 @@ if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] )
 then
     if ( [ ! -f ${HOME}/runtime/INITIALCONFIGSET ] )
     then
-         /usr/bin/s3cmd --recursive --force del s3://${config_bucket}/*
+        /bin/rm -r ${HOME}/config/*
+        /usr/bin/s3cmd --recursive --force del s3://${config_bucket}/*
         /bin/touch ${HOME}/runtime/INITIALCONFIGSET
+    else
+        exit
     fi
-    exit
 fi
 
 if ( [ "${DATASTORE_PROVIDER}" = "amazonS3" ] )
