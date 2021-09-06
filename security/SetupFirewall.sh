@@ -55,7 +55,7 @@ then
     /bin/sleep 5
 fi
 
-NEW_BUILD_CLIENT_IP="`/bin/ls /tmp/BUILDCLIENTIP/* | awk -F'/' '{print $NF}'`"
+NEW_BUILD_CLIENT_IP="`/bin/ls /tmp/BUILDCLIENTIP/* | /usr/bin/awk -F'/' '{print $NF}'`"
 if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${NEW_BUILD_CLIENT_IP} | /bin/grep ALLOW`" = "" ] )
 then
     /usr/sbin/ufw default deny incoming
