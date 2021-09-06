@@ -1,1 +1,1 @@
-/usr/sbin/ufw --force reset
+/usr/sbin/ufw --force disable
