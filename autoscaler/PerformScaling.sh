@@ -172,7 +172,7 @@ then
     do
         contentionperiod="`/usr/bin/awk -v min=5 -v max=60 'BEGIN{srand(); print int(min+rand()*(max-min+1))}'`"
         /bin/sleep ${contentionperiod}
-        ipstokill="`${HOME}/providerscripts/server/GetDNSIPs.sh`"
+        ipstokill="`${HOME}/autoscaler/GetDNSIPs.sh`"
         ip="`/bin/echo ${ipstokill} | /usr/bin/cut -d " " -f ${count}`"
         /bin/touch ${HOME}/config/shuttingdownwebserverips/${ip}
 
