@@ -180,7 +180,7 @@ then
 
         if ( [ "`${HOME}/providerscripts/server/GetServerName.sh ${ip} ${CLOUDHOST} | grep webserver`" != "" ] )
         then
-            /bin/echo "${0} `/bin/date`: Webserver ${ip} is having it's ip removed from the DNS service" >> ${HOME}/logs/ScalingEventsLog.log
+            /bin/echo "${0} `/bin/date`: Webserver ${ip} is having its ip removed from the DNS service" >> ${HOME}/logs/ScalingEventsLog.log
             ${HOME}/autoscaler/RemoveIPFromDNS.sh ${ip}
 
             /bin/touch ${HOME}/runtime/IPREMOVED:${ip}
@@ -191,7 +191,9 @@ then
             #of 2 minutes, if we sleep for a while before we destroy anything, then, we can be sure that no requests will be routed to our
             #terminated machine. Clear? If there is a longer TTL on the record, this could be a problem and the sleep here would have
             #to be increased here to prevent errors on scaledown
-
+            
+            /bin/echo "${0} `/bin/date`: Pausing for 300 seconds to make sure the DNS system has cleared itself" >> ${HOME}/logs/ScalingEventsLog.log
+            
             /bin/sleep 300
 
             /bin/echo "${0} `/bin/date`: Webserver ${ip} is being cleanly shutdown" >> ${HOME}/logs/ScalingEventsLog.log
