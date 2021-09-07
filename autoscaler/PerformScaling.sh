@@ -78,6 +78,9 @@ SUDO=" DEBIAN_FRONTEND=noninteractive /bin/echo ${SERVER_USER_PASSWORD} | /usr/b
 
 /bin/echo "${0} `/bin/date`: ##########################################################################" >> ${HOME}/logs/ScalingEventsLog.log
 
+contentionperiod="`/usr/bin/awk -v min=5 -v max=60 'BEGIN{srand(); print int(min+rand()*(max-min+1))}'`"
+/bin/sleep ${contentionperiod}
+
 # Sometimes we get back a zero when it shouldn't be possibly because of a network glitch, so we try a few times to give us a good chance
 # of getting it right
 provisionedwebservers="`${HOME}/autoscaler/GetDNSIPs.sh | /usr/bin/wc -w`"
@@ -170,8 +173,6 @@ then
     count="1"
     while ( [ "${nowebservers}" -gt "${NO_WEBSERVERS}" ] )
     do
-        contentionperiod="`/usr/bin/awk -v min=5 -v max=60 'BEGIN{srand(); print int(min+rand()*(max-min+1))}'`"
-        /bin/sleep ${contentionperiod}
         ip="`/bin/echo ${ipstokill} | /usr/bin/cut -d " " -f ${count}`"
         /bin/touch ${HOME}/config/shuttingdownwebserverips/${ip}
 
