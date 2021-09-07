@@ -43,6 +43,8 @@ do
     dnsips=${dnsips}${ip}" "
 done
 
+dnsips="`/bin/echo ${dnsips} | /bin/sed 's/ $//g'`"
+
 #Return a list of ip addresses registered with the DNS provider
 /bin/echo "${0} `/bin/date`: #########################################" >> ${HOME}/logs/DNSRetrievalLog.log
 /bin/echo "${0} `/bin/date`: Currently dns ip addresses are: ${dnsips}" >> ${HOME}/logs/DNSRetrievalLog.log
