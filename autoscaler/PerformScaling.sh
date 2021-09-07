@@ -196,7 +196,7 @@ then
             
             /bin/sleep 300
 
-            /bin/echo "${0} `/bin/date`: Webserver ${ip} is being cleanly shutdown" >> ${HOME}/logs/ScalingEventsLog.log
+            /bin/echo "${0} `/bin/date`: Webserver ${ip} is being shutdown" >> ${HOME}/logs/ScalingEventsLog.log
             /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${SUDO} /bin/touch ${HOME}/runtime/MARKEDFORSHUTDOWN"
            
            while ( [ "`/usr/bin/ping -c 3 ${ip} | /bin/grep '100% packet loss'`"  = "" ] )
@@ -205,8 +205,10 @@ then
                /bin/sleep 26
            done
            
+            /bin/echo "${0} `/bin/date`: Webserver ${ip} has been cleanly shutdown getting ready to destroy the virtual machine" >> ${HOME}/logs/ScalingEventsLog.log
+            /bin/sleep 5
             /bin/echo "${0} `/bin/date`: Webserver ${ip} is being destroyed" >> ${HOME}/logs/ScalingEventsLog.log
-            /bin/echo "${0} `/bin/date` : ${ip} is being destroyed because it was excess to requirements" >> ${HOME}/logs/MonitoringLog.log
+            /bin/echo "${0} `/bin/date` : ${ip} is has been destroyed because it was excess to the defined scaling requirements" >> ${HOME}/logs/MonitoringLog.log
             ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
             
             DBaaS_DBSECURITYGROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaSDBSECURITYGROUP'`"
