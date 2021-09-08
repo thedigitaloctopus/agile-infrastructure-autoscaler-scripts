@@ -84,7 +84,7 @@ SUDO=" DEBIAN_FRONTEND=noninteractive /bin/echo ${SERVER_USER_PASSWORD} | /usr/b
 autoscaler_ip="`${HOME}/providerscripts/utilities/GetPublicIP.sh`"
 autoscaler_no="`${HOME}/providerscripts/server/GetServerName.sh ${autoscaler_ip} ${CLOUDHOST} | /usr/bin/awk -F'-' '{print $1}'`"
 
-contentionperiod="`/usr/bin/expr ${autoscaler_no} \* 20`"
+contentionperiod="`/usr/bin/expr ${autoscaler_no} \* 26`"
 
 /bin/sleep ${contentionperiod}
 
@@ -108,6 +108,8 @@ then
     exit
 fi
 
+
+
 /bin/echo "${0} `/bin/date`: ${provisionedwebservers} webservers are currently provisioned." >> ${HOME}/logs/ScalingEventsLog.log
 
 #If we have fewer webservers than we require, build one
@@ -122,8 +124,6 @@ then
     autoscaler_no="`/bin/echo ${autoscaler_name} | /usr/bin/awk -F'-' '{print $1}'`"
     
     #The reason for this sleep period is that when we build from multiple autoscalers we might build too many machines so sleep for multiples of 20 based on autoscaler number
-    
-    /bin/sleep "`/usr/bin/expr ${autoscaler_no} \* 26`"
 
     noallips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST} | /usr/bin/wc -l`"
 
