@@ -108,8 +108,6 @@ then
     exit
 fi
 
-
-
 /bin/echo "${0} `/bin/date`: ${provisionedwebservers} webservers are currently provisioned." >> ${HOME}/logs/ScalingEventsLog.log
 
 #If we have fewer webservers than we require, build one
@@ -126,7 +124,12 @@ then
     #The reason for this sleep period is that when we build from multiple autoscalers we might build too many machines so sleep for multiples of 20 based on autoscaler number
 
     noallips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST} | /usr/bin/wc -l`"
-
+    
+    /bin/echo "${0} `/bin/date`: no of webservers (live) is: ${provisionedwebservers}" >> ${HOME}/logs/ScalingEventsLog.log
+    /bin/echo "${0} `/bin/date`: no of webservers (booting and live) is: ${noallips} " >> ${HOME}/logs/ScalingEventsLog.log
+    booting="`/usr/bin/expr ${noallips} - ${provisionedwebservers}`"
+    /bin/echo "${0} `/bin/date`: no of webservers currently booting is: ${booting} " >> ${HOME}/logs/ScalingEventsLog.log
+    
     if ( [ "${noallips}" -lt "${NO_WEBSERVERS}" ] )
     then
         if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
