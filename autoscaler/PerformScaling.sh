@@ -78,7 +78,14 @@ SUDO=" DEBIAN_FRONTEND=noninteractive /bin/echo ${SERVER_USER_PASSWORD} | /usr/b
 
 /bin/echo "${0} `/bin/date`: ##########################################################################" >> ${HOME}/logs/ScalingEventsLog.log
 
-contentionperiod="`/usr/bin/awk -v min=5 -v max=60 'BEGIN{srand(); print int(min+rand()*(max-min+1))}'`"
+#When there are multiple autoscaler, say 4, we need to put in a contention period so that we don't start 4 websevers when we only need 1.
+#Might not be completely fail safe, but, if extra machines are spun up the system will find out and shut them down later on. 
+
+autoscaler_ip="`${HOME}/providerscripts/utilities/GetPublicIP.sh`"
+autoscaler_no="`${HOME}/providerscripts/server/GetServerName.sh ${autoscaler_ip} ${CLOUDHOST} | /usr/bin/awk -F'-' '{print $1}'`"
+
+contentionperiod="`/usr/bin/expr ${autoscaler_no} \* 20`"
+
 /bin/sleep ${contentionperiod}
 
 # Sometimes we get back a zero when it shouldn't be possibly because of a network glitch, so we try a few times to give us a good chance
