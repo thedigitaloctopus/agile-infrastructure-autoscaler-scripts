@@ -21,7 +21,14 @@
 #######################################################################################################
 #set -x
 
-${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MYIP'
+IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MYIP'`"
+if ( [ "`/usr/bin/ip addr | /bin/grep ${IP}`" != "" ] )
+then
+    /bin/echo ${IP}
+else
+    exit
+fi
+
 BUILDOS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOS'`"
 BUILDOSVERSION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOSVERSION'`"
 
