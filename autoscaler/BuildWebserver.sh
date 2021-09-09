@@ -300,6 +300,9 @@ then
     /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${SERVER_USER}@${ip} "${HOME}/bootstrap/GitCheckout.sh ${INFRASTRUCTURE_REPOSITORY_PROVIDER} providerscripts/datastore/ConfigureDatastoreProvider.sh"
     /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${SERVER_USER}@${ip} "${HOME}/bootstrap/GitPull.sh ${INFRASTRUCTURE_REPOSITORY_PROVIDER} ${INFRASTRUCTURE_REPOSITORY_USERNAME} ${INFRASTRUCTURE_REPOSITORY_PASSWORD} ${INFRASTRUCTURE_REPOSITORY_OWNER} agile-infrastructure-webserver-scripts"
     
+        /usr/bin/scp -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${HOME}/.ssh/webserver_configuration_settings.dat ${SERVER_USER}@${ip}:${HOME}/.ssh/
+    /usr/bin/scp -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${HOME}/.ssh/buildstyles.dat ${SERVER_USER}@${ip}:${HOME}/.ssh/
+    
     #Mark this as an autoscaled machine as distinct from one built during the initial build
     /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh 'AUTOSCALED'"
 
@@ -315,9 +318,6 @@ then
  /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh 'DBIP' ${DBIP}"
  /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh 'DBPUBLICIP' ${DB_PUBLIC_IP}"
  
-    
-    /usr/bin/scp -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${HOME}/.ssh/webserver_configuration_settings.dat ${SERVER_USER}@${ip}:${HOME}/.ssh/
-    /usr/bin/scp -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${HOME}/.ssh/buildstyles.dat ${SERVER_USER}@${ip}:${HOME}/.ssh/
     
     MACHINETYPE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MACHINETYPE'`"
     /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /usr/bin/touch ${HOME}/${MACHINETYPE}"
