@@ -97,6 +97,8 @@ ASIP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ASIP'`"
 AS_PUBLIC_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ASPUBLICIP'`"
 DBIP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBIP'`"
 DB_PUBLIC_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPUBLICIP'`"
+ASIPS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ASIPS'`"
+ASIP_PRIVATES="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ASIP_PRIVATES'`"
 
 #Non standard Variable assignments
 WEBSITE_NAME="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{print $2}'`"
@@ -425,7 +427,7 @@ else
     /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -p ${SSH_PORT} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'MYPUBLICIP' \"${ip}\""
     /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -p ${SSH_PORT} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'MYIP' \"${private_ip}\""
     /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -p ${SSH_PORT} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'BUILDCLIENTIP' \"${BUILD_CLIENT_IP}\""
-    /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -p ${SSH_PORT} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'ASIPS' \"${ASIP}\""
+    /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -p ${SSH_PORT} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'ASIPS' \"${ASIPS}\""
     /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -p ${SSH_PORT} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'ASIP_PRIVATES' \"${ASIP_PRIVATES}\""
      /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -p ${SSH_PORT} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'ASIP' \"${ASIP}\""    
      /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -p ${SSH_PORT} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'ASPUBLICIP' \"${AS_PUBLIC_IP}\""  
