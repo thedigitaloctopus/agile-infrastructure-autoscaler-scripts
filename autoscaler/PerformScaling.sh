@@ -114,8 +114,8 @@ then
     booting="`/usr/bin/expr ${noallips} - ${noprovisionedwebservers}`"
     /bin/echo "${0} `/bin/date`: no of webservers that are booting is: ${booting} " >> ${HOME}/logs/ScalingEventsLog.log
     need_booting="`/usr/bin/expr ${NO_WEBSERVERS} - ${noprovisionedwebservers}`"
-    /bin/echo "${0} `/bin/date`: no of webservers that need to be booted is: ${need_booting} " >> ${HOME}/logs/ScalingEventsLog.log
-    /bin/echo "${0} `/bin/date`: ${booting} webservers are booting out of ${need_booting} that need booting " >> ${HOME}/logs/ScalingEventsLog.log
+    /bin/echo "${0} `/bin/date`: no of webservers that still need booting initiation is: ${need_booting} - ${booting}" >> ${HOME}/logs/ScalingEventsLog.log
+    /bin/echo "${0} `/bin/date`: ${booting} webservers are booting out of a total of ${need_booting} that need booting " >> ${HOME}/logs/ScalingEventsLog.log
 
     if ( [ "${noallips}" -lt "${NO_WEBSERVERS}" ] )
     then
