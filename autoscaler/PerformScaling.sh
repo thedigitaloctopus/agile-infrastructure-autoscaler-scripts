@@ -31,7 +31,10 @@ fi
 #If there's an build processes hanging around from previous attempts, purge them so we are nice and clean
 for pid in "`/bin/pgrep BuildWebserver`"
 do
-    /bin/kill ${pid}
+    if ( [ "${pid}" != "" ] )
+    then
+       /bin/kill ${pid}
+    fi
 done
 
 #################################################ESSENTIAL#########################################################
@@ -60,6 +63,11 @@ NO_WEBSERVERS="`/bin/grep "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.
 if ( [ "${SCALING_MODE}" != "static" ] )
 then
     exit
+fi
+
+if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] )
+then
+   exit
 fi
 
 if ( [ ! -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
