@@ -90,28 +90,14 @@ contentionperiod="`/usr/bin/expr ${autoscaler_no} \* 26`"
 
 # Sometimes we get back a zero when it shouldn't be possibly because of a network glitch, so we try a few times to give us a good chance
 # of getting it right
-provisionedwebservers="`${HOME}/autoscaler/GetDNSIPs.sh | /usr/bin/wc -w`"
-provisionedwebservers1="`${HOME}/autoscaler/GetDNSIPs.sh | /usr/bin/wc -w`"
-provisionedwebservers2="`${HOME}/autoscaler/GetDNSIPs.sh | /usr/bin/wc -w`"
-provisionedwebservers3="`${HOME}/autoscaler/GetDNSIPs.sh | /usr/bin/wc -w`"
-provisionedwebservers4="`${HOME}/autoscaler/GetDNSIPs.sh | /usr/bin/wc -w`"
+noprovisionedwebservers="`${HOME}/autoscaler/GetDNSIPs.sh | /usr/bin/wc -w`"
+noallips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`"
 
-if (
-    ( [ "${provisionedwebservers}" != "${provisionedwebservers1}" ] || [ "${provisionedwebservers}" != "${provisionedwebservers2}" ] || [ "${provisionedwebservers}" != "${provisionedwebservers3}" ] || [ "${provisionedwebservers}" != "${provisionedwebservers4}" ] ) ||
-    ( [ "${provisionedwebservers1}" != "${provisionedwebservers}" ] || [ "${provisionedwebservers1}" != "${provisionedwebservers2}" ] || [ "${provisionedwebservers1}" != "${provisionedwebservers3}" ] || [ "${provisionedwebservers1}" != "${provisionedwebservers4}" ] ) ||
-    ( [ "${provisionedwebservers2}" != "${provisionedwebservers}" ] || [ "${provisionedwebservers2}" != "${provisionedwebservers1}" ] || [ "${provisionedwebservers2}" != "${provisionedwebservers3}" ] || [ "${provisionedwebservers2}" != "${provisionedwebservers4}" ] ) ||
-    ( [ "${provisionedwebservers3}" != "${provisionedwebservers}" ] || [ "${provisionedwebservers3}" != "${provisionedwebservers1}" ] || [ "${provisionedwebservers3}" != "${provisionedwebservers2}" ] || [ "${provisionedwebservers3}" != "${provisionedwebservers4}" ] ) ||
-    ( [ "${provisionedwebservers4}" != "${provisionedwebservers}" ] || [ "${provisionedwebservers4}" != "${provisionedwebservers1}" ] || [ "${provisionedwebservers4}" != "${provisionedwebservers2}" ] || [ "${provisionedwebservers4}" != "${provisionedwebservers3}" ] ) ||
-    ( [ "${provisionedwebservers}" = "" ] || [ "${provisionedwebservers1}" = "" ]  || [ "${provisionedwebservers2}" = "" ]  || [ "${provisionedwebservers3}" = "" ] || [ "${provisionedwebservers4}" = "" ] )
-)
-then
-    exit
-fi
-
-/bin/echo "${0} `/bin/date`: ${provisionedwebservers} webservers are currently provisioned." >> ${HOME}/logs/ScalingEventsLog.log
+/bin/echo "${0} `/bin/date`: ${noprovisionedwebservers} webservers are currently provisioned." >> ${HOME}/logs/ScalingEventsLog.log
 
 #If we have fewer webservers than we require, build one
-if (  [ "${provisionedwebservers}" != "" ] && [ "${provisionedwebservers}" -lt "${NO_WEBSERVERS}" ] )
+#if (  [ "${noprovisionedwebservers}" != "" ] && [ "${noprovisionedwebservers}" -lt "${NO_WEBSERVERS}" ] )
+if ( [ "${noallips}" -lt "${NO_WEBSERVERS}" ] )
 then
     #It is possible that machine builds failed in which case we may have more servers running than are added to the DNS system
     #In this case, we don't want to keep building machines, so, check for it and exit
@@ -122,12 +108,10 @@ then
     autoscaler_no="`/bin/echo ${autoscaler_name} | /usr/bin/awk -F'-' '{print $1}'`"
     
     #The reason for this sleep period is that when we build from multiple autoscalers we might build too many machines so sleep for multiples of 20 based on autoscaler number
-
-    noallips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST} | /usr/bin/wc -l`"
     
-    /bin/echo "${0} `/bin/date`: no of webservers (live) is: ${provisionedwebservers}" >> ${HOME}/logs/ScalingEventsLog.log
+    /bin/echo "${0} `/bin/date`: no of webservers (live) is: ${noprovisionedwebservers}" >> ${HOME}/logs/ScalingEventsLog.log
     /bin/echo "${0} `/bin/date`: no of webservers (booting and live) is: ${noallips} " >> ${HOME}/logs/ScalingEventsLog.log
-    booting="`/usr/bin/expr ${noallips} - ${provisionedwebservers}`"
+    booting="`/usr/bin/expr ${noallips} - ${noprovisionedwebservers}`"
     /bin/echo "${0} `/bin/date`: no of webservers currently booting is: ${booting} " >> ${HOME}/logs/ScalingEventsLog.log
     
     if ( [ "${noallips}" -lt "${NO_WEBSERVERS}" ] )
@@ -154,22 +138,7 @@ fi
 
 #If we have more webservers than we need, probably due to a configuration seeing (NO_WEBSERVERS) being changed, then, shutdown
 #the excess servers. Issue command repeatedly in case of network glitches, repeated attempts give us a good chance of getting it right
-nowebservers="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST} | /usr/bin/wc -w`"
-nowebservers1="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST} | /usr/bin/wc -w`"
-nowebservers2="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST} | /usr/bin/wc -w`"
-nowebservers3="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST} | /usr/bin/wc -w`"
-nowebservers4="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST} | /usr/bin/wc -w`"
-
-if (
-    ( [ "${nowebservers}" != "${nowebservers1}" ] || [ "${nowebservers}" != "${nowebservers2}" ] || [ "${nowebservers}" != "${nowebservers3}" ] || [ "${nowebservers}" != "${nowebservers4}" ] ) ||
-    ( [ "${nowebservers1}" != "${nowebservers}" ] || [ "${nowebservers1}" != "${nowebservers2}" ] || [ "${nowebservers1}" != "${nowebservers3}" ] || [ "${nowebservers1}" != "${nowebservers4}" ] ) ||
-    ( [ "${nowebservers2}" != "${nowebservers}" ] || [ "${nowebservers2}" != "${nowebservers1}" ] || [ "${nowebservers2}" != "${nowebservers3}" ] || [ "${nowebservers2}" != "${nowebservers4}" ] ) ||
-    ( [ "${nowebservers3}" != "${nowebservers}" ] || [ "${nowebservers3}" != "${nowebservers1}" ] || [ "${nowebservers3}" != "${nowebservers2}" ] || [ "${nowebservers3}" != "${nowebservers4}" ] ) ||
-    ( [ "${nowebservers4}" != "${nowebservers}" ] || [ "${nowebservers4}" != "${nowebservers1}" ] || [ "${nowebservers4}" != "${nowebservers2}" ] || [ "${nowebservers4}" != "${nowebservers3}" ] )
-)
-then
-    exit
-fi
+nowebservers="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`"
 
 if ( [ "${nowebservers}" -gt "${NO_WEBSERVERS}" ] )
 then
