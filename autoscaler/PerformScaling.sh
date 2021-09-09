@@ -65,7 +65,7 @@ then
     exit
 fi
 
-if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] )
+if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" = "" ] )
 then
    exit
 fi
