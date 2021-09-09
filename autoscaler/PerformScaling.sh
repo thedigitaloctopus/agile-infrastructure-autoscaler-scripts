@@ -224,7 +224,7 @@ then
         /bin/rm  ${HOME}/config/shuttingdownwebserverips/${ip}
         count="`/usr/bin/expr ${count} + 1`"
         nowebservers="`/usr/bin/expr ${nowebservers} - 1`"
-        /bin/echo "${0} `/bin/date`: There are now ${nowebservers} running" >> ${HOME}/logs/ScalingEventsLog.log
+        /bin/echo "${0} `/bin/date`: There is now ${nowebservers} webservers running" >> ${HOME}/logs/ScalingEventsLog.log
         ${HOME}/providerscripts/email/SendEmail.sh "UPDATE IN NUMBER OF ACTIVE WEBSERVERS" "There is now ${nowebservers} webservers running"
 
     done
