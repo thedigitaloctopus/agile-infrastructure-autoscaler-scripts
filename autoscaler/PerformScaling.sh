@@ -108,7 +108,7 @@ then
     autoscaler_no="`/bin/echo ${autoscaler_name} | /usr/bin/awk -F'-' '{print $1}'`"
     
     #The reason for this sleep period is that when we build from multiple autoscalers we might build too many machines so sleep for multiples of 20 based on autoscaler number
-    
+    /bin/echo "${0} `/bin/date`: total no of webservers needed is: ${NO_WEBSERVERS}" >> ${HOME}/logs/ScalingEventsLog.log
     /bin/echo "${0} `/bin/date`: no of webservers (live) is: ${noprovisionedwebservers}" >> ${HOME}/logs/ScalingEventsLog.log
     /bin/echo "${0} `/bin/date`: no of webservers (booting and live) is: ${noallips} " >> ${HOME}/logs/ScalingEventsLog.log
     booting="`/usr/bin/expr ${noallips} - ${noprovisionedwebservers}`"
