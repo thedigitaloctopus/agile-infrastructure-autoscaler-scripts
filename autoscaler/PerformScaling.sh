@@ -47,8 +47,9 @@ NO_WEBSERVERS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'NUMBERW
 
 if ( [ ! -f ${HOME}/config/scalingprofile/profile.cnf ] )
 then
-    /bin/mkdir -p ${HOME}/config/scalingprofile
-    /bin/touch ${HOME}/config/scalingprofile/profile.cnf
+    exit
+    #/bin/mkdir -p ${HOME}/config/scalingprofile
+    #/bin/touch ${HOME}/config/scalingprofile/profile.cnf
 fi
 
 if ( [ "`/bin/grep "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf`" = "" ] || [ "`/bin/grep "SCALING_MODE" ${HOME}/config/scalingprofile/profile.cnf`" = "" ] )
