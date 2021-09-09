@@ -29,7 +29,7 @@
 #set -x
 
 #Don't start killing stuff until we have settled down post build (relevant when bulding from snapshots in particular)
-if ( [ "`/bin/cat /proc/uptime | /usr/bin/awk '{print $1}' | /bin/sed 's/\..*//g'`" -lt "1500" ] )
+if ( [ "`/bin/cat /proc/uptime | /usr/bin/awk '{print $1}' | /bin/sed 's/\..*//g'`" -lt "600" ] )
 then
     exit
 fi
