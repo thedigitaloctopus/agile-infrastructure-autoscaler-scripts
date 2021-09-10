@@ -45,12 +45,6 @@ fi
 CUSTOM_USER_SUDO="DEBIAN_FRONTEND=noninteractive /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E "
 OPTIONS=" -o ConnectTimeout=10 -o ConnectionAttempts=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "
 
-#The log files for the server build are written here...
-LOG_FILE="webserver_out_`/bin/date | /bin/sed 's/ //g'`"
-exec 1>>${HOME}/logs/${LOG_FILE}
-ERR_FILE="webserver_err_`/bin/date | /bin/sed 's/ //g'`"
-exec 2>>${HOME}/logs/${ERR_FILE}
-
 #Check there is a directory for logging
 if ( [ ! -d ${HOME}/logs ] )
 then
@@ -64,6 +58,12 @@ if ( [ ! -d ${HOME}/logs/${logdir} ] )
 then
     /bin/mkdir -p ${HOME}/logs/${logdir}
 fi
+
+#The log files for the server build are written here...
+LOG_FILE="webserver_out_`/bin/date | /bin/sed 's/ //g'`"
+exec 1>>${HOME}/logs/${logdir}/${LOG_FILE}
+ERR_FILE="webserver_err_`/bin/date | /bin/sed 's/ //g'`"
+exec 2>>${HOME}/logs/${logdir}/${ERR_FILE}
 
 DONE="0"
 ip=""
