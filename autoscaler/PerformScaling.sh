@@ -62,6 +62,14 @@ then
     /bin/cp /dev/null ${HOME}/config/scalingprofile/profile.cnf
 fi
 
+#With s3fs if the user updates the profile.cnf file without changing the number of bytes s3fs assumes it didn't change
+#So, if we find it has been updated on one of the machines, add an extra space to it in order to signal a change
+if ( [ "`/usr/bin/find ${HOME}/config/scalingprofile/profile.cnf -mmin -1`" != "" ] )
+then
+    /bin/echo " " >> ${HOME}/config/scalingprofile/profile.cnf
+    /bin/sleep 10
+fi    
+
 if ( [ ! -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
 then
     exit
