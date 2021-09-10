@@ -23,6 +23,11 @@
 #######################################################################################################
 #set -x
 
+if ( [ "`${HOME}providerscripts/utilities/TimeSinceInstallation.sh`" -lt "10" ] )
+then
+    exit
+fi
+
 logdate="`/usr/bin/date | /usr/bin/awk '{print $1 $2 $3 $NF}'`"
 logdir="scaling-events-${logdate}"
 
