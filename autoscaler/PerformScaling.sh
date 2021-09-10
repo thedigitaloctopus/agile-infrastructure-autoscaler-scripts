@@ -209,13 +209,33 @@ then
             /bin/sleep 300
 
             /bin/echo "${0} `/bin/date`: Webserver ${ip} is being shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-            /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${SUDO} /bin/touch ${HOME}/runtime/MARKEDFORSHUTDOWN"
+            
+            tryshutdown="1"
+            
+            while ( [ "${tryshutdown}" = "1" ] )
+            do
+                /bin/echo "${0} `/bin/date`: Making a fresh attempt to shutdown webserver ${ip}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+
+                /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${SUDO} /bin/touch ${HOME}/runtime/MARKEDFORSHUTDOWN"
            
-           while ( [ "`/usr/bin/ping -c 3 ${ip} | /bin/grep '100% packet loss'`"  = "" ] )
-           do
-               /bin/echo "${0} `/bin/date`: Waiting for webserver ${ip} to become unresponsive after shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-               /bin/sleep 26
+               count="0"
+               while ( [ "`/usr/bin/ping -c 3 ${ip} | /bin/grep '100% packet loss'`"  = "" ] && [ "${count}" -lt "9" ] )
+               do
+                   /bin/echo "${0} `/bin/date`: Waiting for webserver ${ip} to become unresponsive after shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+                   /bin/sleep 26
+                   count="`/usr/bin/expr ${count} + 1`"
+               done
+           
+               if ( [ "${count}" = "9" ] )
+               then
+                   /bin/echo "${0} `/bin/date`: There seems to have been some trouble getting webserver ${ip} to shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+                   tryshutdown="1"
+               else
+                   tryshutdown="0"
+               fi
            done
+           
+           
            
             /bin/echo "${0} `/bin/date`: Webserver ${ip} has been cleanly shutdown getting ready to destroy the virtual machine" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             /bin/sleep 5
