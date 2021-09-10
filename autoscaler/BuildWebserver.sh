@@ -98,11 +98,45 @@ SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
 DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPORT'`"
 BUILD_CLIENT_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDCLIENTIP'`"
 ASIP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ASIP'`"
+if ( [ "${ASIP}" = "" ] )
+then
+    if ( [ "`/bin/ls ${HOME}/config/autoscalerip | /usr/bin/tr '\n' ' ' | /usr/bin/wc-w`" = "1" ] )
+    then
+        ASIP="`/bin/ls ${HOME}/config/autoscalerip`"
+    else
+        ASIP="multiple"
+    fi
+fi
 AS_PUBLIC_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ASPUBLICIP'`"
+if ( [ "${AS_PUBLIC_IP}" = "" ] )
+then
+    if ( [ "`/bin/ls ${HOME}/config/autoscalerpublicip | /usr/bin/tr '\n' ' ' | /usr/bin/wc-w`" = "1" ] )
+    then
+        AS_PUBLIC_IP="`/bin/ls ${HOME}/config/autoscalerpublicip`"
+    else
+        AS_PUBLIC_IP="mutiple"
+    fi
+fi
 DBIP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBIP'`"
+if ( [ "${DBIP}" = "" ] )
+then
+     ASIP="`/bin/ls ${HOME}/config/databaseip`"
+fi
 DB_PUBLIC_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPUBLICIP'`"
+if ( [ "${DB_PUBLIC_IP}" = "" ] )
+then
+     DB_PUBLIC_IP="`/bin/ls ${HOME}/config/databasepublicip`"
+fi
 ASIPS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ASIPS'`"
+if ( [ "${ASIPS}" = "" ] )
+then
+    ASIPS="`/bin/ls ${HOME}/config/autoscalerpublicip`"
+fi
 ASIP_PRIVATES="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ASIP_PRIVATES'`"
+if ( [ "${ASIP_PRIVATES}" = "" ] )
+then
+    ASIP_PRIVATES"`/bin/ls ${HOME}/config/autoscalerip`"
+fi
 
 #Non standard Variable assignments
 WEBSITE_NAME="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{print $2}'`"
