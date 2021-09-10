@@ -23,6 +23,14 @@
 #######################################################################################################
 #set -x
 
+logdate="`/usr/bin/date | /usr/bin/awk '{print $1 $2 $3 $NF}'`"
+logdir="scaling-events-${logdate}"
+
+if ( [ ! -d ${HOME}/logs/${logdir} ] )
+then
+    /bin/mkdir -p ${HOME}/logs/${logdir}
+fi
+
 if ( [ -f ${HOME}/config/webrootsynctunnel/sync*purge ] || [ -f ${HOME}/config/webrootsynctunnel/switchoff* ] )
 then
     exit
@@ -87,7 +95,7 @@ SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh '
 
 SUDO=" DEBIAN_FRONTEND=noninteractive /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E "
 
-/bin/echo "${0} `/bin/date`: ##########################################################################" >> ${HOME}/logs/ScalingEventsLog.log
+/bin/echo "${0} `/bin/date`: ##########################################################################" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
 #When there are multiple autoscaler, say 4, we need to put in a contention period so that we don't start 4 websevers when we only need 1.
 #Might not be completely fail safe, but, if extra machines are spun up the system will find out and shut them down later on. 
@@ -104,7 +112,7 @@ contentionperiod="`/usr/bin/expr ${autoscaler_no} \* 26`"
 noprovisionedwebservers="`${HOME}/autoscaler/GetDNSIPs.sh | /usr/bin/wc -w`"
 noallips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`"
 
-/bin/echo "${0} `/bin/date`: ${noprovisionedwebservers} webservers are currently provisioned." >> ${HOME}/logs/ScalingEventsLog.log
+/bin/echo "${0} `/bin/date`: ${noprovisionedwebservers} webservers are currently provisioned." >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
 #If we have fewer webservers than we require, build one
 #if (  [ "${noprovisionedwebservers}" != "" ] && [ "${noprovisionedwebservers}" -lt "${NO_WEBSERVERS}" ] )
@@ -119,29 +127,29 @@ then
     autoscaler_no="`/bin/echo ${autoscaler_name} | /usr/bin/awk -F'-' '{print $1}'`"
     
     #The reason for this sleep period is that when we build from multiple autoscalers we might build too many machines so sleep for multiples of 20 based on autoscaler number
-    /bin/echo "${0} `/bin/date`: total no of webservers needed is: ${NO_WEBSERVERS}" >> ${HOME}/logs/ScalingEventsLog.log
-    /bin/echo "${0} `/bin/date`: no of webservers (live) is: ${noprovisionedwebservers}" >> ${HOME}/logs/ScalingEventsLog.log
-    /bin/echo "${0} `/bin/date`: no of webservers (booting and live) is: ${noallips} " >> ${HOME}/logs/ScalingEventsLog.log
+    /bin/echo "${0} `/bin/date`: total no of webservers needed is: ${NO_WEBSERVERS}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+    /bin/echo "${0} `/bin/date`: no of webservers (live) is: ${noprovisionedwebservers}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+    /bin/echo "${0} `/bin/date`: no of webservers (booting and live) is: ${noallips} " >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
     booting="`/usr/bin/expr ${noallips} - ${noprovisionedwebservers}`"
-    /bin/echo "${0} `/bin/date`: no of webservers that are booting is: ${booting} " >> ${HOME}/logs/ScalingEventsLog.log
+    /bin/echo "${0} `/bin/date`: no of webservers that are booting is: ${booting} " >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
     need_booting="`/usr/bin/expr ${NO_WEBSERVERS} - ${noprovisionedwebservers}`"
-    /bin/echo "${0} `/bin/date`: total no of webservers that still need booting initiation is: `/usr/bin/expr ${need_booting} - ${booting}`" >> ${HOME}/logs/ScalingEventsLog.log
-    /bin/echo "${0} `/bin/date`: ${booting} webservers are booting out of a total of ${need_booting} that need booting " >> ${HOME}/logs/ScalingEventsLog.log
+    /bin/echo "${0} `/bin/date`: total no of webservers that still need booting initiation is: `/usr/bin/expr ${need_booting} - ${booting}`" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+    /bin/echo "${0} `/bin/date`: ${booting} webservers are booting out of a total of ${need_booting} that need booting " >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
     if ( [ "${noallips}" -lt "${NO_WEBSERVERS}" ] )
     then
         if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
         then
-            /bin/echo "${0} `/bin/date`: ${need_booting} needs booting so am booting a new one from a snapshot" >> ${HOME}/logs/ScalingEventsLog.log
+            /bin/echo "${0} `/bin/date`: ${need_booting} needs booting so am booting a new one from a snapshot" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             newip="`${HOME}/autoscaler/BuildWebserver.sh`"
            # /bin/echo "${0} `/bin/date`:  Rebooting autoscaler before next scaling event so that memory doesn't run out which sometimes happens on small machines" >> ${HOME}/logs/ScalingEventsLog.log
            # /usr/sbin/shutdown -r now
         else
-            /bin/echo "${0} `/bin/date`: ${need_booting} need booting so am booting a new one as a regular build (not a snapshot)" >> ${HOME}/logs/ScalingEventsLog.log
+            /bin/echo "${0} `/bin/date`: ${need_booting} need booting so am booting a new one as a regular build (not a snapshot)" >> ${HOME}/${logdir}/logs/ScalingEventsLog.log
             newip="`${HOME}/autoscaler/BuildWebserver.sh`"
            # if ( [ "${newip}" != "" ] )
            # then
-           #     /bin/echo "${0} `/bin/date`:  Added the new IP for the webserver( ${newip} ) to the DNS system" >> ${HOME}/logs/ScalingEventsLog.log
+           #     /bin/echo "${0} `/bin/date`:  Added the new IP for the webserver( ${newip} ) to the DNS system" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
            #     ${HOME}/providerscripts/email/SendEmail.sh "A WEBSERVER HAS BEEN DEPLOYED" "Webserver ( ${ip} ) has just been deployed and activated"
            #     /bin/echo "${0} `/bin/date`:  Rebooting autoscaler before next scaling event so that memory doesn't run out which sometimes happens on small machines" >> ${HOME}/logs/ScalingEventsLog.log
            #     /usr/sbin/shutdown -r now
@@ -149,7 +157,7 @@ then
         fi
         if ( [ "${newip}" != "" ] )
         then
-            /bin/echo "${0} `/bin/date`:  Added the new IP for the webserver( ${newip} ) to the DNS system" >> ${HOME}/logs/ScalingEventsLog.log
+            /bin/echo "${0} `/bin/date`:  Added the new IP for the webserver( ${newip} ) to the DNS system" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             ${HOME}/providerscripts/email/SendEmail.sh "A WEBSERVER HAS BEEN DEPLOYED" "Webserver ( ${ip} ) has just been deployed and activated"
             /bin/echo "${0} `/bin/date`:  Rebooting autoscaler before next scaling event so that memory doesn't run out which sometimes happens on small machines" >> ${HOME}/logs/ScalingEventsLog.log
             /usr/sbin/shutdown -r now
@@ -163,8 +171,8 @@ nowebservers="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver
 
 if ( [ "${nowebservers}" -gt "${NO_WEBSERVERS}" ] )
 then
-    /bin/echo "${0} `/bin/date`: More webservers are running than are required by the configuration" >> ${HOME}/logs/ScalingEventsLog.log
-    /bin/echo "${0} `/bin/date`: There are ${nowebservers} runnning when only ${NO_WEBSERVERS} are required" >> ${HOME}/logs/ScalingEventsLog.log
+    /bin/echo "${0} `/bin/date`: More webservers are running than are required by the configuration" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+    /bin/echo "${0} `/bin/date`: There are ${nowebservers} runnning when only ${NO_WEBSERVERS} are required" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
     #we need to terminate an arbitrary webserver so get a list of candidate ones
    # ipstokill="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST}`"
@@ -176,11 +184,11 @@ then
         ip="`/bin/echo ${ipstokill} | /usr/bin/cut -d " " -f ${count}`"
         /bin/touch ${HOME}/config/shuttingdownwebserverips/${ip}
 
-        /bin/echo "${0} `/bin/date`: We have elected webserver ${ip} to shutdown" >> ${HOME}/logs/ScalingEventsLog.log
+        /bin/echo "${0} `/bin/date`: We have elected webserver ${ip} to shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
         if ( [ "`${HOME}/providerscripts/server/GetServerName.sh ${ip} ${CLOUDHOST} | grep webserver`" != "" ] )
         then
-            /bin/echo "${0} `/bin/date`: Webserver ${ip} is having its ip removed from the DNS service" >> ${HOME}/logs/ScalingEventsLog.log
+            /bin/echo "${0} `/bin/date`: Webserver ${ip} is having its ip removed from the DNS service" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             ${HOME}/autoscaler/RemoveIPFromDNS.sh ${ip}
 
             /bin/touch ${HOME}/runtime/IPREMOVED:${ip}
@@ -192,23 +200,23 @@ then
             #terminated machine. Clear? If there is a longer TTL on the record, this could be a problem and the sleep here would have
             #to be increased here to prevent errors on scaledown
             
-            /bin/echo "${0} `/bin/date`: Pausing for 300 seconds to make sure the DNS system has cleared itself" >> ${HOME}/logs/ScalingEventsLog.log
+            /bin/echo "${0} `/bin/date`: Pausing for 300 seconds to make sure the DNS system has cleared itself" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             
             /bin/sleep 300
 
-            /bin/echo "${0} `/bin/date`: Webserver ${ip} is being shutdown" >> ${HOME}/logs/ScalingEventsLog.log
+            /bin/echo "${0} `/bin/date`: Webserver ${ip} is being shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${SUDO} /bin/touch ${HOME}/runtime/MARKEDFORSHUTDOWN"
            
            while ( [ "`/usr/bin/ping -c 3 ${ip} | /bin/grep '100% packet loss'`"  = "" ] )
            do
-               /bin/echo "${0} `/bin/date`: Waiting for webserver ${ip} to become unresponsive after shutdown" >> ${HOME}/logs/ScalingEventsLog.log
+               /bin/echo "${0} `/bin/date`: Waiting for webserver ${ip} to become unresponsive after shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
                /bin/sleep 26
            done
            
-            /bin/echo "${0} `/bin/date`: Webserver ${ip} has been cleanly shutdown getting ready to destroy the virtual machine" >> ${HOME}/logs/ScalingEventsLog.log
+            /bin/echo "${0} `/bin/date`: Webserver ${ip} has been cleanly shutdown getting ready to destroy the virtual machine" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             /bin/sleep 5
-            /bin/echo "${0} `/bin/date`: Webserver ${ip} is being destroyed" >> ${HOME}/logs/ScalingEventsLog.log
-            /bin/echo "${0} `/bin/date` : ${ip} is has been destroyed because it was excess to the defined scaling requirements" >> ${HOME}/logs/MonitoringLog.log
+            /bin/echo "${0} `/bin/date`: Webserver ${ip} is being destroyed" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+            /bin/echo "${0} `/bin/date` : ${ip} is has been destroyed because it was excess to the defined scaling requirements" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
             
             DBaaS_DBSECURITYGROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaSDBSECURITYGROUP'`"
@@ -235,7 +243,7 @@ then
         /bin/rm  ${HOME}/config/shuttingdownwebserverips/${ip}
         count="`/usr/bin/expr ${count} + 1`"
         nowebservers="`/usr/bin/expr ${nowebservers} - 1`"
-        /bin/echo "${0} `/bin/date`: There is now ${nowebservers} webservers running" >> ${HOME}/logs/ScalingEventsLog.log
+        /bin/echo "${0} `/bin/date`: There is now ${nowebservers} webservers running" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
         ${HOME}/providerscripts/email/SendEmail.sh "UPDATE IN NUMBER OF ACTIVE WEBSERVERS" "There is now ${nowebservers} webservers running"
 
     done
