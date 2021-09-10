@@ -31,6 +31,7 @@ then
     exit
 fi
 
+
 SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
 SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
 DEFAULT_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DEFAULTUSER'`"
@@ -54,6 +55,14 @@ exec 2>>${HOME}/logs/${ERR_FILE}
 if ( [ ! -d ${HOME}/logs ] )
 then
     /bin/mkdir -p ${HOME}/logs
+fi
+
+logdate="`/usr/bin/date | /usr/bin/awk '{print $1 $2 $3 $NF}'`"
+logdir="scaling-events-${logdate}"
+
+if ( [ ! -d ${HOME}/logs/${logdir} ] )
+then
+    /bin/mkdir -p ${HOME}/logs/${logdir}
 fi
 
 DONE="0"
@@ -106,14 +115,6 @@ z="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{$1=""}1' | /bin/sed 's/^ //g
 name="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{print $1}'`"
 WEBSITE_DISPLAY_NAME="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEDISPLAYNAME' | /bin/sed 's/_/ /g'`"
 
-
-##/bin/touch ${HOME}/.ssh/ASIP:`${HOME}/providerscripts/utilities/GetIP.sh`
-##/bin/touch ${HOME}/.ssh/ASPUBLICIP:`${HOME}/providerscripts/utilities/GetPublicIP.sh`
-
-#If it doesn't successfully build the webserver, try building another one up to a maximum of 3 attempts
-/bin/echo "${0} `/bin/date`: ###############################################" >> ${HOME}/logs/MonitoringWebserverBuildLog.log
-/bin/echo "${0} `/bin/date`: Building a new webserver" >> ${HOME}/logs/MonitoringWebserverBuildLog.log
-
 # Set up the webservers properties, like its name and so on.
 RND="`/bin/cat /dev/urandom | /usr/bin/tr -dc 'a-zA-Z0-9' | /usr/bin/fold -w 4 | /usr/bin/head -n 1`"
 SERVER_TYPE="webserver"
@@ -121,6 +122,11 @@ SERVER_NUMBER="`${HOME}/providerscripts/server/NumberOfServers.sh "${SERVER_TYPE
 webserver_name="webserver-${RND}-${WEBSITE_NAME}-${BUILD_IDENTIFIER}"
 SERVER_INSTANCE_NAME="`/bin/echo ${webserver_name} | /usr/bin/cut -c -32 | /bin/sed 's/-$//g'`"
 
+logdir="${logdir}/${webserver_name}"
+
+#If it doesn't successfully build the webserver, try building another one up to a maximum of 3 attempts
+/bin/echo "${0} `/bin/date`: ###############################################" >> ${HOME}/logs/${logdir}/.log
+/bin/echo "${0} `/bin/date`: Building a new webserver" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 
 #What type of machine are we building - this will determine the size and so on with the cloudhost
 SERVER_TYPE_ID="`${HOME}/providerscripts/server/GetServerTypeID.sh ${SIZE} "${SERVER_TYPE}" ${CLOUDHOST}`"
@@ -142,7 +148,7 @@ done
 
 if ( [ "${count}" = "10" ] )
 then
-    /bin/echo "${0} `/bin/date`: Failed to build server" >> ${HOME}/logs/MonitoringWebserverBuildLog.log
+    /bin/echo "${0} `/bin/date`: Failed to build server" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
     exit
 fi
 
@@ -165,7 +171,7 @@ if ( [ "${ip}" = "" ] )
 then
     #This should never happen, and I am not sure what to do about it if it does. If we don't have an ip address, how can
     #we destroy the machine? I simply exit, therefore.
-    /bin/echo "${0} `/bin/date`: Server didn't come online " >> ${HOME}/logs/MonitoringWebserverBuildLog.log
+    /bin/echo "${0} `/bin/date`: Server didn't come online " >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
     exit
 fi
 
@@ -246,11 +252,11 @@ then
 
             if ( [ "${count}" = "10" ] )
             then
-                /bin/echo "${0} `/bin/date`: Failed to build server" >> ${HOME}/logs/MonitoringWebserverBuildLog.log
+                /bin/echo "${0} `/bin/date`: Failed to build server" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
                 exit
             fi
         else
-            /bin/echo "${0} `/bin/date`: Failed to build server -cloudhost password not set" >> ${HOME}/logs/MonitoringWebserverBuildLog.log
+            /bin/echo "${0} `/bin/date`: Failed to build server -cloudhost password not set" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
             exit
         fi
         #Set up our ssh keys
@@ -362,7 +368,7 @@ then
         /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO}  ${HOME}/ws.sh 'bimonthly' ${SERVER_USER}"
     fi
 else
-    /bin/echo "${0} `/bin/date`: Building a new machine from a snapshot or dynamically scaled" >> ${HOME}/logs/MonitoringWebserverBuildLog.log
+    /bin/echo "${0} `/bin/date`: Building a new machine from a snapshot or dynamically scaled" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 
     #If we got to here, then the server has been built from a snapshot.
     /usr/bin/touch ${HOME}/config/bootedwebserverips/${private_ip}
@@ -387,7 +393,7 @@ else
             /bin/sleep 300
         fi
 
-        /bin/echo "${0} `/bin/date` : ${ip} is being destroyed because it couldn't be connected to after spawning it from a snapshot" >> ${HOME}/logs/MonitoringLog.log
+        /bin/echo "${0} `/bin/date` : ${ip} is being destroyed because it couldn't be connected to after spawning it from a snapshot" >> ${HOME}/logs/${logdir}/MonitoringLog.log
         ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
         
         DBaaS_DBSECURITYGROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaSDBSECURITYGROUP'`"
@@ -455,26 +461,26 @@ then
     /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=60 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "exit"
 fi
 
-/bin/echo "${0} `/bin/date`: It can take a minute or so for a new machine to initialise after it is back online post reboot, so just gonna nap for 30 seconds..." >> ${HOME}/logs/MonitoringWebserverBuildLog.log
+/bin/echo "${0} `/bin/date`: It can take a minute or so for a new machine to initialise after it is back online post reboot, so just gonna nap for 30 seconds..." >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 
 /bin/sleep 30
 
 /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/application/processing/PerformPostProcessingByApplication.sh ${SERVER_USER}"
 
-/bin/echo "${0} `/bin/date`: The main build has completed now just have to check that it's been dun right" >> ${HOME}/logs/MonitoringWebserverBuildLog.log
+/bin/echo "${0} `/bin/date`: The main build has completed now just have to check that it's been dun right" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 
 #Do some checks to make sure the machine has come online and so on
 tries="0"
 while ( [ "${tries}" -lt "20" ] && ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/AreAssetsMounted.sh"`" != "MOUNTED" ] || [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/CheckServerAlive.sh"`" != "ALIVE" ] ) )
 do
-    /bin/echo "${0} `/bin/date`: Doing integrity checks for ${ip}" >> ${HOME}/logs/MonitoringWebserverBuildLog.log
+    /bin/echo "${0} `/bin/date`: Doing integrity checks for ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
     /bin/sleep 10
     tries="`/usr/bin/expr ${tries} + 1`"
 done
 
 if ( [ "${tries}" = "20" ] )
 then
-    /bin/echo "${0} `/bin/date`: Failed integrity checks for ${ip}" >> ${HOME}/logs/MonitoringWebserverBuildLog.log
+    /bin/echo "${0} `/bin/date`: Failed integrity checks for ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 fi
 
 /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/SyncFromWebrootTunnel.sh"
@@ -494,11 +500,11 @@ do
 
     if ( [ "`/usr/bin/curl -I --max-time 60 --insecure https://${ip}:443/${file} | /bin/grep -E 'HTTP/2 200|HTTP/2 301|HTTP/2 302|200 OK|302 Found|301 Moved Permanently'`" = "" ] )
     then
-        /bin/echo "${0} `/bin/date`: Expecting ${ip} to be online, but can't curl it yet...." >> ${HOME}/logs/MonitoringWebserverBuildLog.log
+        /bin/echo "${0} `/bin/date`: Expecting ${ip} to be online, but can't curl it yet...." >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
         /bin/sleep 60
         loop="`/usr/bin/expr ${loop} + 1`"
     else
-        /bin/echo "${0} `/bin/date`: ${ip} is online wicked..." >> ${HOME}/logs/MonitoringWebserverBuildLog.log
+        /bin/echo "${0} `/bin/date`: ${ip} is online wicked..." >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
         break
     fi
 done
@@ -512,7 +518,7 @@ then
         /bin/sleep 300
     fi
     /bin/echo "${0} `/bin/date` : ${ip} is being destroyed because it didn't come online." >> ${HOME}/logs/MonitoringLog.log
-    /bin/echo "${0} `/bin/date`: ${ip} is being destroyed because it didn't come online" >> ${HOME}/logs/MonitoringWebserverBuildLog.log
+    /bin/echo "${0} `/bin/date`: ${ip} is being destroyed because it didn't come online" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
     ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
     
     DBaaS_DBSECURITYGROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaSDBSECURITYGROUP'`"
@@ -538,12 +544,12 @@ else
     #If we got to here then we are a successful build as as best as we can tell, everything is online
     #So, we add the ip address of our new machine to our DNS provider and that machine is then ready
     #to start serving requests
-    /bin/echo "${0} `/bin/date`: ${ip} is fully online and it's public ip is being added to the DNS provider" >> ${HOME}/logs/MonitoringWebserverBuildLog.log
+    /bin/echo "${0} `/bin/date`: ${ip} is fully online and it's public ip is being added to the DNS provider" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
     /bin/rm ${HOME}/config/beingbuiltips/${private_ip}
     ${HOME}/autoscaler/AddIPToDNS.sh ${ip}
     /bin/echo "${ip}"
 fi
 
-/bin/echo "${0} `/bin/date`: Either way, successful or not the build process for machine with ip: ${ip} has completed" >> ${HOME}/logs/MonitoringWebserverBuildLog.log
+/bin/echo "${0} `/bin/date`: Either way, successful or not the build process for machine with ip: ${ip} has completed" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 #Remove our flag saying that this is still in the being built state
 /bin/rm ${HOME}/config/beingbuiltips/${private_ip}
