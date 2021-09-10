@@ -177,6 +177,9 @@ if ( [ "${nowebservers}" -gt "${NO_WEBSERVERS}" ] )
 then
     /bin/echo "${0} `/bin/date`: More webservers are running than are required by the configuration" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
     /bin/echo "${0} `/bin/date`: There are ${nowebservers} runnning when only ${NO_WEBSERVERS} are required" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+    
+    /bin/touch ${HOME}/runtime/SWITCHOFFDEADORALIVE.lock
+    /bin/touch ${HOME}/runtime/SWITCHOFFPURGEDETACHEDIPS.lock
 
     #we need to terminate an arbitrary webserver so get a list of candidate ones
    # ipstokill="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST}`"
@@ -276,6 +279,16 @@ then
             ${HOME}/providerscripts/email/SendEmail.sh "UPDATE IN NUMBER OF ACTIVE WEBSERVERS" "There is now ${nowebservers} webservers running"
         else
             /bin/echo "${0} `/bin/date`: Couldn't find the name for webserver ${ip} its most likely already been shutdown for some other reason" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+        fi
+        
+        if ( [ -f ${HOME}/runtime/SWITCHOFFDEADORALIVE.lock ] )
+        then
+            /bin/rm ${HOME}/runtime/SWITCHOFFDEADORALIVE.lock 
+        fi
+        
+        if ( [ -f ${HOME}/runtime/SWITCHOFFPURGEDETACHEDIPS.lock ] )
+        then
+            /bin/rm ${HOME}/runtime/SWITCHOFFPURGEDETACHEDIPS.lock
         fi
     done
 fi
