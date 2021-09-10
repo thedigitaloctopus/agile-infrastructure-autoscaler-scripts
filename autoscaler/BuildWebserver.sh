@@ -124,6 +124,11 @@ SERVER_INSTANCE_NAME="`/bin/echo ${webserver_name} | /usr/bin/cut -c -32 | /bin/
 
 logdir="${logdir}/${webserver_name}"
 
+if ( [ ! -d ${HOME}/logs/${logdir} ] )
+then
+    /bin/mkdir -p ${HOME}/logs/${logdir}
+fi
+
 #If it doesn't successfully build the webserver, try building another one up to a maximum of 3 attempts
 /bin/echo "${0} `/bin/date`: ###############################################" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 /bin/echo "${0} `/bin/date`: Building a new webserver" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
