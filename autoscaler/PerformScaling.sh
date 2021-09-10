@@ -45,11 +45,23 @@ SCALING_MODE="static"
 
 NO_WEBSERVERS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'NUMBERWS'`"
 
+if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" = "" ] )
+then
+   exit
+elif ( [ ! -f ${HOME}/config/scalingprofile/profile.cnf ] )
+then
+    /bin/mkdir ${HOME}/config/scalingprofile
+    /bin/touch ${HOME}/config/scalingprofile/profile.cnf
+fi
+
+if ( [ ! -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
+then
+    exit
+fi
+
 if ( [ ! -f ${HOME}/config/scalingprofile/profile.cnf ] )
 then
     exit
-    #/bin/mkdir -p ${HOME}/config/scalingprofile
-    #/bin/touch ${HOME}/config/scalingprofile/profile.cnf
 fi
 
 if ( [ "`/bin/grep "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf`" = "" ] || [ "`/bin/grep "SCALING_MODE" ${HOME}/config/scalingprofile/profile.cnf`" = "" ] )
@@ -62,16 +74,6 @@ SCALING_MODE="`/bin/grep "SCALING_MODE" ${HOME}/config/scalingprofile/profile.cn
 NO_WEBSERVERS="`/bin/grep "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
 
 if ( [ "${SCALING_MODE}" != "static" ] )
-then
-    exit
-fi
-
-if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" = "" ] )
-then
-   exit
-fi
-
-if ( [ ! -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
 then
     exit
 fi
