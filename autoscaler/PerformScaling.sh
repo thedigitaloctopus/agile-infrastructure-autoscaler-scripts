@@ -59,7 +59,7 @@ then
 elif ( [ ! -f ${HOME}/config/scalingprofile/profile.cnf ] )
 then
     /bin/mkdir ${HOME}/config/scalingprofile
-    /bin/touch ${HOME}/config/scalingprofile/profile.cnf
+    /bin/cp /dev/null ${HOME}/config/scalingprofile/profile.cnf
 fi
 
 if ( [ ! -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
