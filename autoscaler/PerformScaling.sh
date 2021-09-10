@@ -189,8 +189,10 @@ then
         /bin/touch ${HOME}/config/shuttingdownwebserverips/${ip}
 
         /bin/echo "${0} `/bin/date`: We have elected webserver ${ip} to shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+        
+        webserver_name="`${HOME}/providerscripts/server/GetServerName.sh ${ip} ${CLOUDHOST} | grep webserver`"
 
-        if ( [ "`${HOME}/providerscripts/server/GetServerName.sh ${ip} ${CLOUDHOST} | grep webserver`" != "" ] )
+        if ( [ "${webserver_name}" != "" ] )
         then
             /bin/echo "${0} `/bin/date`: Webserver ${ip} is having its ip removed from the DNS service" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             ${HOME}/autoscaler/RemoveIPFromDNS.sh ${ip}
@@ -219,15 +221,15 @@ then
                 markattempts="`/usr/bin/expr ${markattempts} + 1`"
                 /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${SUDO} /bin/touch ${HOME}/runtime/MARKEDFORSHUTDOWN"
            
-               count="0"
+               count1="0"
                while ( [ "`/usr/bin/ping -c 3 ${ip} | /bin/grep '100% packet loss'`"  = "" ] && [ "${count}" -lt "9" ] )
                do
                    /bin/echo "${0} `/bin/date`: Waiting for webserver ${ip} to become unresponsive after shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
                    /bin/sleep 26
-                   count="`/usr/bin/expr ${count} + 1`"
+                   count1="`/usr/bin/expr ${count1} + 1`"
                done
            
-               if ( [ "${count}" = "9" ] )
+               if ( [ "${count1}" = "9" ] )
                then
                    /bin/echo "${0} `/bin/date`: There seems to have been some trouble getting webserver ${ip} to shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
                    tryshutdown="1"
@@ -264,12 +266,16 @@ then
             /bin/rm ${HOME}/runtime/IPREMOVED:${ip}
             ${HOME}/providerscripts/email/SendEmail.sh "A WEBSERVER HAS BEEN DESTROYED" "Webserver ( ${ip} ) has just been shutdown and destroyed"
         fi
-
-        /bin/rm  ${HOME}/config/shuttingdownwebserverips/${ip}
-        count="`/usr/bin/expr ${count} + 1`"
-        nowebservers="`/usr/bin/expr ${nowebservers} - 1`"
-        /bin/echo "${0} `/bin/date`: There is now ${nowebservers} webservers running" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-        ${HOME}/providerscripts/email/SendEmail.sh "UPDATE IN NUMBER OF ACTIVE WEBSERVERS" "There is now ${nowebservers} webservers running"
-
+        
+        if ( [ "${webserver_name}" != "" ] )
+        then
+            /bin/rm  ${HOME}/config/shuttingdownwebserverips/${ip}
+            count="`/usr/bin/expr ${count} + 1`"
+            nowebservers="`/usr/bin/expr ${nowebservers} - 1`"
+            /bin/echo "${0} `/bin/date`: There is now ${nowebservers} webservers running" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+            ${HOME}/providerscripts/email/SendEmail.sh "UPDATE IN NUMBER OF ACTIVE WEBSERVERS" "There is now ${nowebservers} webservers running"
+        else
+            /bin/echo "${0} `/bin/date`: Couldn't find the name for webserver ${ip} its most likely already been shutdown for some other reason" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+        fi
     done
 fi
