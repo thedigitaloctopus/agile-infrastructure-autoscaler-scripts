@@ -55,7 +55,6 @@ done
 #################################################ESSENTIAL#########################################################
 
 SCALING_MODE="static"
-
 NO_WEBSERVERS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'NUMBERWS'`"
 
 if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" = "" ] )
