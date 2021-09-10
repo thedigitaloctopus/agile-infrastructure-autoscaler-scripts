@@ -150,7 +150,7 @@ then
            # /bin/echo "${0} `/bin/date`:  Rebooting autoscaler before next scaling event so that memory doesn't run out which sometimes happens on small machines" >> ${HOME}/logs/ScalingEventsLog.log
            # /usr/sbin/shutdown -r now
         else
-            /bin/echo "${0} `/bin/date`: ${need_booting} need booting so am booting a new one as a regular build (not a snapshot)" >> ${HOME}/${logdir}/logs/ScalingEventsLog.log
+            /bin/echo "${0} `/bin/date`: ${need_booting} need booting so am booting a new one as a regular build (not a snapshot)" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             newip="`${HOME}/autoscaler/BuildWebserver.sh`"
            # if ( [ "${newip}" != "" ] )
            # then
