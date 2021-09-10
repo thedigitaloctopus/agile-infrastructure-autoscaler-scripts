@@ -171,7 +171,7 @@ fi
 
 #If we have more webservers than we need, probably due to a configuration seeing (NO_WEBSERVERS) being changed, then, shutdown
 #the excess servers. Issue command repeatedly in case of network glitches, repeated attempts give us a good chance of getting it right
-nowebservers="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`"
+nowebservers="`${HOME}/autoscaler/GetDNSIPs.sh | /usr/bin/wc -w`"
 
 if ( [ "${nowebservers}" -gt "${NO_WEBSERVERS}" ] )
 then
