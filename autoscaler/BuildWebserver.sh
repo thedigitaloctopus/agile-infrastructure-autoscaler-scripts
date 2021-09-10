@@ -59,11 +59,6 @@ then
     /bin/mkdir -p ${HOME}/logs/${logdir}
 fi
 
-#The log files for the server build are written here...
-LOG_FILE="webserver_out_`/bin/date | /bin/sed 's/ //g'`"
-exec 1>>${HOME}/logs/${logdir}/${LOG_FILE}
-ERR_FILE="webserver_err_`/bin/date | /bin/sed 's/ //g'`"
-exec 2>>${HOME}/logs/${logdir}/${ERR_FILE}
 
 DONE="0"
 ip=""
@@ -128,6 +123,12 @@ if ( [ ! -d ${HOME}/logs/${logdir} ] )
 then
     /bin/mkdir -p ${HOME}/logs/${logdir}
 fi
+
+#The log files for the server build are written here...
+LOG_FILE="webserver_out_`/bin/date | /bin/sed 's/ //g'`"
+exec 1>>${HOME}/logs/${logdir}/${LOG_FILE}
+ERR_FILE="webserver_err_`/bin/date | /bin/sed 's/ //g'`"
+exec 2>>${HOME}/logs/${logdir}/${ERR_FILE}
 
 #If it doesn't successfully build the webserver, try building another one up to a maximum of 3 attempts
 /bin/echo "${0} `/bin/date`: ###############################################" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
