@@ -55,14 +55,14 @@ then
     /bin/sleep 5
 fi
 
-NEW_BUILD_CLIENT_IP="`/bin/ls /tmp/BUILDCLIENTIP/* | /usr/bin/awk -F'/' '{print $NF}'`"
-if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${NEW_BUILD_CLIENT_IP} | /bin/grep ALLOW`" = "" ] )
-then
-    /usr/sbin/ufw default deny incoming
-    /usr/sbin/ufw default allow outgoing
-    /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${NEW_BUILD_CLIENT_IP} to any port ${SSH_PORT}
-    /bin/sleep 5
-fi
+#NEW_BUILD_CLIENT_IP="`/bin/ls /tmp/BUILDCLIENTIP/* | /usr/bin/awk -F'/' '{print $NF}'`"
+#if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${NEW_BUILD_CLIENT_IP} | /bin/grep ALLOW`" = "" ] )
+#then
+#    /usr/sbin/ufw default deny incoming
+#    /usr/sbin/ufw default allow outgoing
+#    /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${NEW_BUILD_CLIENT_IP} to any port ${SSH_PORT}
+#    /bin/sleep 5
+#fi
 
 
 for autoscalerip in `/bin/ls ${HOME}/config/autoscalerip`
