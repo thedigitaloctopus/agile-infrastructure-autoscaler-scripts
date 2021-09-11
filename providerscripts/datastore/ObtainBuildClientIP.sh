@@ -1,3 +1,8 @@
+if ( [ -f ${HOME}/runtime/BUILDCLIENTUPDATED ] )
+then
+    exit
+fi
+
 if ( [ -d /tmp/BUILDCLIENTIP ] )
 then
     /bin/rm /tmp/BUILDCLIENTIP/*
@@ -9,4 +14,5 @@ BUILD_CLIENT_IP="`/bin/ls /tmp/BUILDCLIENTIP/* | /usr/bin/awk -F'/' '{print $NF}
 if ( [ "${BUILD_CLIENT_IP}" != "" ] )
 then
     ${HOME}/providerscripts/utilities/StoreConfigValue.sh "BUILDCLIENTIP" "${BUILD_CLIENT_IP}"
+    /bin/touch ${HOME}/runtime/BUILDCLIENTUPDATED
 fi 
