@@ -25,17 +25,5 @@ then
     :
 fi
 
-region="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DNSREGION'`"
-username="${1}"
-apikey="${2}"
-websiteurl="`/bin/echo ${3} | /usr/bin/cut -d'.' -f2-`"
-dns="${4}"
-
-if ( [ "${dns}" = "rackspace" ] )
-then
-    token="`/usr/bin/curl -s -X POST https://identity.api.rackspacecloud.com/v2.0/tokens -H "Content-Type: application/json" -d '{ "auth": { "RAX-KSKEY:apiKeyCredentials": { "username": "'${username}'", "apiKey": "'${apikey}'" } } }' | /usr/bin/python -m json.tool | /usr/bin/jq ".access.token.id" | /bin/sed 's/"//g'`"
-    endpoint="`/usr/bin/curl -s -X POST https://identity.api.rackspacecloud.com/v2.0/tokens -H "Content-Type: application/json" -d '{ "auth": { "RAX-KSKEY:apiKeyCredentials": { "username": "'${username}'", "apiKey": "'${apikey}'" } } }' | /usr/bin/python -m json.tool | /usr/bin/jq ".access.serviceCatalog[].endpoints[].publicURL" | /bin/sed 's/"//g' | /bin/grep ${region} | /bin/grep dns`"
-    /usr/bin/curl -X POST ${endpoint}/domains -H "X-Auth-Token: ${token}" -H "Content-Type: application/json" -d '{ "domains" : [ { "name" : "'${websiteurl}'", "comment" : "Root level for '${websiteurl}'", "subdomains" : { "domains" : [] }, "ttl" : 300 , "emailAddress" : "webmaster@'${websiteurl}'" } ] }' | python -m json.tool
-fi
 ~
 ~
