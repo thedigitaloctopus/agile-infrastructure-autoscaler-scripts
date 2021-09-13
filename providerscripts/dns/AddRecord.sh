@@ -57,18 +57,3 @@ then
     /usr/bin/curl  -H "X-DNS-Token: ${authkey}" -H 'Accept: application/json' -H 'Content-Type: application/json' -X POST -d "{\"record\":{\"name\": \"${subdomain}\",\"record_type\": \"A\",\"content\": \"${ip}\",\"ttl\": 120}}" https://api.exoscale.com/dns/v1/domains/${domainurl}/records
 fi
 
-region="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DNSREGION'`"
-username="${2}"
-apikey="${3}"
-websiteurl="${4}"
-ip="${5}"
-dns="${6}"
-rootdomain="`/bin/echo ${websiteurl} | /usr/bin/awk -F'.' '{$1="";print }' | /bin/sed 's/^ //' | sed 's/ /./g'`"
-
-if ( [ "${dns}" = "rackspace" ] )
-then
-    token="`/usr/bin/curl -s -X POST https://identity.api.rackspacecloud.com/v2.0/tokens -H "Content-Type: application/json" -d '{ "auth": { "RAX-KSKEY:apiKeyCredentials": { "username": "'${username}'", "apiKey": "'${apikey}'" } } }' | /usr/bin/python -m json.tool | /usr/bin/jq ".access.token.id" | /bin/sed 's/"//g'`"
-    endpoint="`/usr/bin/curl -s -X POST https://identity.api.rackspacecloud.com/v2.0/tokens -H "Content-Type: application/json" -d '{ "auth": { "RAX-KSKEY:apiKeyCredentials": { "username": "'${username}'", "apiKey": "'${apikey}'" } } }' | /usr/bin/python -m json.tool | /usr/bin/jq ".access.serviceCatalog[].endpoints[].publicURL" | /bin/sed 's/"//g' | /bin/grep ${region} | /bin/grep dns`"
-    domainid="`/usr/bin/curl -X GET -H "X-Auth-Token:${token}" -H "Accept:application/json" "${endpoint}/domains" | /usr/bin/python -m json.tool | /usr/bin/jq '.domains[] | select(.name=="'${rootdomain}'") | .id'`"
-    /usr/bin/curl -s -X POST $endpoint/domains/${domainid}/records -H "X-Auth-Token: $token" -H "Content-Type: application/json" -d '{ "records": [ { "name" : "'${websiteurl}'", "type" : "A", "data" : "'${ip}'", "ttl" : 300 } ] }' | python -m json.tool
-fi
