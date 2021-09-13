@@ -56,7 +56,7 @@ netmask 255.255.0.0
         fi
 elif ( [ "${BUILDOS}" = "ubuntu" ] )
     then
-        if ( [ "${BUILDOSVERSION}" = "18.04" ] || [ "${BUILDOSVERSION}" = "20.04" ]  )
+        if ( [ "${BUILDOSVERSION}" = "20.04" ]  )
         then
             /bin/echo "network:
   version: 2
