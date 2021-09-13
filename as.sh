@@ -106,11 +106,6 @@ then
     /bin/chmod 700 ${HOME}/.ssh
 fi
 
-if ( [ ! -d ${HOME}/cpuaggregator ] )
-then
-    /bin/mkdir -p ${HOME}/cpuaggregator
-    /bin/chmod 700 ${HOME}/cpuaggregator
-fi
 if ( [ ! -d ${HOME}/runtime ] )
 then
     /bin/mkdir -p ${HOME}/runtime
