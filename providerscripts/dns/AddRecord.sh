@@ -54,7 +54,7 @@ dns="${6}"
 
 if ( [ "${dns}" = "exoscale" ] )
 then
-    /usr/bin/exo dns add A ${domainurl} -a ${ip}
+    /usr/bin/exo dns add A ${domainurl} -a ${ip} -n ${subdomain}
     #Alternative
     #/usr/bin/curl  -H "X-DNS-Token: ${authkey}" -H 'Accept: application/json' -H 'Content-Type: application/json' -X POST -d "{\"record\":{\"name\": \"${subdomain}\",\"record_type\": \"A\",\"content\": \"${ip}\",\"ttl\": 120}}" https://api.exoscale.com/dns/v1/domains/${domainurl}/records
 fi
