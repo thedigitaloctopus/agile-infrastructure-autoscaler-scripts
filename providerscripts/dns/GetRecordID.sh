@@ -60,7 +60,7 @@ dns="${6}"
 
 if ( [ "${dns}" = "exoscale" ] )
 then
-    /usr/bin/exo -O json dns list | /usr/bin/jq --arg tmp_subdomain "${subdomain}" --arg tmp_content "${ip}" '.[] | select (.name == $tmp_subdomain and .content == $tmp_content ) | .id'  
+    /usr/bin/exo -O json dns show | /usr/bin/jq --arg tmp_subdomain "${subdomain}" --arg tmp_content "${ip}" '.[] | select (.name == $tmp_subdomain and .content == $tmp_content ) | .id'  
     
     
     #Alternative
