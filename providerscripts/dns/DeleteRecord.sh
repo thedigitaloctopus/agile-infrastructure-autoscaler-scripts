@@ -51,7 +51,7 @@ domainurl="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL'
 
 if ( [ "${dns}" = "exoscale" ] )
 then
-
+   /usr/bin/exo dns remove ${domainurl} ${recordid}
    #Alternative
    # /usr/bin/curl  -H "X-DNS-Token: ${authkey}"  -H 'Accept: application/json' -X DELETE  https://api.exoscale.com/dns/v1/domains/${domainurl}/records/${recordid}
 fi
