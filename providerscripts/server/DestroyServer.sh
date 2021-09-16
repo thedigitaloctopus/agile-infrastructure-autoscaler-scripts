@@ -39,7 +39,6 @@ then
         /bin/rm ${HOME}/config/webserverips/${private_server_ip}
         /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
         /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
-        /bin/rm ${HOME}/config/webserveripcouples/*${server_ip}*
 
         server_id="`/usr/local/bin/doctl compute droplet list | /bin/grep ${server_ip} | /usr/bin/awk '{print $1}'`"
 
@@ -66,7 +65,6 @@ then
             /bin/rm ${HOME}/config/webserverips/${private_server_ip}
             /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
             /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
-            /bin/rm ${HOME}/config/webserveripcouples/*${serverip}*
         fi
     fi
 fi
@@ -76,14 +74,12 @@ then
     /bin/rm ${HOME}/config/webserverips/${private_server_ip}
     /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
     /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
-    /bin/rm ${HOME}/config/webserveripcouples/*${server_ip}*
     server_id="`/usr/local/bin/cs listVirtualMachines | jq --arg tmp_ip_address "${server_ip}" '(.virtualmachine[] | select(.nic[].ipaddress == $tmp_ip_address) | .id)' | /bin/sed 's/\"//g'`"
     /usr/local/bin/cs destroyVirtualMachine id="${server_id}"
     /bin/echo "${0} `/bin/date`: Destroyed a server with id ${server_id}" >> ${HOME}/logs/MonitoringLog.log
     /bin/rm ${HOME}/config/webserverips/${private_server_ip}
     /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
     /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
-    /bin/rm ${HOME}/config/webserveripcouples/*${server_ip}*
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
@@ -93,7 +89,6 @@ then
         /bin/rm ${HOME}/config/webserverips/${private_server_ip}
         /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
         /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
-        /bin/rm ${HOME}/config/webserveripcouples/*${server_ip}*
         server_to_delete=""
         server_to_delete="`${HOME}/providerscripts/server/GetServerName.sh ${server_ip} 'linode'`"
         server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_to_delete} | /bin/grep -v "id" | /usr/bin/awk '{print $1}'`"
@@ -105,7 +100,6 @@ then
             /bin/rm ${HOME}/config/webserverips/${private_server_ip}
             /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
             /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
-            /bin/rm ${HOME}/config/webserveripcouples/*${server_ip}*
         else
             /bin/echo "${0} `/bin/date` : This script is only for Destroying Webservers, refused to destroy server with ip: ${server_ip}" >> ${HOME}/logs/MonitoringLog.log
         fi
@@ -123,7 +117,6 @@ then
         /bin/rm ${HOME}/config/webserverips/${private_server_ip}
         /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
         /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
-        /bin/rm ${HOME}/config/webserveripcouples/*${server_ip}*
 
         /bin/sleep 1
         server_id="`/usr/bin/vultr server list | /bin/grep ${server_ip} | /usr/bin/awk '{print $1}'`"
@@ -135,7 +128,6 @@ then
         /bin/rm ${HOME}/config/webserverips/${private_server_ip}
         /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
         /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
-        /bin/rm ${HOME}/config/webserveripcouples/*${server_ip}*
     else
         /bin/echo "${0} `/bin/date` : This script is only for Destroying Webservers, refused to destroy server with ip: ${server_ip}" >> ${HOME}/logs/MonitoringLog.log
     fi
@@ -148,7 +140,6 @@ then
         /bin/rm ${HOME}/config/webserverips/${private_server_ip}
         /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
         /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
-        /bin/rm ${HOME}/config/webserveripcouples/*${server_ip}*
 
         instance_id="`/usr/bin/aws ec2 describe-instances | /usr/bin/jq '.Reservations[].Instances[] | .InstanceId + " " + .PublicIpAddress' | /bin/sed 's/\"//g' | /bin/grep ${server_ip} | /usr/bin/awk '{print $1}'`"
         /usr/bin/aws ec2 stop-instances --instance-ids ${instance_id}
@@ -158,7 +149,6 @@ then
         /bin/rm ${HOME}/config/webserverips/${private_server_ip}
         /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
         /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
-        /bin/rm ${HOME}/config/webserveripcouples/*${server_ip}*
     else
         /bin/echo "${0} `/bin/date` : This script is only for Destroying Webservers, refused to destroy server with ip: ${server_ip}" >> ${HOME}/logs/MonitoringLog.log
     fi
