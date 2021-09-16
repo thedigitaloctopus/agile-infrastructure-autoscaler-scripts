@@ -16,11 +16,6 @@ then
     /bin/chmod 700 ${HOME}/config/webserverips
 fi
 
-if ( [ ! -d ${HOME}/config/webserveripcouples ] )
-then
-    /bin/mkdir -p ${HOME}/config/webserveripcouples
-    /bin/chmod 700 ${HOME}/config/webserveripcouples
-fi
 if ( [ ! -d ${HOME}/config/databaseip ] )
 then
     /bin/mkdir -p ${HOME}/config/databaseip
