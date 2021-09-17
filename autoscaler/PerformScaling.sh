@@ -138,18 +138,18 @@ then
     /bin/echo "${0} `/bin/date`: no of webservers that are booting is: ${booting} " >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
     need_booting="`/usr/bin/expr ${NO_WEBSERVERS} - ${noprovisionedwebservers}`"
     /bin/echo "${0} `/bin/date`: total no of webservers that still need booting initiation is: `/usr/bin/expr ${need_booting} - ${booting}`" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-    /bin/echo "${0} `/bin/date`: ${booting} webservers are booting out of a total of ${need_booting} that need booting " >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+    /bin/echo "${0} `/bin/date`: `/usr/bin/expr ${need_booting} - ${booting}` webservers are still needed out of a total of ${need_booting} that need booting " >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
     if ( [ "${noallips}" -lt "${NO_WEBSERVERS}" ] )
     then
         if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
         then
-            /bin/echo "${0} `/bin/date`: ${need_booting} needs booting so am booting a new one from a snapshot" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+            /bin/echo "${0} `/bin/date`: I have calculated that a webserver needs booting so am booting a new one from a snapshot" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             newip="`${HOME}/autoscaler/BuildWebserver.sh`"
            # /bin/echo "${0} `/bin/date`:  Rebooting autoscaler before next scaling event so that memory doesn't run out which sometimes happens on small machines" >> ${HOME}/logs/ScalingEventsLog.log
            # /usr/sbin/shutdown -r now
         else
-            /bin/echo "${0} `/bin/date`: ${need_booting} need booting so am booting a new one as a regular build (not a snapshot)" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+            /bin/echo "${0} `/bin/date`:  I have calculated that a webserver needs booting so am booting a new one as a regular build (not a snapshot)" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             newip="`${HOME}/autoscaler/BuildWebserver.sh`"
            # if ( [ "${newip}" != "" ] )
            # then
