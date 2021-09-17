@@ -27,5 +27,4 @@
 ${HOME}/providerscripts/email/SendEmail.sh "Shutting down the autoscaler" "Shutting down the autoscaler"
 /bin/echo "${0} `/bin/date`: Shutting down the autoscaler" >> ${HOME}/logs/MonitoringLog.log
 
-#Note, we don't call the shutdown command here, on purpose, we just destroy the VM because we have cleaned it up as much as we need to
-
+/usr/sbin/shutdown -h now
