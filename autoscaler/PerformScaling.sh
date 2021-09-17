@@ -215,36 +215,31 @@ then
 
             /bin/echo "${0} `/bin/date`: Webserver ${ip} is being shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             
-            tryshutdown="1"
             markattempts="0"
             
-            while ( [ "${tryshutdown}" = "1" ] && [ "${markattempts}" -lt "5" ] )
+            while ([ "${markattempts}" -lt "5" ] )
             do
                 /bin/echo "${0} `/bin/date`: Making a fresh attempt to shutdown webserver ${ip}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
                 markattempts="`/usr/bin/expr ${markattempts} + 1`"
                 /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${SUDO} /bin/touch ${HOME}/runtime/MARKEDFORSHUTDOWN"
+            done
+            
+            count1="0"
+            while ( [ "`/usr/bin/ping -c 3 ${ip} | /bin/grep '100% packet loss'`"  = "" ] && [ "${count1}" -lt "5" ] )
+            do
+                /bin/echo "${0} `/bin/date`: Waiting for webserver ${ip} to become unresponsive after shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+                /bin/sleep 26
+                count1="`/usr/bin/expr ${count1} + 1`"
+            done
            
-               count1="0"
-               while ( [ "`/usr/bin/ping -c 3 ${ip} | /bin/grep '100% packet loss'`"  = "" ] && [ "${count1}" -lt "5" ] )
-               do
-                   /bin/echo "${0} `/bin/date`: Waiting for webserver ${ip} to become unresponsive after shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-                   /bin/sleep 26
-                   count1="`/usr/bin/expr ${count1} + 1`"
-               done
-           
-               if ( [ "${count1}" = "9" ] )
-               then
-                   /bin/echo "${0} `/bin/date`: There seems to have been some trouble getting webserver ${ip} to shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-                   tryshutdown="1"
-               else
-                   tryshutdown="0"
-               fi
-           done
-           
-           
-           
-            /bin/echo "${0} `/bin/date`: Webserver ${ip} has been cleanly shutdown getting ready to destroy the virtual machine" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-            /bin/sleep 5
+            if ( [ "${count1}" = "5" ] )
+            then
+                /bin/echo "${0} `/bin/date`: There seems to have been some trouble getting webserver ${ip} to shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+                /bin/echo "${0} `/bin/date`: I am going to destroy it anyway and hope for the best..." >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+            else     
+                /bin/echo "${0} `/bin/date`: Webserver ${ip} has been cleanly shutdown getting ready to destroy the virtual machine" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+                /bin/sleep 5
+            fi
             /bin/echo "${0} `/bin/date`: Webserver ${ip} is being destroyed" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             /bin/echo "${0} `/bin/date` : ${ip} is has been destroyed because it was excess to the defined scaling requirements" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
