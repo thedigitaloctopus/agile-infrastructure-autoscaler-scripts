@@ -190,11 +190,9 @@ then
     do
         ip="`/bin/echo ${ipstokill} | /usr/bin/cut -d " " -f ${count}`"
         /bin/touch ${HOME}/config/shuttingdownwebserverips/${ip}
-
         /bin/echo "${0} `/bin/date`: We have elected webserver ${ip} to shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-        
         webserver_name="`${HOME}/providerscripts/server/GetServerName.sh ${ip} ${CLOUDHOST} | grep webserver`"
-
+        
         if ( [ "${webserver_name}" != "" ] )
         then
             /bin/echo "${0} `/bin/date`: Webserver ${ip} is having its ip removed from the DNS service" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
@@ -263,16 +261,17 @@ then
             
             /bin/rm ${HOME}/runtime/IPREMOVED:${ip}
             ${HOME}/providerscripts/email/SendEmail.sh "A WEBSERVER HAS BEEN DESTROYED" "Webserver ( ${ip} ) has just been shutdown and destroyed"
-        fi
-        
-        if ( [ "${webserver_name}" != "" ] )
-        then
+
             /bin/rm  ${HOME}/config/shuttingdownwebserverips/${ip}
             count="`/usr/bin/expr ${count} + 1`"
             nowebservers="`/usr/bin/expr ${nowebservers} - 1`"
             /bin/echo "${0} `/bin/date`: There is now ${nowebservers} webservers running" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             ${HOME}/providerscripts/email/SendEmail.sh "UPDATE IN NUMBER OF ACTIVE WEBSERVERS" "There is now ${nowebservers} webservers running"
         else
+            #If we have multiple autoscalers its possible that an IP that we are processing has been shutdown by another autoscaler so if we can't find a machine
+            #name for that IP address assume it has been shutdown and treat it as if we had shut it down ourselves in terms of our iterating. 
+            count="`/usr/bin/expr ${count} + 1`"
+            nowebservers="`/usr/bin/expr ${nowebservers} - 1`"            
             /bin/echo "${0} `/bin/date`: Couldn't find the name for webserver ${ip} its most likely already been shutdown for some other reason" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
         fi
         
