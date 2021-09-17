@@ -116,7 +116,7 @@ contentionperiod="`/usr/bin/expr ${autoscaler_no} \* 26`"
 noprovisionedwebservers="`${HOME}/autoscaler/GetDNSIPs.sh | /usr/bin/wc -w`"
 noallips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`"
 
-/bin/echo "${0} `/bin/date`: ${noprovisionedwebservers} webservers are currently provisioned." >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+/bin/echo "${0} `/bin/date`: ${noprovisionedwebservers} webservers are currently provisioned and live." >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
 #If we have fewer webservers than we require, build one
 #if (  [ "${noprovisionedwebservers}" != "" ] && [ "${noprovisionedwebservers}" -lt "${NO_WEBSERVERS}" ] )
