@@ -21,8 +21,11 @@
 #######################################################################################################
 #set -x
 
+/bin/echo ""
+/bin/echo "#######################################################################"
 /bin/echo "Shutting down an autoscaler instance. Please wait whilst I clean the place first."
-
+/bin/echo "#######################################################################"
+/bin/echo ""
 /bin/rm ${HOME}/config/autoscalerip/`${HOME}/providerscripts/utilities/GetIP.sh`
 ${HOME}/providerscripts/email/SendEmail.sh "Shutting down the autoscaler" "Shutting down the autoscaler"
 /bin/echo "${0} `/bin/date`: Shutting down the autoscaler" >> ${HOME}/logs/MonitoringLog.log
