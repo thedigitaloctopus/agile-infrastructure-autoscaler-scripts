@@ -223,7 +223,7 @@ then
             done
             
             count1="0"
-            while ( [ "`/usr/bin/ping -c 3 ${ip} | /bin/grep '100% packet loss'`"  = "" ] && [ "${count1}" -lt "5" ] )
+            while ( [ "`/usr/bin/ping -c 3 ${ip} | /bin/grep '100% packet loss'`"  = "" ] && [ "${count1}" -lt "9" ] )
             do
                 /bin/echo "${0} `/bin/date`: Waiting for webserver ${ip} to become unresponsive after shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
                 /bin/sleep 26
