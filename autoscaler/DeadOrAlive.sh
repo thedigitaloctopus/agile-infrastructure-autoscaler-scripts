@@ -88,7 +88,7 @@ allliveips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${
 
 for ip in ${allliveips}
 do
-    if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "/bin/ls ${HOME}/runtime/WEBSERVER_READY"`" != "" ] &&  [ "`iswebserverup ${ip}`" = "up" ] )
+    if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "/bin/ls ${HOME}/runtime/WEBSERVER_READY"`" != "" ] &&  [ "`iswebserverup ${ip}`" = "up" ] && [ ! -f ${HOME}/runtime/IPREMOVED:${ip} ] )
     then
         webservers="`${HOME}/autoscaler/GetDNSIPs.sh`"
         
