@@ -151,13 +151,6 @@ then
         else
             /bin/echo "${0} `/bin/date`:  I have calculated that a webserver needs booting so am booting a new one as a regular build (not a snapshot)" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             newip="`${HOME}/autoscaler/BuildWebserver.sh`"
-           # if ( [ "${newip}" != "" ] )
-           # then
-           #     /bin/echo "${0} `/bin/date`:  Added the new IP for the webserver( ${newip} ) to the DNS system" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-           #     ${HOME}/providerscripts/email/SendEmail.sh "A WEBSERVER HAS BEEN DEPLOYED" "Webserver ( ${ip} ) has just been deployed and activated"
-           #     /bin/echo "${0} `/bin/date`:  Rebooting autoscaler before next scaling event so that memory doesn't run out which sometimes happens on small machines" >> ${HOME}/logs/ScalingEventsLog.log
-           #     /usr/sbin/shutdown -r now
-           # fi
         fi
         if ( [ "${newip}" != "" ] )
         then
