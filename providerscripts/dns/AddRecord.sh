@@ -29,7 +29,7 @@ dns="${6}"
 
 if ( [ "${dns}" = "digitalocean" ] )
 then
-    /usr/local/bin/doctl compute domain records create --record-type A --record-name ${subdomain} --record-data ${ip} ${domainurl}
+    /usr/local/bin/doctl compute domain records create --record-type A --record-name ${subdomain} --record-data ${ip} --record-ttl 120 ${domainurl}
 fi
 
 
