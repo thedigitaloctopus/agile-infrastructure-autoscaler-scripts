@@ -202,7 +202,7 @@ then
             
             /bin/echo "${0} `/bin/date`: Pausing for 300 seconds to make sure the DNS system has cleared itself" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             
-            /bin/sleep 300
+            /bin/sleep 120
 
             /bin/echo "${0} `/bin/date`: Webserver ${ip} is being shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             
