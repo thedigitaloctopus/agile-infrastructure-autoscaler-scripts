@@ -22,18 +22,30 @@
 
 if ( [ "${1}" != "" ] )
 then
-    BUILDOS="${1}"
+    BUILD_OS="${1}"
 fi
 
-if ( [ "${BUILDOS}" = "ubuntu" ] )
+if ( [ "${BUILD_OS}" = "ubuntu" ] )
 then
     /usr/bin/yes | /usr/bin/dpkg --configure -a
-    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y update --allow-change-held-packages
+    /usr/bin/apt install -y -qq apt-utils 2&1>/dev/null
+    /usr/bin/apt-get -qq -y update --allow-change-held-packages
+    while ( [ "$?" != "0" ] )
+    do 
+        /bin/sleep 10
+        /usr/bin/apt-get -qq -y update --allow-change-held-packages
+    done
 fi
 
-if ( [ "${BUILDOS}" = "debian" ] )
+if ( [ "${BUILD_OS}" = "debian" ] )
 then
     /usr/bin/yes | /usr/bin/dpkg --configure -a
-    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq -y update --allow-change-held-packages
+    /usr/bin/apt install -y -qq apt-utils 2&1>/dev/null
+    /usr/bin/apt-get -qq -y update --allow-change-held-packages
+    while ( [ "$?" != "0" ] )
+    do 
+        /bin/sleep 10
+        /usr/bin/apt-get -qq -y update --allow-change-held-packages
+    done
 fi
 
