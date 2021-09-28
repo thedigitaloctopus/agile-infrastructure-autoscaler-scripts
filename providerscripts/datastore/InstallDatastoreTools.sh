@@ -31,7 +31,7 @@ then
    #     ${HOME}/installscripts/ForceInstall.sh ${BUILDOS}
    # fi
     
-    ${HOME}/installscripts/ForceInstallPythonPIP.sh ${BUILDOS}
+    ${HOME}/installscripts/InstallPythonPIP.sh ${BUILDOS}
     ${HOME}/installscripts/InstallPythonDateUtil.sh ${BUILDOS}
     
     if ( [ ! -f /usr/bin/s3cmd ] )
