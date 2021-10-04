@@ -45,7 +45,7 @@ then
     /bin/echo "${0} `/bin/date`: Email sent via gmail, subject : ${subject} to: ${TO_ADDRESS}" >> ${HOME}/logs/MonitoringLog.log
     /usr/bin/sendemail -o tls=yes -f ${FROM_ADDRESS} -t ${TO_ADDRESS} -s smtp.gmail.com:587 -xu ${USERNAME} -xp ${PASSWORD} -u "${subject} `/bin/date`" -m ${message}
 fi
-if ( [ "${emailprovider}" = "3" ] )
+if ( [ "${EMAIL_PROVIDER}" = "3" ] )
 then
     /usr/bin/sendemail -o tls=yes -f ${FROM_ADDRESS} -t ${TO_ADDRESS} -s email-smtp.eu-west-1.amazonaws.com -xu ${USERNAME} -xp ${PASSWORD} -u "${subject} `/bin/date`" -m ${message}
 fi
