@@ -121,8 +121,8 @@ then
         if ( [ "${private_network_id}" = "" ] )
         then
             private_network_id="`/usr/local/bin/cs createNetwork displaytext="AgileDeploymentToolkit" name="adt" networkofferingid="${network_offering_id}" zoneid="${zone_id}" startip="10.0.0.10" endip="10.0.0.40" netmask="255.255.255.0" | jq '.network.id' | /bin/sed 's/"//g'`"
-            /bin/sleep 5
         fi
+        /bin/sleep 5
     done
 
     vmid="`/usr/local/bin/cs deployVirtualMachine templateid="${template_id}" zoneid="${zone_id}" serviceofferingid="${service_offering_id}" name="${server_name}" keyPair="${key_pair}" rootdisksize="${disksize}" | jq '.virtualmachine.id' | /bin/sed 's/"//g'`"
