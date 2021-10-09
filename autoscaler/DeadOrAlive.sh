@@ -29,7 +29,7 @@
 #set -x
 
 #Don't start killing stuff until we have settled down post build (relevant when bulding from snapshots in particular)
-if ( [ "`${HOME}providerscripts/utilities/TimeSinceInstallation.sh`" -lt "20" ] )
+if ( [ "`${HOME}/providerscripts/utilities/TimeSinceInstallation.sh`" -lt "20" ] )
 then
     exit
 fi
