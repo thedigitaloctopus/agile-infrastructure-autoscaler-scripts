@@ -31,6 +31,7 @@ then
     /bin/ln -s /usr/bin/python3 /usr/bin/python
     /bin/rm /usr/bin/pip
     /bin/ln /usr/bin/pip3 /usr/bin/pip
+    /usr/bin/pip install --default-timeout=100 future
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
@@ -40,5 +41,6 @@ then
     /bin/ln -s /usr/bin/python3 /usr/bin/python
     /bin/rm /usr/bin/pip
     /bin/ln /usr/bin/pip3 /usr/bin/pip
+    /usr/bin/pip install --default-timeout=100 future
 fi
 
