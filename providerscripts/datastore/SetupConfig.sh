@@ -42,13 +42,20 @@ fi
 
 if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] )
 then
-    if ( [ -f ${HOME}/config/REFRESH_MOUNT ] )
+    SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
+    if ( [ "`/bin/ls ${HOME}/config/${SERVER_USER}`" = "" ] )
     then
-        /bin/sleep 20
-        /bin/rm ${HOME}/config/REFRESH_MOUNT
-        /bin/umount -f ${HOME}/config
-        exit
+        /bin/rm ${HOME}/config/*
+        /bin/touch ${HOME}/config/${SERVER_USER}
     fi
+    
+    #if ( [ -f ${HOME}/config/REFRESH_MOUNT ] )
+    #then
+    #    /bin/sleep 20
+    #    /bin/rm ${HOME}/config/REFRESH_MOUNT
+    #    /bin/umount -f ${HOME}/config
+    #    exit
+   # fi
     if ( [ ! -f ${HOME}/runtime/INITIALCONFIGSET ] )
     then
         /bin/rm -r ${HOME}/config/*
