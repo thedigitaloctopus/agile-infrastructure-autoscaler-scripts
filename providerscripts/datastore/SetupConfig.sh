@@ -45,7 +45,7 @@ then
     SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
     if ( [ "`/bin/ls ${HOME}/config/${SERVER_USER}`" = "" ] )
     then
-        /bin/rm ${HOME}/config/*
+        /bin/rm -r ${HOME}/config/*
         /bin/touch ${HOME}/config/${SERVER_USER}
     fi
     
