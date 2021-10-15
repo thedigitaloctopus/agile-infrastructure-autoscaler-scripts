@@ -22,15 +22,6 @@
 #set -x
 
 home="`/bin/cat /home/homedir.dat`"
-domainurl="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL' | /usr/bin/cut -d'.' -f2-`"
-recordid="${2}"
-dns="${5}"
-
-if ( [ "${dns}" = "digitalocean" ] )
-then
-    /usr/local/bin/doctl compute domain records list ${domainurl} | /bin/grep ${recordid} | /usr/bin/awk '{print $1}'
-    /usr/local/bin/doctl compute domain records delete --force ${domainurl} ${recordid}
-fi
 
 zoneid="${1}"
 recordid="${2}"
@@ -42,6 +33,16 @@ if ( [ "${dns}" = "cloudflare" ] )
 then
     /bin/echo "${0} `/bin/date`: Deleting record for recordid ${recordid} from dns" >> ${HOME}/logs/MonitoringLog.log
     /usr/bin/curl -X DELETE "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records/${recordid}" -H "X-Auth-Email: ${email}"  -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json"
+fi
+
+domainurl="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL' | /usr/bin/cut -d'.' -f2-`"
+recordid="${2}"
+dns="${5}"
+
+if ( [ "${dns}" = "digitalocean" ] )
+then
+    /usr/local/bin/doctl compute domain records list ${domainurl} | /bin/grep ${recordid} | /usr/bin/awk '{print $1}'
+    /usr/local/bin/doctl compute domain records delete --force ${domainurl} ${recordid}
 fi
 
 recordid="${2}"
