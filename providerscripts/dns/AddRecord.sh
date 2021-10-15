@@ -66,6 +66,6 @@ dns="${6}"
 if ( [ "${dns}" = "linode" ] )
 then
     domain_id="`/usr/local/bin/linode-cli --json domains list | /usr/bin/jq --arg tmp_domain_url "${domain_url}" '(.[] | select(.domain | contains($tmp_domain_url)) | .id)'`"
-    /usr/local/bin/linode-cli domains records-create $domain_id --type A --name ${subdomain} --target ${ip}
+    /usr/local/bin/linode-cli domains records-create $domain_id --type A --name ${subdomain} --target ${ip} --ttl_sec 120
 fi
 
