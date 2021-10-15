@@ -21,17 +21,6 @@
 ##########################################################################################
 #set -x
 
-websiteurl="${2}"
-domainurl="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
-subdomain="`/bin/echo ${2} | /usr/bin/awk -F'.' '{print $1}'`"
-dns="${5}"
-
-if ( [ "${dns}" = "digitalocean" ] )
-then
-    /usr/local/bin/doctl compute domain records list ${domainurl} | /bin/grep ${subdomain} | /usr/bin/awk '{print $4}'
-fi
-
-
 zoneid="${1}"
 websiteurl="${2}"
 email="${3}"
@@ -43,6 +32,17 @@ then
     /bin/echo "${0} `/bin/date`: Getting ip addresses for ${websiteurl} from dns provider" >> ${HOME}/logs/MonitoringLog.log
     /usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records?type=A&name=${websiteurl}&page=1&per_page=20&order=type&direction=desc&match=all" -H "X-Auth-Email: ${email}" -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json" | /usr/bin/jq '.result[].content' | /bin/sed 's/"//g'
 fi
+
+websiteurl="${2}"
+domainurl="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
+subdomain="`/bin/echo ${2} | /usr/bin/awk -F'.' '{print $1}'`"
+dns="${5}"
+
+if ( [ "${dns}" = "digitalocean" ] )
+then
+    /usr/local/bin/doctl compute domain records list ${domainurl} | /bin/grep ${subdomain} | /usr/bin/awk '{print $4}'
+fi
+
 
 domainurl="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
 subdomain="`/bin/echo ${2} | /usr/bin/awk -F'.' '{print $1}'`"
