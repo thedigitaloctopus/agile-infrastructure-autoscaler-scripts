@@ -56,3 +56,13 @@ then
    # /usr/bin/curl  -H "X-DNS-Token: ${authkey}"  -H 'Accept: application/json' -X DELETE  https://api.exoscale.com/dns/v1/domains/${domainurl}/records/${recordid}
 fi
 
+record_id="${2}"
+dns="${5}"
+domainurl="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL' | /usr/bin/cut -d'.' -f2-`"
+
+if ( [ "${dns}" = "linode" ] )
+then
+    domain_id="`/usr/local/bin/linode-cli --json domains list | /usr/bin/jq --arg tmp_domainurl "${domainurl}" '(.[] | select(.domain | contains($tmp_domainurl)) | .id)'`"
+    /usr/local/bin/linode-cli domains records-delete ${domain_id} ${record_id}
+fi
+
