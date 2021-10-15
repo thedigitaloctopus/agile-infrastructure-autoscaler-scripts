@@ -20,6 +20,20 @@
 #######################################################################################
 #set -x
 
+zoneid="${1}"
+websiteurl="${2}"
+ip="${3}"
+email="${4}"
+authkey="${5}"
+dns="${6}"
+
+if ( [ "${dns}" = "cloudflare" ] )
+then
+    /bin/echo "${0} `/bin/date`: Getting record id from for websiteurl : ${websiteurl} and ip: ${ip} from the dns provider" >> ${HOME}/logs/MonitoringLog.log
+    /usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records?type=A&name=${websiteurl}&content=${ip}&page=1&per_page=20&order=type&direction=desc&match=all" -H "X-Auth-Email: ${email}" -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json" | /usr/bin/jq '.result[].id' | /bin/sed 's/"//g'
+fi
+
+
 websiteurl="${2}"
 domainurl="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
 subdomain="`/bin/echo ${2} | /usr/bin/awk -F'.' '{print $1}'`"
@@ -37,19 +51,6 @@ then
 	count="`/usr/bin/expr ${count} + 1`"
     done
     /bin/echo "${recordid}"
-fi
-
-zoneid="${1}"
-websiteurl="${2}"
-ip="${3}"
-email="${4}"
-authkey="${5}"
-dns="${6}"
-
-if ( [ "${dns}" = "cloudflare" ] )
-then
-    /bin/echo "${0} `/bin/date`: Getting record id from for websiteurl : ${websiteurl} and ip: ${ip} from the dns provider" >> ${HOME}/logs/MonitoringLog.log
-    /usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records?type=A&name=${websiteurl}&content=${ip}&page=1&per_page=20&order=type&direction=desc&match=all" -H "X-Auth-Email: ${email}" -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json" | /usr/bin/jq '.result[].id' | /bin/sed 's/"//g'
 fi
 
 domainurl="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
