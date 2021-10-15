@@ -168,6 +168,11 @@ then
             /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image linode/debian10 --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
             server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
             /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
+        elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Debian 11'`" != "" ] )
+        then
+            /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image linode/debian11 --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
+            server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
+            /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
         fi
     fi
 fi
