@@ -65,4 +65,14 @@ then
     #/usr/bin/curl  -H "X-DNS-Token: ${authkey}" -H 'Accept: application/json' https://api.exoscale.com/dns/v1/domains/${domainurl}/records | /usr/bin/jq --arg tmp_subdomain "${subdomain}" --arg tmp_content "${ip}" '.[].record | select (.name == $tmp_subdomain and .content == $tmp_content ) | .id'
 fi
 
+domainurl="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
+subdomain="`/bin/echo ${2} | /usr/bin/awk -F'.' '{print $1}'`"
+ip="${3}"
+authkey="${5}"
+dns="${6}"
 
+if ( [ "${dns}" = "linode" ] )
+then
+    domain_id="`/usr/local/bin/linode-cli --json domains list | /usr/bin/jq --arg tmp_domainurl "${domainurl}" '(.[] | select(.domain | contains($tmp_domainurl)) | .id)'`"
+    /usr/local/bin/linode-cli --json domains records-list ${domain_id} | /usr/bin/jq --arg tmp_ip "${ip}" '(.[] | select(.target | contains($tmp_ip)) | .id)'
+fi
