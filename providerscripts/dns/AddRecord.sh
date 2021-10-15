@@ -21,18 +21,6 @@
 ####################################################################################
 #set -x
 
-websiteurl="${4}"
-domainurl="`/bin/echo ${4} | /usr/bin/cut -d'.' -f2-`"
-subdomain="`/bin/echo ${4} | /usr/bin/awk -F'.' '{print $1}'`"
-ip="${5}"
-dns="${6}"
-
-if ( [ "${dns}" = "digitalocean" ] )
-then
-    /usr/local/bin/doctl compute domain records create --record-type A --record-name ${subdomain} --record-data ${ip} --record-ttl 120 ${domainurl}
-fi
-
-
 zoneid="${1}"
 email="${2}"
 authkey="${3}"
@@ -46,6 +34,17 @@ then
     /usr/bin/curl -X POST "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records" -H "X-Auth-Email: ${email}" -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json" --data "{\"type\":\"A\",\"name\":\"${websiteurl}\",\"content\":\"${ip}\",\"ttl\":120,\"proxiable\":true,\"proxied\":true,\"ttl\":120}"
 fi
 
+websiteurl="${4}"
+domainurl="`/bin/echo ${4} | /usr/bin/cut -d'.' -f2-`"
+subdomain="`/bin/echo ${4} | /usr/bin/awk -F'.' '{print $1}'`"
+ip="${5}"
+dns="${6}"
+
+if ( [ "${dns}" = "digitalocean" ] )
+then
+    /usr/local/bin/doctl compute domain records create --record-type A --record-name ${subdomain} --record-data ${ip} --record-ttl 120 ${domainurl}
+fi
+
 authkey="${3}"
 subdomain="`/bin/echo ${4} | /usr/bin/awk -F'.' '{print $1}'`"
 domainurl="`/bin/echo ${4} | /usr/bin/cut -d'.' -f2-`"
@@ -57,5 +56,16 @@ then
     /usr/bin/exo dns add A ${domainurl} -a ${ip} -n ${subdomain} -t 120
     #Alternative
     #/usr/bin/curl  -H "X-DNS-Token: ${authkey}" -H 'Accept: application/json' -H 'Content-Type: application/json' -X POST -d "{\"record\":{\"name\": \"${subdomain}\",\"record_type\": \"A\",\"content\": \"${ip}\",\"ttl\": 120}}" https://api.exoscale.com/dns/v1/domains/${domainurl}/records
+fi
+
+subdomain="`/bin/echo ${4} | /usr/bin/awk -F'.' '{print $1}'`"
+domain_url="`/bin/echo ${4} | /usr/bin/cut -d'.' -f2-`"
+ip="${5}"
+dns="${7}"
+
+if ( [ "${dns}" = "linode" ] )
+then
+    domain_id="`/usr/local/bin/linode-cli --json domains list | /usr/bin/jq --arg tmp_domain_url "${domain_url}" '(.[] | select(.domain | contains($tmp_domain_url)) | .id)'`"
+    /usr/local/bin/linode-cli domains records-create $domain_id --type A --name ${subdomain} --target ${ip}
 fi
 
