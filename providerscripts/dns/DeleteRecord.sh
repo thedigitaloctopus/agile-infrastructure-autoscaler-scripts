@@ -73,6 +73,7 @@ domainurl="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL'
 
 if ( [ "${dns}" = "vultr" ] )
 then
+    HOME="`/bin/cat /home/homedir.dat`"
     export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
     /usr/bin/vultr dns record delete -d ${domainurl} -r ${record_id}
 fi
