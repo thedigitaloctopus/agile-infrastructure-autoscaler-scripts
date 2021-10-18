@@ -75,6 +75,6 @@ domainurl="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL'
 if ( [ "${dns}" = "vultr" ] )
 then
     export VULTR_API_KEY="${authkey}"
-    /usr/bin/vultr dns record delete -r ${record_id}
+    /usr/bin/vultr dns record delete -d ${domainurl} -r ${record_id}
 fi
 
