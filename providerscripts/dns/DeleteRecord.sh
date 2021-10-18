@@ -68,13 +68,12 @@ then
 fi
 
 record_id="${2}"
-authkey="${4}"
 dns="${5}"
 domainurl="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL' | /usr/bin/cut -d'.' -f2-`"
 
 if ( [ "${dns}" = "vultr" ] )
 then
-    export VULTR_API_KEY="${authkey}"
+    export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
     /usr/bin/vultr dns record delete -d ${domainurl} -r ${record_id}
 fi
 
