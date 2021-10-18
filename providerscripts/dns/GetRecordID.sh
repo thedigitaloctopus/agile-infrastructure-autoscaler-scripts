@@ -81,11 +81,10 @@ fi
 domainurl="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
 subdomain="`/bin/echo ${2} | /usr/bin/awk -F'.' '{print $1}'`"
 ip="${3}"
-authkey="${5}"
 dns="${6}"
 
 if ( [ "${dns}" = "vultr" ] )
 then
-    export VULTR_API_KEY="${authkey}"
+    export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
     /usr/bin/vultr dns record list -d ${domainurl} | /bin/grep  ${ip} | /usr/bin/awk '{print $1}'
 fi
