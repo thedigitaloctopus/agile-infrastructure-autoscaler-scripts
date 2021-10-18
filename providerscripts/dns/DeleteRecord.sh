@@ -67,3 +67,14 @@ then
     /usr/local/bin/linode-cli domains records-delete ${domain_id} ${record_id}
 fi
 
+record_id="${2}"
+authkey="${4}"
+dns="${5}"
+domainurl="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL' | /usr/bin/cut -d'.' -f2-`"
+
+if ( [ "${dns}" = "vultr" ] )
+then
+    export VULTR_API_KEY="${authkey}"
+    /usr/bin/vultr dns record delete -r ${record_id}
+fi
+
