@@ -69,10 +69,10 @@ then
     /usr/local/bin/linode-cli domains records-create $domain_id --type A --name ${subdomain} --target ${ip} --ttl_sec 120
 fi
 
-subdomain="`/bin/echo ${4} | /usr/bin/awk -F'.' '{print $1}'`"
-domainurl="`/bin/echo ${4} | /usr/bin/cut -d'.' -f2-`"
-ip="${5}"
-dns="${7}"
+subdomain="`/bin/echo ${3} | /usr/bin/awk -F'.' '{print $1}'`"
+domainurl="`/bin/echo ${3} | /usr/bin/cut -d'.' -f2-`"
+ip="${4}"
+dns="${5}"
 
 if ( [ "${dns}" = "vultr" ] )
 then
