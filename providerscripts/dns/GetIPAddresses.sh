@@ -67,3 +67,14 @@ then
     domain_id="`/usr/local/bin/linode-cli --json domains list | /usr/bin/jq --arg tmp_domain_url "${domain_url}" '(.[] | select(.domain | contains($tmp_domain_url)) | .id)'`"
     /usr/local/bin/linode-cli --json domains records-list ${domain_id}  | /usr/bin/jq --arg tmp_subdomain "${subdomain}" '(.[] | select(.name | contains($tmp_subdomain)) | .target)' | /bin/sed 's/\"//g'
 fi
+
+domain_url="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
+subdomain="`/bin/echo ${2} | /usr/bin/awk -F'.' '{print $1}'`"
+authkey="${4}"
+dns="${5}"
+
+if ( [ "${dns}" = "vultr" ] )
+then
+    export VULTR_API_KEY="${authkey}"
+    /usr/bin/vultr dns record list -d ${domain_url} | /bin/grep  ${subdomain} | /usr/bin/awk '{print $4}'
+fi
