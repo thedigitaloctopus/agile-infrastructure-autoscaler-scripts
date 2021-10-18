@@ -98,6 +98,8 @@ SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
 DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPORT'`"
 BUILD_CLIENT_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDCLIENTIP'`"
 ASIP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ASIP'`"
+${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh 'AUTOSCALED' 
+
 if ( [ "${ASIP}" = "" ] )
 then
     if ( [ "`/bin/ls ${HOME}/config/autoscalerip | /usr/bin/tr '\n' ' ' | /usr/bin/wc-w`" = "1" ] )
