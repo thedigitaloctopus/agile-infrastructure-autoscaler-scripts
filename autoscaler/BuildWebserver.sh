@@ -31,6 +31,7 @@ then
     exit
 fi
 
+start=`/bin/date +%s`
 
 SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
 SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
@@ -611,3 +612,8 @@ if ( [ -f ${HOME}/config/beingbuiltips/${private_ip} ] )
 then
     /bin/rm ${HOME}/config/beingbuiltips/${private_ip}
 fi
+
+#Output how long the build took
+end=`/bin/date +%s`
+runtime="`/usr/bin/expr ${end} - ${start}`"
+status "This script took `/bin/date -u -d @${runtime} +\"%T\"` to complete"
