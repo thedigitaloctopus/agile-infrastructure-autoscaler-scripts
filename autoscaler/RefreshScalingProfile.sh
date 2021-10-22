@@ -9,3 +9,5 @@ then
        /bin/echo " " >> ${HOME}/config/scalingprofile/profile.cnf
     fi
 fi
+
+/bin/touch ${HOME}/config/scalingprofile/ONLY_EDIT_profile.cnf_ON_AN_AUTOSCALER
