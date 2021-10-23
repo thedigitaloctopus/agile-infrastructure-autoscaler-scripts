@@ -41,7 +41,10 @@ then
     export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
     public_key_name="`/bin/echo ${public_key_name} | /usr/bin/cut -c 1-30`"
     /bin/sleep 1
-    /usr/bin/vultr sshkey list | /bin/grep "${public_key_name}" | /usr/bin/awk '{print $1}'
+    #Clonk
+    #/usr/bin/vultr sshkey list | /bin/grep "${public_key_name}" | /usr/bin/awk '{print $1}'
+    #Official
+    /usr/bin/vultr ssh-key list | /bin/grep "${public_key_name}" | /usr/bin/awk '{print $1}'
 fi
 
 if ( [ "${cloudhost}" = "aws" ] )
