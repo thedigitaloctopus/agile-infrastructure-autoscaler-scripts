@@ -27,42 +27,46 @@ fi
 
 if ( [ "${BUILD_OS}" = "ubuntu" ] )
 then
-    #/usr/local/go/bin/go get -u github.com/vultr/vultr-cli
+    #official
+    /usr/local/go/bin/go install github.com/vultr/vultr-cli@latest
 
-    #vultr=`/usr/bin/find / -name "vultr-cli" -print | /bin/grep -v github`
+    vultr=`/usr/bin/find / -name "vultr-cli" -print | /bin/grep -v github`
 
-   # /usr/bin/ln ${vultr} /usr/bin/vultr
-    
-    latest="`/usr/bin/curl https://github.com/JamesClonk/vultr/releases/latest | /bin/sed 's/.*tag\///g' | /bin/sed 's/\".*//g' | /bin/sed 's/v//g'`"
-    /usr/bin/wget -O ${HOME}/vultrcli.tar.gz https://github.com/JamesClonk/vultr/releases/download/v${latest}/vultr_${latest}_Linux-64bit.tar.gz 
-    if ( [ ! -d ${HOME}/vultrcli ] )
-    then
-        /bin/mkdir ${HOME}/vultrcli
-    fi
-    /bin/tar xvfz ${HOME}/vultrcli.tar.gz  -C ${HOME}/vultrcli
-    /bin/mv ${HOME}/vultrcli/vultr /usr/bin
-    /bin/rm -r ${HOME}/vultrcli
-    /bin/rm ${HOME}/vultrcli.tar.gz 
+    /usr/bin/ln ${vultr} /usr/bin/vultr
+   
+   #Clonk
+   # latest="`/usr/bin/curl https://github.com/JamesClonk/vultr/releases/latest | /bin/sed 's/.*tag\///g' | /bin/sed 's/\".*//g' | /bin/sed 's/v//g'`"
+   # /usr/bin/wget -O ${HOME}/vultrcli.tar.gz https://github.com/JamesClonk/vultr/releases/download/v${latest}/vultr_${latest}_Linux-64bit.tar.gz 
+   # if ( [ ! -d ${HOME}/vultrcli ] )
+   # then
+   #     /bin/mkdir ${HOME}/vultrcli
+   # fi
+   # /bin/tar xvfz ${HOME}/vultrcli.tar.gz  -C ${HOME}/vultrcli
+   # /bin/mv ${HOME}/vultrcli/vultr /usr/bin
+   # /bin/rm -r ${HOME}/vultrcli
+   # /bin/rm ${HOME}/vultrcli.tar.gz 
 fi
 
 if ( [ "${BUILD_OS}" = "debian" ] )
 then
-   # /usr/local/go/bin/go get -u github.com/vultr/vultr-cli
+    #official
+    /usr/local/go/bin/go install github.com/vultr/vultr-cli@latest
 
-    #vultr=`/usr/bin/find / -name "vultr-cli" -print | /bin/grep -v github`
+    vultr=`/usr/bin/find / -name "vultr-cli" -print | /bin/grep -v github`
 
-   # /usr/bin/ln ${vultr} /usr/bin/vultr
+    /usr/bin/ln ${vultr} /usr/bin/vultr
     
-    latest="`/usr/bin/curl https://github.com/JamesClonk/vultr/releases/latest | /bin/sed 's/.*tag\///g' | /bin/sed 's/\".*//g' | /bin/sed 's/v//g'`"
-    /usr/bin/wget -O ${HOME}/vultrcli.tar.gz https://github.com/JamesClonk/vultr/releases/download/v${latest}/vultr_${latest}_Linux-64bit.tar.gz 
-    if ( [ ! -d ${HOME}/vultrcli ] )
-    then
-        /bin/mkdir ${HOME}/vultrcli
-    fi
-    /bin/tar xvfz ${HOME}/vultrcli.tar.gz  -C ${HOME}/vultrcli
-    /bin/mv ${HOME}/vultrcli/vultr /usr/bin
-    /bin/rm -r ${HOME}/vultrcli
-    /bin/rm ${HOME}/vultrcli.tar.gz  
+    #Clonk
+    #latest="`/usr/bin/curl https://github.com/JamesClonk/vultr/releases/latest | /bin/sed 's/.*tag\///g' | /bin/sed 's/\".*//g' | /bin/sed 's/v//g'`"
+    #/usr/bin/wget -O ${HOME}/vultrcli.tar.gz https://github.com/JamesClonk/vultr/releases/download/v${latest}/vultr_${latest}_Linux-64bit.tar.gz 
+    ##if ( [ ! -d ${HOME}/vultrcli ] )
+    #then
+    #    /bin/mkdir ${HOME}/vultrcli
+    #fi
+    #/bin/tar xvfz ${HOME}/vultrcli.tar.gz  -C ${HOME}/vultrcli
+    #/bin/mv ${HOME}/vultrcli/vultr /usr/bin
+    #/bin/rm -r ${HOME}/vultrcli
+    #/bin/rm ${HOME}/vultrcli.tar.gz  
 fi
 
 
