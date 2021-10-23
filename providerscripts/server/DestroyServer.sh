@@ -119,10 +119,17 @@ then
         /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
 
         /bin/sleep 1
-        server_id="`/usr/bin/vultr server list | /bin/grep ${server_ip} | /usr/bin/awk '{print $1}'`"
+        #Clonk
+        #server_id="`/usr/bin/vultr server list | /bin/grep ${server_ip} | /usr/bin/awk '{print $1}'`"
+        #Official
+        server_id="`/usr/bin/vultr instance list | /bin/grep ${server_ip} | /usr/bin/awk '{print $1}'`"
+        
         /bin/sleep 1
 
+        #Clonk
         /usr/bin/vultr server delete ${server_id} --force=true
+        #Official   
+        /usr/bin/vultr instance delete ${server_id}
 
         /bin/echo "${0} `/bin/date`: Destroyed a server with id ${server_id}" >> ${HOME}/logs/MonitoringLog.log
         /bin/rm ${HOME}/config/webserverips/${private_server_ip}
