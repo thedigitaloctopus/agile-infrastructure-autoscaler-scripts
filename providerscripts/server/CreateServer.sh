@@ -200,7 +200,13 @@ then
         #If we are here, then we are building from a snapshot, so, get the snapshot id and pass it in to the server create command
         #Note 164 is a special os id to say that we are building from a snapshot and not a standard image
         snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
-        /usr/bin/vultr server create --name="${server_name}" --region="${region}" --plan="${server_plan}" --os="164" --private-networking=true --ipv6=false -k ${key_id} --snapshot="${snapshot_id}"
+        
+        #Clonk
+        #/usr/bin/vultr server create --name="${server_name}" --region="${region}" --plan="${server_plan}" --os="164" --private-networking=true --ipv6=false -k ${key_id} --snapshot="${snapshot_id}"
+        
+       #Official
+       /usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_plan}" --os="164" --private-network=true --ipv6=false -s ${key_id} --snapshot="${snapshot_id}"
+        
         #Pass back a token to say we built from a snapshot
         /bin/echo "SNAPPED"
     else
@@ -209,7 +215,14 @@ then
         /bin/sleep 1
         os_choice="`/usr/bin/vultr os | /bin/grep "${os_choice}" | /usr/bin/awk '{print $1}'`"
         /bin/sleep 1
-        /usr/bin/vultr server create --name="${server_name}"  --region=${region} --plan=${server_plan} --os=${os_choice} --private-networking=true --ipv6=false -k ${key_id}
+        #Clonk
+        #/usr/bin/vultr server create --name="${server_name}"  --region=${region} --plan=${server_plan} --os=${os_choice} --private-networking=true --ipv6=false -k ${key_id}
+        #if ( [ "$?" = "0" ] )
+        #then
+        #    /bin/sleep 120
+        #fi
+        #Official
+        /usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_plan}" --os="${os_choice}" --private-network=true --ipv6=false -s ${key_id}
         if ( [ "$?" = "0" ] )
         then
             /bin/sleep 120
