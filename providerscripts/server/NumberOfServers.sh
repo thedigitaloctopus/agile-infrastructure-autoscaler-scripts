@@ -58,7 +58,10 @@ then
     export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
     /bin/sleep 1
     server_type="`/bin/echo ${server_type} | /usr/bin/cut -c -25`"
-    /usr/bin/vultr server list | /bin/grep ${server_type} | /usr/bin/awk '{print $3}' | /bin/sed 's/IP//g' | /bin/sed '/^$/d' | /usr/bin/wc -l
+   #Clonk
+   # /usr/bin/vultr server list | /bin/grep ${server_type} | /usr/bin/awk '{print $3}' | /bin/sed 's/IP//g' | /bin/sed '/^$/d' | /usr/bin/wc -l
+    #Official
+    /usr/bin/vultr instance list | /bin/grep ${server_type} | /usr/bin/awk '{print $2}' | /usr/bin/wc -l
 fi
 
 if ( [ -f ${HOME}/AWS ] || [ "${cloudhost}" = "aws" ] )
