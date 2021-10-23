@@ -50,7 +50,10 @@ if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
     export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
     /bin/sleep 1
-    /usr/bin/vultr plans | /usr/bin/awk '{print $2}' | /bin/sed 's/NAME//g'
+    #Clonk
+    #/usr/bin/vultr plans | /usr/bin/awk '{print $2}' | /bin/sed 's/NAME//g'
+    #Official
+    /usr/bin/vultr plans list | /bin/grep vc2 | /usr/bin/awk '{print $1}'
 fi
 if ( [ "${cloudhost}" = "aws" ] )
 then
