@@ -79,7 +79,7 @@ then
     HOME="`/bin/cat /home/homedir.dat`"
     export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
     #Clonk
-    /usr/bin/vultr dns record create -d ${domainurl} -n ${subdomain} -t A -D ${ip} --priority=10 --ttl=120
+    #/usr/bin/vultr dns record create -d ${domainurl} -n ${subdomain} -t A -D ${ip} --priority=10 --ttl=120
     #Official
     /usr/bin/vultr dns record create -m ${domainurl} -n ${subdomain} -t A -d "${ip}" --priority=10 --ttl=120
 fi
