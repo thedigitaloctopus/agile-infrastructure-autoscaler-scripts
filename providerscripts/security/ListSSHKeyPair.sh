@@ -44,7 +44,7 @@ then
     /bin/sleep 1
     
     #Clonk
-    /usr/bin/vultr sshkey list | /bin/grep "${key_name}"
+   # /usr/bin/vultr sshkey list | /bin/grep "${key_name}"
     
     #Official
     /usr/bin/vultr ssh-key list | /bin/grep "${key_name}" | /usr/bin/awk '{print $NF}'
