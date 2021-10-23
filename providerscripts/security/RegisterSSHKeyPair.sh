@@ -61,7 +61,12 @@ if ( [ -f /root/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
     export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
     /bin/sleep 1
+    
+    #Clonk
     /usr/bin/vultr sshkey create -n "${key_name}" -k "${key_substance}"
+    
+    #Official
+    /usr/bin/vultr ssh-key create -n "${key_name}" -k "${key_substance}"
 fi
 
 if ( [ "${cloudhost}" = "aws" ] )
