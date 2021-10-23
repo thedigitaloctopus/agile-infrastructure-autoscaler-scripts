@@ -81,11 +81,20 @@ then
     export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
     /bin/sleep 1
     server_type="`/bin/echo ${server_type} | /usr/bin/cut -c -25`"
-    ids="`/usr/bin/vultr server list | /bin/grep ${server_type} | /usr/bin/awk '{print $1}' | /bin/sed 's/SUBID//g' | /bin/sed '/^$/d'`"
+   # Clonk
+   # ids="`/usr/bin/vultr server list | /bin/grep ${server_type} | /usr/bin/awk '{print $1}' | /bin/sed 's/SUBID//g' | /bin/sed '/^$/d'`"
+   # for id in ${ids}
+   # do
+   #     /bin/sleep 1
+   #     /usr/bin/vultr server list-ipv4 ${id} | /bin/grep '^10\.' | /usr/bin/awk '{print $1}'
+   # done
+    
+   #Official
+    ids="`/usr/bin/vultr instance list | /bin/grep ${server_type} | /usr/bin/awk '{print $1}'`"
+    
     for id in ${ids}
     do
-        /bin/sleep 1
-        /usr/bin/vultr server list-ipv4 ${id} | /bin/grep '^10\.' | /usr/bin/awk '{print $1}'
+        /usr/bin/vultr instance get ${id} | /bin/grep "INTERNAL IP" | /usr/bin/awk '{print $NF}'
     done
 fi
 
