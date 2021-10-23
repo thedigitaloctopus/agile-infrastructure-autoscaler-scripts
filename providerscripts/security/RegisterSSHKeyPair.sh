@@ -63,7 +63,7 @@ then
     /bin/sleep 1
     
     #Clonk
-    /usr/bin/vultr sshkey create -n "${key_name}" -k "${key_substance}"
+    #/usr/bin/vultr sshkey create -n "${key_name}" -k "${key_substance}"
     
     #Official
     /usr/bin/vultr ssh-key create -n "${key_name}" -k "${key_substance}"
