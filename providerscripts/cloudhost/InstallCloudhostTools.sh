@@ -56,6 +56,7 @@ fi
 
 if ( [ "${CLOUDHOST}" = "vultr" ] )
 then
+    ${HOME}/installscripts/InstallGo.sh ${BUILDOS}
     ${HOME}/installscripts/InstallVultr.sh ${BUILDOS}
     /usr/bin/touch ${HOME}/VULTR
 fi
