@@ -64,14 +64,26 @@ if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
     export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
     /bin/sleep 1
-    ids="`/usr/bin/vultr servers | /usr/bin/awk '{print $1}' | /bin/sed 's/SUBID//g'`"
+    #Clonk
+    #ids="`/usr/bin/vultr servers | /usr/bin/awk '{print $1}' | /bin/sed 's/SUBID//g'`"
+    #for id in ${ids}
+    #do
+    #    /bin/sleep 1
+    #    if ( [ "`/usr/bin/vultr server show ${id} | /bin/grep "Internal IP:" | /usr/bin/awk '{print $3}'`" = "${ip}" ] )
+    #    then
+    #        /bin/sleep 1
+    #        /usr/bin/vultr server show ${id} | /bin/grep "^IP:" | /usr/bin/awk '{print $2}'
+    #        break
+    #    fi
+    #done
+    #Official
+    ids="`/usr/bin/vultr instance list | /bin/grep webserver | /usr/bin/awk '{print $1}'`"
+
     for id in ${ids}
     do
-        /bin/sleep 1
-        if ( [ "`/usr/bin/vultr server show ${id} | /bin/grep "Internal IP:" | /usr/bin/awk '{print $3}'`" = "${ip}" ] )
+        if ( [ "`/usr/bin/vultr instance get ${id} | /bin/grep "INTERNAL IP" | /usr/bin/awk '{print $NF}'`" = "${ip}" ] )
         then
-            /bin/sleep 1
-            /usr/bin/vultr server show ${id} | /bin/grep "^IP:" | /usr/bin/awk '{print $2}'
+            /usr/bin/vultr instance list | /bin/grep ${id} | /usr/bin/awk '{print $2}'
             break
         fi
     done
