@@ -32,7 +32,7 @@ then
     /usr/bin/curl -O -s https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz
     /bin/tar -xf go${version}.linux-amd64.tar.gz
     /bin/rm go${version}.linux-amd64.tar.gz
-    /bin/mv go /usr/local
+    /usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go
 fi
 
 if ( [ "${BUILD_OS}" = "debian" ] )
@@ -40,5 +40,5 @@ then
     /usr/bin/curl -O -s https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz
     /bin/tar -xf go${version}.linux-amd64.tar.gz
     /bin/rm go${version}.linux-amd64.tar.gz
-    /bin/mv go /usr/local
+    /usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go
 fi
