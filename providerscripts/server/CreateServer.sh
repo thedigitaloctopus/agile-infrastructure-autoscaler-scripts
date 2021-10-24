@@ -213,7 +213,7 @@ then
         #If we are here, then we are doing a regular build
         /bin/echo "${0} `/bin/date`: Building a new server" >> ${HOME}/logs/MonitoringLog.log
         /bin/sleep 1
-        os_choice="`/usr/bin/vultr os | /bin/grep "${os_choice}" | /usr/bin/awk '{print $1}'`"
+        os_choice="`/usr/bin/vultr os list | /bin/grep "${os_choice}" | /usr/bin/awk '{print $1}'`"
         /bin/sleep 1
         #Clonk
         #/usr/bin/vultr server create --name="${server_name}"  --region=${region} --plan=${server_plan} --os=${os_choice} --private-networking=true --ipv6=false -k ${key_id}
