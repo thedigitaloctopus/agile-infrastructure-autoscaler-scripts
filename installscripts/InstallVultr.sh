@@ -28,11 +28,9 @@ fi
 if ( [ "${BUILD_OS}" = "ubuntu" ] )
 then
     #official
-    /usr/local/go/bin/go install github.com/vultr/vultr-cli@latest
-
-    vultr=`/usr/bin/find / -name "vultr-cli" -print | /bin/grep -v github`
-
-    /usr/bin/ln ${vultr} /usr/bin/vultr
+    /usr/bin/git clone https://github.com/vultr/vultr-cli.git
+    cd vultr-cli
+    /usr/bin/make builds/vultr-cli_linux_amd64
    
    #Clonk
    # latest="`/usr/bin/curl https://github.com/JamesClonk/vultr/releases/latest | /bin/sed 's/.*tag\///g' | /bin/sed 's/\".*//g' | /bin/sed 's/v//g'`"
@@ -50,11 +48,9 @@ fi
 if ( [ "${BUILD_OS}" = "debian" ] )
 then
     #official
-    /usr/local/go/bin/go install github.com/vultr/vultr-cli@latest
-
-    vultr=`/usr/bin/find / -name "vultr-cli" -print | /bin/grep -v github`
-
-    /usr/bin/ln ${vultr} /usr/bin/vultr
+    /usr/bin/git clone https://github.com/vultr/vultr-cli.git
+    cd vultr-cli
+    /usr/bin/make builds/vultr-cli_linux_amd64
     
     #Clonk
     #latest="`/usr/bin/curl https://github.com/JamesClonk/vultr/releases/latest | /bin/sed 's/.*tag\///g' | /bin/sed 's/\".*//g' | /bin/sed 's/v//g'`"
