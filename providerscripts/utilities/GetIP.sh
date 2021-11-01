@@ -63,6 +63,8 @@ elif ( [ "${BUILDOS}" = "ubuntu" ] )
   renderer: networkd
   ethernets:
     ens7:
+      match:
+        macaddress: 00:00:00:00:00:00
       mtu: 1450
       dhcp4: no
       addresses: [${ip}/16]" >> /etc/netplan/10-ens7.yaml
