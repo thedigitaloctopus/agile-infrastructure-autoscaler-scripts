@@ -42,12 +42,12 @@ fi
 
 if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] )
 then
-   # SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
-   # if ( [ "`/bin/ls ${HOME}/config/${SERVER_USER}`" = "" ] )
-   # then
-   #     /bin/rm -r ${HOME}/config/*
-   #     /bin/touch ${HOME}/config/${SERVER_USER}
-   # fi
+    SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
+    if ( [ "`/bin/ls ${HOME}/config/${SERVER_USER}`" = "" ] )
+    then
+        /bin/rm -r ${HOME}/config/*
+        /bin/touch ${HOME}/config/${SERVER_USER}
+    fi
     
     #if ( [ -f ${HOME}/config/REFRESH_MOUNT ] )
     #then
@@ -62,6 +62,10 @@ then
   #      /usr/bin/s3cmd --recursive --force del s3://${config_bucket}/*
   #      /bin/touch ${HOME}/runtime/INITIALCONFIGSET
   #  fi
+fi
+
+if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] &&  [ "`/bin/ls ${HOME}/config/${SERVER_USER}`" != "" ] )
+then
     exit
 fi
 
