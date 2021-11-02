@@ -28,14 +28,20 @@ if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
     if ( [ ! -f /usr/bin/s3fs ] )
     then
-        /usr/bin/apt-get -qq -y install build-essential git libfuse-dev libcurl4-openssl-dev libxml2-dev mime-support automake libtool
-        /usr/bin/apt-get -qq -y install pkg-config libssl-dev
-        /usr/bin/git clone https://github.com/s3fs-fuse/s3fs-fuse
-        cd s3fs-fuse/
-        ./autogen.sh
-        ./configure --prefix=/usr --with-openssl
-        /usr/bin/make
-        /usr/bin/make install
+        if ( [ "`${HOME}/providerscripts/utilities/CheckBuildStyle.sh 'S3FS:repo'`" = "1" ] )
+        then
+            /usr/bin/apt-get -qq -y s3fs
+        elif ( [ "`${HOME}/providerscripts/utilities/CheckBuildStyle.sh 'S3FS:source'`" = "1" ] )
+        then
+            /usr/bin/apt-get -qq -y install build-essential git libfuse-dev libcurl4-openssl-dev libxml2-dev mime-support automake libtool
+            /usr/bin/apt-get -qq -y install pkg-config libssl-dev
+            /usr/bin/git clone https://github.com/s3fs-fuse/s3fs-fuse
+            cd s3fs-fuse/
+            ./autogen.sh
+            ./configure --prefix=/usr --with-openssl
+            /usr/bin/make
+            /usr/bin/make install
+        fi
     fi
 fi
 
@@ -43,13 +49,19 @@ if ( [ "${BUILDOS}" = "debian" ] )
 then
     if ( [ ! -f /usr/bin/s3fs ] )
     then
-        /usr/bin/apt-get -qq -y install build-essential git libfuse-dev libcurl4-openssl-dev libxml2-dev mime-support automake libtool
-        /usr/bin/apt-get -qq -y install pkg-config libssl-dev
-        /usr/bin/git clone https://github.com/s3fs-fuse/s3fs-fuse
-        cd s3fs-fuse/
-        ./autogen.sh
-        ./configure --prefix=/usr --with-openssl
-        /usr/bin/make
-        /usr/bin/make install
+        if ( [ "`${HOME}/providerscripts/utilities/CheckBuildStyle.sh 'S3FS:repo'`" = "1" ] )
+        then
+            /usr/bin/apt-get -qq -y s3fs
+        elif ( [ "`${HOME}/providerscripts/utilities/CheckBuildStyle.sh 'S3FS:source'`" = "1" ] )
+        then
+            /usr/bin/apt-get -qq -y install build-essential git libfuse-dev libcurl4-openssl-dev libxml2-dev mime-support automake libtool
+            /usr/bin/apt-get -qq -y install pkg-config libssl-dev
+            /usr/bin/git clone https://github.com/s3fs-fuse/s3fs-fuse
+            cd s3fs-fuse/
+            ./autogen.sh
+            ./configure --prefix=/usr --with-openssl
+            /usr/bin/make
+            /usr/bin/make install
+        fi
     fi
 fi
