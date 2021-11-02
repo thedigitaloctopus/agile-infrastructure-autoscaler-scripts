@@ -56,16 +56,17 @@ elif ( [ "${BUILDOS}" = "ubuntu" ] )
     then
         if ( [ "${BUILDOSVERSION}" = "20.04" ]  )
         then
+            mac="`/usr/bin/ip addr | /bin/grep "link" | /bin/grep "ether" | /usr/bin/tail -1 | /usr/bin/awk '{print $2}'`"
             /bin/echo "network:
   version: 2
   renderer: networkd
   ethernets:
-    ens7:
+    enp6s0:
       match:
-        macaddress: 00:00:00:00:00:00
+        macaddress: ${mac}
       mtu: 1450
       dhcp4: no
-      addresses: [${ip}/16]" >> /etc/netplan/10-ens7.yaml
+      addresses: [${ip}/16]" >> /etc/netplan/10-enp6s0.yaml
             /usr/sbin/netplan apply
         fi
     fi
