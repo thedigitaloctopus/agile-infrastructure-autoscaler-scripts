@@ -205,7 +205,7 @@ then
         #/usr/bin/vultr server create --name="${server_name}" --region="${region}" --plan="${server_plan}" --os="164" --private-networking=true --ipv6=false -k ${key_id} --snapshot="${snapshot_id}"
         
        #Official
-       /usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_plan}" --os="164" --private-network=true --ipv6=false -s ${key_id} --snapshot="${snapshot_id}"
+       /usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_plan}" --private-network=true --ipv6=false -s ${key_id} --snapshot="${snapshot_id}"
         
         #Pass back a token to say we built from a snapshot
         /bin/echo "SNAPPED"
