@@ -40,9 +40,10 @@ then
     /bin/umount -f ${HOME}/config
 fi
 
+SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
+
 if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] )
 then
-    SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
     if ( [ "`/bin/ls ${HOME}/config/${SERVER_USER}`" = "" ] )
     then
         /bin/rm -r ${HOME}/config/*
