@@ -44,10 +44,20 @@ SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSE
 
 if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] )
 then
-    if ( [ "`/bin/ls ${HOME}/config/${SERVER_USER}`" = "" ] )
+    if ( [ ! -f ${HOME}/config/${SERVER_USER} ] )
     then
+        installed="0"
+        if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
+        then
+            installed="1"
+        fi
         /bin/rm -r ${HOME}/config/*
         /bin/touch ${HOME}/config/${SERVER_USER}
+        if ( [ "${installed}" = "1" ] )
+        then
+            /bin/touch ${HOME}/config/${INSTALLEDSUCCESSFULLY}
+        fi
+        /bin/sleep 5
     fi
     
     #if ( [ -f ${HOME}/config/REFRESH_MOUNT ] )
