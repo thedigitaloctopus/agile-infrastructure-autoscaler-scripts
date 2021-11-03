@@ -43,11 +43,20 @@ then
 
     if ( [ "${BUILDOS}" = "debian" ] )
     then
-        if ( [ "${BUILDOSVERSION}" = "10" ] || [ "${BUILDOSVERSION}" = "11" ] )
+        if ( [ "${BUILDOSVERSION}" = "10" ] )
         then
             /bin/echo "auto ens7
 iface ens7 inet static
 address ${ip}
+netmask 255.255.0.0
+            mtu 1450" >> /etc/network/interfaces
+            /sbin/ifup --all
+        fi
+        if ( [ "${BUILDOSVERSION}" = "11" ] )
+        then
+            /bin/echo "auto enp6s0
+iface enp6s0 inet static
+address ${IP}
 netmask 255.255.0.0
             mtu 1450" >> /etc/network/interfaces
             /sbin/ifup --all
