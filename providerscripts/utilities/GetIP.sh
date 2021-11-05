@@ -75,7 +75,7 @@ elif ( [ "${BUILDOS}" = "ubuntu" ] )
         macaddress: ${mac}
       mtu: 1450
       dhcp4: no
-      addresses: [${ip}/16]" >> /etc/netplan/10-enp6s0.yaml
+      addresses: [${ip}/16]" > /etc/netplan/10-enp6s0.yaml
             /usr/sbin/netplan apply
         fi
     fi
