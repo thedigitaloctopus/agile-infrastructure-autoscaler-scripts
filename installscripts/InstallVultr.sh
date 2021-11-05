@@ -36,8 +36,8 @@ then
     
         #Official
     /usr/bin/go get -u github.com/vultr/vultr-cli/v2
-    vultr-cli="`/usr/bin/find / -name "vultr-cli" -print | /bin/grep bin | /bin/grep vultr-cli`"
-    /bin/cp ${vultr-cli} /usr/bin/vultr
+    vultrcli="`/usr/bin/find / -name "vultr-cli" -print | /bin/grep bin | /bin/grep vultr-cli`"
+    /bin/cp ${vultrcli} /usr/bin/vultr
    
    #Clonk
    # latest="`/usr/bin/curl https://github.com/JamesClonk/vultr/releases/latest | /bin/sed 's/.*tag\///g' | /bin/sed 's/\".*//g' | /bin/sed 's/v//g'`"
@@ -62,8 +62,8 @@ then
     #cd ..
     #Official
     /usr/bin/go get -u github.com/vultr/vultr-cli/v2
-    vultr-cli="`/usr/bin/find / -name "vultr-cli" -print | /bin/grep bin | /bin/grep vultr-cli`"
-    /bin/cp ${vultr-cli} /usr/bin/vultr
+    vultrcli="`/usr/bin/find / -name "vultr-cli" -print | /bin/grep bin | /bin/grep vultr-cli`"
+    /bin/cp ${vultrcli} /usr/bin/vultr
     
     #Clonk
     #latest="`/usr/bin/curl https://github.com/JamesClonk/vultr/releases/latest | /bin/sed 's/.*tag\///g' | /bin/sed 's/\".*//g' | /bin/sed 's/v//g'`"
