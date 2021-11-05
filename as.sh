@@ -307,6 +307,9 @@ ${HOME}/providerscripts/utilities/GetIP.sh
 /usr/sbin/ufw default allow outgoing
 /usr/sbin/ufw --force enable
 
+#This is needed to intialise the networking
+${HOME}/providerscripts/utilities/GetIP.sh
+
 /bin/chown -R ${SERVER_USER}.${SERVER_USER} ${HOME}
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
