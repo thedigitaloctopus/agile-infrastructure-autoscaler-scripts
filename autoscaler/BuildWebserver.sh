@@ -421,7 +421,7 @@ then
         /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO}  ${HOME}/ws.sh 'bimonthly' ${SERVER_USER}"
     fi
 else
-    /bin/echo "${0} `/bin/date`: Building a new machine from a snapshot or dynamically scaled" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+    /bin/echo "${0} `/bin/date`: Building a new machine from a snapshot" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 
     #If we got to here, then the server has been built from a snapshot.
     /usr/bin/touch ${HOME}/config/bootedwebserverips/${private_ip}
