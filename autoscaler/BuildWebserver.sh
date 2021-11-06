@@ -477,16 +477,22 @@ else
         fi
         exit
     fi
-
-    #Our snapshot built machine will have "frozen" config settings from when it was snapshotted. These will likely be different
-    #For example, the ip addresses will be different for the machines, so, we need to purge the bits of configuration that need
-    #to be updated and replace it with fresh stuff
-   # /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /bin/rm -f /home/${SERVER_USER}/.ssh/BUILDARCHIVECHOICE:* /home/${SERVER_USER}/.ssh/MYIP:* /home/${SERVER_USER}/.ssh/MYPUBLICIP:* /home/${SERVER_USER}/runtime/NETCONFIGURED /home/${FULL_SNAPSHOT_ID}/runtime/SSHTUNNELCONFIGURED /home/${FULL_SNAPSHOT_ID}/runtime/APPLICATION_CONFIGURATION_PREPARED /home/${FULL_SNAPSHOT_ID}/runtime/APPLICATION_DB_CONFIGURED /home/${FULL_SNAPSHOT_ID}/runtime/*.lock"
-   # /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /bin/touch /home/${SERVER_USER}/.ssh/BUILDARCHIVECHOICE:${BUILD_ARCHIVE} /home/${SERVER_USER}/.ssh/MYIP:${private_ip} /home/${SERVER_USER}/.ssh/MYPUBLICIP:${ip}"
-   
-   
- #  /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /home/${SERVER_USER}/providerscripts/utilities/RefreshNetworking.sh"
     
+   /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /home/${SERVER_USER}/providerscripts/utilities/RefreshNetworking.sh"
+   /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /sbin/shutdown -r now"
+
+   /usr/bin/ping -c 10 ${ip}
+
+   while ( [ "$?" != "0" ] )
+   do
+        /usr/bin/ping -c 10 ${ip}
+   done
+
+   while ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /bin/ls ${HOME}/runtime/WEBSERVER_READY"`" != "${HOME}/runtime/WEBSERVER_READY" ] )
+   do
+       /bin/sleep 30
+   done
+ 
     /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/SyncFromWebrootTunnel.sh"
     /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/applicationscripts/SyncLatestApplication.sh ${APPLICATION_REPOSITORY_PROVIDER} ${APPLICATION_REPOSITORY_USERNAME} ${APPLICATION_REPOSITORY_PASSWORD} ${APPLICATION_REPOSITORY_OWNER} ${BUILD_ARCHIVE} ${DATASTORE_CHOICE} ${BUILD_IDENTIFIER} ${WEBSITE_NAME}"
     
@@ -500,7 +506,7 @@ else
      /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -p ${SSH_PORT} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'DBIP' \"${DBIP}\""
     /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -p ${SSH_PORT} ${OPTIONS} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'DBPUBLICIP' \"${DB_PUBLIC_IP}\""    
 #   /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/StoreConfigValue.sh \"AUTOSCALED\""
-   /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /home/${SERVER_USER}/providerscripts/utilities/RefreshNetworking.sh"
+#   /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /home/${SERVER_USER}/providerscripts/utilities/RefreshNetworking.sh"
    /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /sbin/shutdown -r now"
 fi
 
