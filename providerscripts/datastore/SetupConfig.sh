@@ -51,7 +51,7 @@ then
         then
             installed="1"
         fi
-        /bin/rm -r ${HOME}/config/*
+        /bin/rm -r ${HOME}/config/* ${HOME}/config_cache/*
         /bin/touch ${HOME}/config/${SERVER_USER}
         if ( [ "${installed}" = "1" ] )
         then
@@ -80,6 +80,11 @@ then
     exit
 fi
 
+if ( [ ! -d ${HOME}/config_cache ] )
+then
+    /bin/mkdir ${HOME}/config_cache
+fi
+
 if ( [ "${DATASTORE_PROVIDER}" = "amazonS3" ] )
 then
     export AWSACCESSKEYID=`/bin/grep 'access_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
@@ -104,7 +109,7 @@ then
             done
         else
             /usr/bin/s3cmd mb s3://${configbucket}
-            /usr/bin/s3fs -o nonempty,allow_other,kernel_cache,use_path_request_style,sigv2 -ourl=https://${endpoint} ${configbucket} ${HOME}/config
+            /usr/bin/s3fs -o nonempty,allow_other,kernel_cache,use_path_request_style,sigv2 -o use_cache=${HOME}/config_cache -ourl=https://${endpoint} ${configbucket} ${HOME}/config
         fi
     fi
 fi
@@ -114,7 +119,7 @@ then
     export AWSACCESSKEYID=`/bin/grep 'access_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
     export AWSSECRETACCESSKEY=`/bin/grep 'secret_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
     /usr/bin/s3cmd mb s3://${configbucket}
-    /usr/bin/s3fs -o nonempty,allow_other,kernel_cache,use_path_request_style,sigv2 -ourl=https://${endpoint} ${configbucket} ${HOME}/config
+    /usr/bin/s3fs -o nonempty,allow_other,kernel_cache,use_path_request_style,sigv2 -o use_cache=${HOME}/config_cache -ourl=https://${endpoint} ${configbucket} ${HOME}/config
 fi
 
 if ( [ "${DATASTORE_PROVIDER}" = "exoscale" ] )
@@ -122,7 +127,7 @@ then
     export AWSACCESSKEYID=`/bin/grep 'access_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
     export AWSSECRETACCESSKEY=`/bin/grep 'secret_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
     /usr/bin/s3cmd mb s3://${configbucket}
-    /usr/bin/s3fs -o nonempty,allow_other,kernel_cache,use_path_request_style -ourl=https://${endpoint} ${configbucket} ${HOME}/config
+    /usr/bin/s3fs -o nonempty,allow_other,kernel_cache,use_path_request_style -o use_cache=${HOME}/config_cache -ourl=https://${endpoint} ${configbucket} ${HOME}/config
 fi
 
 if ( [ "${DATASTORE_PROVIDER}" = "linode" ] )
@@ -130,7 +135,7 @@ then
     export AWSACCESSKEYID=`/bin/grep 'access_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
     export AWSSECRETACCESSKEY=`/bin/grep 'secret_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
     /usr/bin/s3cmd mb s3://${configbucket}
-    /usr/bin/s3fs -o nonempty,allow_other,kernel_cache,use_path_request_style -ourl=https://${endpoint} ${configbucket} ${HOME}/config
+    /usr/bin/s3fs -o nonempty,allow_other,kernel_cache,use_path_request_style -o use_cache=${HOME}/config_cache -ourl=https://${endpoint} ${configbucket} ${HOME}/config
 fi
 
 if ( [ "${DATASTORE_PROVIDER}" = "vultr" ] )
@@ -138,7 +143,7 @@ then
     export AWSACCESSKEYID=`/bin/grep 'access_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
     export AWSSECRETACCESSKEY=`/bin/grep 'secret_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
     /usr/bin/s3cmd mb s3://${configbucket}
-    /usr/bin/s3fs -o nonempty,allow_other,kernel_cache,use_path_request_style,sigv2 -ourl=https://${endpoint} ${configbucket} ${HOME}/config
+    /usr/bin/s3fs -o nonempty,allow_other,kernel_cache,use_path_request_style,sigv2 -o use_cache=${HOME}/config_cache -ourl=https://${endpoint} ${configbucket} ${HOME}/config
 fi
 
 SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
