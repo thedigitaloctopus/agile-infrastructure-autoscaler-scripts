@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if ( [ "${cloudhost}" = "digitalocean" ] )
+if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 then
     dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
   
