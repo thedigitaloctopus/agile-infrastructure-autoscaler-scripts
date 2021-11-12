@@ -4,7 +4,7 @@ if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 then
     dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
   
-    cluster_id"`/bin/echo ${dbaas} | /usr/bin/awk '{print $NF}'`"
+    cluster_id="`/bin/echo ${dbaas} | /usr/bin/awk '{print $NF}'`"
 
     if ( [ "`/usr/local/bin/doctl databases list | /bin/grep ${cluster_id}`" != "" ] )
     then
