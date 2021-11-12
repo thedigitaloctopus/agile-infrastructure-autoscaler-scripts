@@ -29,7 +29,7 @@ USER_HOME="`/usr/bin/awk -F: '{ print $1}' /etc/passwd | /bin/grep "X*X"`"
 export HOME="/home/${USER_HOME}" | /usr/bin/tee -a ~/.bashrc
 export HOMEDIR=${HOME}
 /bin/echo "${HOMEDIR}" > /home/homedir.dat
-/bin/echo "export HOME=`/bin/cat /home/homedir.dat` && \${1}" > /usr/bin/run
+/bin/echo "export HOME=`/bin/cat /home/homedir.dat` && \${1} \${2} \${3}" > /usr/bin/run
 /bin/chmod 755 /usr/bin/run
 
 #First thing is to tighten up permissions in case theres any wronguns. 
