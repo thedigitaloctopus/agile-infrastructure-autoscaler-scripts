@@ -55,7 +55,7 @@ then
         /bin/touch ${HOME}/config/${SERVER_USER}
         if ( [ "${installed}" = "1" ] )
         then
-            /bin/touch ${HOME}/config/${INSTALLEDSUCCESSFULLY}
+            /bin/touch ${HOME}/config/INSTALLEDSUCCESSFULLY
         fi
         /bin/sleep 5
     fi
