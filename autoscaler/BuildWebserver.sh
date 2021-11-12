@@ -218,6 +218,8 @@ then
     exit
 fi
 
+. ${HOME}/providerscripts/cloudhost/TightenDBaaSFirewall.sh
+
 if ( [ ! -d ${HOME}/runtime/protectedfromtermination ] )
 then
     /bin/mkdir -p ${HOME}/runtime/protectedfromtermination
