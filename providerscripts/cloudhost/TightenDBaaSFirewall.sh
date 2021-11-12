@@ -1,4 +1,12 @@
+#!/bin/sh
+
+if ( [ "${cloudhost}" = "digitalocean" ] )
+then
+    dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
   
-  db_ass="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh 
-  
-  /usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:${WSIP}  
+    if ( [ "`/bin/echo ${dbaas} | /bin/grep DBAAS`" != "" ] )
+    then
+        cluster_id"`/bin/echo ${dbaas} | /usr/bin/awk '{print $NF}'`"
+        /local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:${ip}
+    fi
+fi
