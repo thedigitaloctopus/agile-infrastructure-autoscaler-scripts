@@ -46,33 +46,10 @@ if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] )
 then
     if ( [ ! -f ${HOME}/config/${SERVER_USER} ] )
     then
-        installed="0"
-        if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
-        then
-            installed="1"
-        fi
         /bin/rm -r ${HOME}/config/* ${HOME}/config_cache/*
-        /bin/touch ${HOME}/config/${SERVER_USER}
-        if ( [ "${installed}" = "1" ] )
-        then
-            /bin/touch ${HOME}/config/INSTALLEDSUCCESSFULLY
-        fi
         /bin/sleep 5
+        /bin/touch ${HOME}/config/${SERVER_USER}
     fi
-    
-    #if ( [ -f ${HOME}/config/REFRESH_MOUNT ] )
-    #then
-    #    /bin/sleep 20
-    #    /bin/rm ${HOME}/config/REFRESH_MOUNT
-    #    /bin/umount -f ${HOME}/config
-    #    exit
-   # fi
-  #  if ( [ ! -f ${HOME}/runtime/INITIALCONFIGSET ] )
-  #  then
-  #      /bin/rm -r ${HOME}/config/*
-  #      /usr/bin/s3cmd --recursive --force del s3://${config_bucket}/*
-  #      /bin/touch ${HOME}/runtime/INITIALCONFIGSET
-  #  fi
 fi
 
 if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] &&  [ "`/bin/ls ${HOME}/config/${SERVER_USER}`" != "" ] )
