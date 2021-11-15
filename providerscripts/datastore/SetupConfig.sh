@@ -54,6 +54,7 @@ fi
 
 if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] &&  [ "`/bin/ls ${HOME}/config/${SERVER_USER}`" != "" ] )
 then
+   ${HOME}/providerscripts/utilities/SetupConfigDirectories.sh
     exit
 fi
 
