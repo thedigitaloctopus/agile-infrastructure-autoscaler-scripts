@@ -8,7 +8,7 @@ then
 
     if ( [ "`/usr/local/bin/doctl databases list | /bin/grep ${cluster_id}`" != "" ] )
     then
-        /usr//local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:${ip}
+        /usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:${ip}
     fi
 fi
 
@@ -19,6 +19,7 @@ then
     database_name="`/bin/echo ${dbaas} | /usr/bin/awk '{print $6}'`"
     ips="`/bin/ls ${HOME}/config/autoscalerpublicip`"
     ips="${ips} `/bin/ls ${HOME}/config/webserverpublicips`"
+    ips="${ips} `/bin/ls ${HOME}/config/databasepublicip`"
     ips="${ips} `/bin/ls ${HOME}/config/buildclientip`"
     ips="`/bin/echo ${ips} | /bin/sed 's/  / /g' | /bin/tr ' ' ',' | /bin/sed 's/,$//g'`"
     
