@@ -29,7 +29,7 @@ fi
 
 if ( [ "${BUILD_OS}" = "ubuntu" ] )
 then
-    exo_version="`/usr/bin/curl https://github.com/exoscale/cli/releases | /bin/grep releases | /bin/grep exoscale-cli | /usr/bin/tac | /usr/bin/head -1 | /bin/sed "s/.*exoscale-cli_//g" | /usr/bin/awk -F'_' '{print $1}'`"
+    exo_version="`/usr/bin/curl https://github.com/exoscale/cli/releases | /bin/grep releases | /bin/grep exoscale-cli |  /bin/grep "linux_amd" | /bin/grep "tar.gz" | /usr/bin/head -1 | /bin/sed "s/.*exoscale-cli_//g" | /usr/bin/awk -F'_' '{print $1}'`"
     /usr/bin/wget https://github.com/exoscale/cli/releases/download/v${exo_version}/exoscale-cli_${exo_version}_linux_amd64.tar.gz
     /usr/bin/tar xvfz exoscale-cli*tar.gz -C ./exo_unpack
     /bin/mv ./exo_unpack/exo /usr/bin
@@ -42,7 +42,7 @@ fi
 
 if ( [ "${BUILD_OS}" = "debian" ] )
 then
-    exo_version="`/usr/bin/curl https://github.com/exoscale/cli/releases | /bin/grep releases | /bin/grep exoscale-cli | /usr/bin/tac | /usr/bin/head -1 | /bin/sed "s/.*exoscale-cli_//g" | /usr/bin/awk -F'_' '{print $1}'`"
+    exo_version="`/usr/bin/curl https://github.com/exoscale/cli/releases | /bin/grep releases | /bin/grep exoscale-cli |  /bin/grep "linux_amd" | /bin/grep "tar.gz" | /usr/bin/head -1 | /bin/sed "s/.*exoscale-cli_//g" | /usr/bin/awk -F'_' '{print $1}'`"
     /usr/bin/wget https://github.com/exoscale/cli/releases/download/v${exo_version}/exoscale-cli_${exo_version}_linux_amd64.tar.gz
     /usr/bin/tar xvfz exoscale-cli*tar.gz -C ./exo_unpack
     /bin/mv ./exo_unpack/exo /usr/bin
