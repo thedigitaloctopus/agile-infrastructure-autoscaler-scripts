@@ -19,5 +19,12 @@ then
     database_name="`/bin/echo ${dbaas} | /usr/bin/awk '{print $6}'`"
     ips="`/bin/ls ${HOME}/config/webserverpublicips`"
     ips="`/bin/echo ${ips} | /bin/tr '\n' ',' | /bin/sed 's/,$//g'`"
-    /usr/bin/exo dbaas update -z ${zone}  ${database_name} --mysql-ip-filter=${ips}
+    
+    if ( [ "`/bin/echo ${dbaas} | /bin/grep ' pg '`" != "" ] )
+    then
+        /usr/bin/exo dbaas update -z ${zone}  ${database_name} --pg-ip-filter=${ips}
+    elif ( [ "`/bin/echo ${dbaas} | /bin/grep ' mysql '`" != "" ] )
+    then
+        /usr/bin/exo dbaas update -z ${zone}  ${database_name} --mysql-ip-filter=${ips}
+    fi
 fi
