@@ -11,3 +11,13 @@ then
         /usr//local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:${ip}
     fi
 fi
+
+if ( [ "${CLOUDHOST}" = "exoscale" ] )
+then
+    dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
+    zone="`/bin/echo ${dbaas} | /usr/bin/awk '{print $4}'`"
+    database_name="`/bin/echo ${dbaas} | /usr/bin/awk '{print $6}'`"
+    ips="`/bin/ls ${HOME}/config/webserverpublicips`"
+    ips="`/bin/echo ${ips} | /bin/tr '\n' ',' | /bin/sed 's/,$//g'`"
+    /usr/bin/exo dbaas update -z ${zone}  ${database_name} --mysql-ip-filter=${ips}
+fi
