@@ -27,7 +27,12 @@ fi
 
 if ( [ -f ${HOME}/EXOSCALE ] )
 then
-    /usr/bin/exo compute security-group rule add adt --network ${1}/32 --port ${2}    
+    if ( [ "${2}" != "" ] )
+    then
+        /usr/bin/exo compute security-group rule add adt --network ${1}/32 
+    else
+        /usr/bin/exo compute security-group rule add adt --network ${1}/32 ${2}
+    fi
 fi
 
 if ( [ -f ${HOME}/LINODE ] )
