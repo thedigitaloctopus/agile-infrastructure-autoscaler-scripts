@@ -27,7 +27,7 @@ fi
 
 if ( [ -f ${HOME}/EXOSCALE ] )
 then
-    if ( [ "${2}" != "" ] )
+    if ( [ "${2}" = "" ] )
     then
         /usr/bin/exo compute security-group rule add adt --network ${1}/32 --port 1-65535
     else
