@@ -20,27 +20,27 @@
 #########################################################################################
 #set -x
 
-if ( [ "${CLOUDHOST}" = "digitalocean" ] )
+if ( [ -f ${HOME}/DROPLET ] )
 then
     :
 fi
 
-if ( [ "${CLOUDHOST}" = "exoscale" ] )
+if ( [ -f ${HOME}/EXOSCALE ] )
 then
     /usr/bin/exo compute security-group rule add adt --network ${1}/32 --port ${2}    
 fi
 
-if ( [ "${CLOUDHOST}" = "linode" ] )
+if ( [ -f ${HOME}/LINODE ] )
 then
     :
 fi
 
-if ( [ "${CLOUDHOST}" = "vultr" ] )
+if ( [ -f ${HOME}/VULTR ] )
 then
     :
 fi
 
-if ( [ "${CLOUDHOST}" = "aws" ] )
+if ( [ -f ${HOME}/AWS ] )
 then
     :
 fi
