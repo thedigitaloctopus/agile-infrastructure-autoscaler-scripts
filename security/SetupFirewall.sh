@@ -72,7 +72,7 @@ do
     then
        /bin/sleep 5
        /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${autoscalerip}
-       ${HOME}/providerscripts/server/UpdateNativeFirewall.sh ${BUILD_CLIENT_IP} 
+       ${HOME}/providerscripts/server/UpdateNativeFirewall.sh ${autoscalerip} 
     fi
 done
     
@@ -82,7 +82,7 @@ do
     then
         /bin/sleep 5
         /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${publicautoscalerip}
-        ${HOME}/providerscripts/server/UpdateNativeFirewall.sh ${BUILD_CLIENT_IP}
+        ${HOME}/providerscripts/server/UpdateNativeFirewall.sh ${publicautoscalerip}
     fi
 done
 
