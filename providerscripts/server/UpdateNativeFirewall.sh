@@ -33,6 +33,14 @@ then
     else
         /usr/bin/exo compute security-group rule add adt --network ${1}/32 --port ${2}
     fi
+
+    #Delete the general access rule, if it exists that we setup during the build process
+
+    if ( [ "${2}" != "" ] && [ "${2}" != "443" ] && [ "${2}" != "80" ] )
+    then
+        id="`/usr/bin/exo -O json compute security-group show adt | jq --arg tmp_port "${2}" '(.ingress_rules[] | select (.network == "0.0.0.0/0" and .start_port == $tmp_port and .end_port == $tmp_port) | .id)' | /bin/sed 's/"//g'`"
+        /usr/bin/exo  compute security-group rule delete -f adt ${id}
+    fi
 fi
 
 if ( [ -f ${HOME}/LINODE ] )
