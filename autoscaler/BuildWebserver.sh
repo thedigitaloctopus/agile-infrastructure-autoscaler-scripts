@@ -45,6 +45,7 @@ else
 fi
 CUSTOM_USER_SUDO="DEBIAN_FRONTEND=noninteractive /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E "
 OPTIONS=" -o ConnectTimeout=10 -o ConnectionAttempts=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "
+OPTIONS1=" -o ConnectTimeout=10 -o ConnectionAttempts=5 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "
 
 #Check there is a directory for logging
 if ( [ ! -d ${HOME}/logs ] )
@@ -271,7 +272,7 @@ then
     do
         count="`/usr/bin/expr ${count} + 1`"
         /bin/sleep 10
-        /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -o "PasswordAuthentication no" ${DEFAULT_USER}@${ip} "exit"
+        /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS1} -o "PasswordAuthentication no" ${DEFAULT_USER}@${ip} "exit"
     done
 
     if ( [ "${count}" = "5" ] || [ "${CLOUDHOST_PASSWORD}" != "" ] )
