@@ -31,7 +31,7 @@ then
     then
         /usr/bin/exo compute security-group rule add adt --network ${1}/32 --port 1-65535
     else
-        /usr/bin/exo compute security-group rule add adt --network ${1}/32 ${2}
+        /usr/bin/exo compute security-group rule add adt --network ${1}/32 --port ${2}
     fi
 fi
 
