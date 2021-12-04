@@ -65,6 +65,8 @@ then
             /bin/rm ${HOME}/config/webserverips/${private_server_ip}
             /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
             /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
+            ${HOME}/providerscripts/server/UpdateNativeFirewall.sh SCALING ${server_ip}
+            ${HOME}/providerscripts/server/UpdateNativeFirewall.sh SCALING ${private_server_ip}
         fi
     fi
 fi
@@ -80,6 +82,8 @@ then
     /bin/rm ${HOME}/config/webserverips/${private_server_ip}
     /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
     /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
+    ${HOME}/providerscripts/server/UpdateNativeFirewall.sh SCALING ${server_ip}
+    ${HOME}/providerscripts/server/UpdateNativeFirewall.sh SCALING ${private_server_ip}
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
@@ -103,6 +107,8 @@ then
         else
             /bin/echo "${0} `/bin/date` : This script is only for Destroying Webservers, refused to destroy server with ip: ${server_ip}" >> ${HOME}/logs/MonitoringLog.log
         fi
+        ${HOME}/providerscripts/server/UpdateNativeFirewall.sh SCALING ${server_ip}
+        ${HOME}/providerscripts/server/UpdateNativeFirewall.sh SCALING ${private_server_ip}
     fi
 fi
 
@@ -135,6 +141,8 @@ then
         /bin/rm ${HOME}/config/webserverips/${private_server_ip}
         /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
         /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
+        ${HOME}/providerscripts/server/UpdateNativeFirewall.sh SCALING ${server_ip}
+        ${HOME}/providerscripts/server/UpdateNativeFirewall.sh SCALING ${private_server_ip}
     else
         /bin/echo "${0} `/bin/date` : This script is only for Destroying Webservers, refused to destroy server with ip: ${server_ip}" >> ${HOME}/logs/MonitoringLog.log
     fi
@@ -156,6 +164,8 @@ then
         /bin/rm ${HOME}/config/webserverips/${private_server_ip}
         /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
         /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
+        ${HOME}/providerscripts/server/UpdateNativeFirewall.sh SCALING ${server_ip}
+        ${HOME}/providerscripts/server/UpdateNativeFirewall.sh SCALING ${private_server_ip}
     else
         /bin/echo "${0} `/bin/date` : This script is only for Destroying Webservers, refused to destroy server with ip: ${server_ip}" >> ${HOME}/logs/MonitoringLog.log
     fi
