@@ -76,7 +76,7 @@ then
     exit
 fi
 
-${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh 'NUMBERWS' "${NO_WEBSERVERS}"
+${HOME}/providerscripts/utilities/StoreConfigValue.sh 'NUMBERWS' "${NO_WEBSERVERS}"
 
 if ( [ "`/bin/grep "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf`" = "" ] || [ "`/bin/grep "SCALING_MODE" ${HOME}/config/scalingprofile/profile.cnf`" = "" ] )
 then
