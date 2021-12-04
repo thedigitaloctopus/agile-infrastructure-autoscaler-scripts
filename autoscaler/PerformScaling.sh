@@ -76,6 +76,8 @@ then
     exit
 fi
 
+${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh 'NUMBERWS' "${NO_WEBSERVERS}"
+
 if ( [ "`/bin/grep "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf`" = "" ] || [ "`/bin/grep "SCALING_MODE" ${HOME}/config/scalingprofile/profile.cnf`" = "" ] )
 then
     if ( [ "`/bin/cat /proc/uptime | /usr/bin/awk '{print $1}' | /usr/bin/awk -F'.' '{print $1}'`" -gt "120" ] )
@@ -87,6 +89,8 @@ fi
 
 SCALING_MODE="`/bin/grep "SCALING_MODE" ${HOME}/config/scalingprofile/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
 NO_WEBSERVERS="`/bin/grep "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
+
+${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh 'NUMBERWS' "${NO_WEBSERVERS}"
 
 if ( [ "${SCALING_MODE}" != "static" ] )
 then
