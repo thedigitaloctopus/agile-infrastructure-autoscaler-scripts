@@ -60,32 +60,17 @@ NO_WEBSERVERS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'NUMBERW
 if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" = "" ] )
 then
    exit
-elif ( [ ! -f ${HOME}/config/scalingprofile/profile.cnf ] )
+elif ( [ ! -f ${HOME}/config/scalingprofile/profile.cnf ] || [ "`/bin/grep "SCALING_MODE" ${HOME}/config/scalingprofile/profile.cnf`" = "" ] || [ "`/bin/grep "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf`" = "" ] )
 then
     /bin/mkdir ${HOME}/config/scalingprofile
     /bin/cp /dev/null ${HOME}/config/scalingprofile/profile.cnf
+    /bin/echo  "SCALING_MODE=${SCALING_MODE}" > ${HOME}/config/scalingprofile/profile.cnf
+    /bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> ${HOME}/config/scalingprofile/profile.cnf
 fi
 
 if ( [ ! -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
 then
     exit
-fi
-
-if ( [ ! -f ${HOME}/config/scalingprofile/profile.cnf ] )
-then
-    /bin/echo  "SCALING_MODE=${SCALING_MODE}" > ${HOME}/config/scalingprofile/profile.cnf
-    /bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> ${HOME}/config/scalingprofile/profile.cnf
-fi
-
-${HOME}/providerscripts/utilities/StoreConfigValue.sh 'NUMBERWS' "${NO_WEBSERVERS}"
-
-if ( [ "`/bin/grep "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf`" = "" ] || [ "`/bin/grep "SCALING_MODE" ${HOME}/config/scalingprofile/profile.cnf`" = "" ] )
-then
-    if ( [ "`/bin/cat /proc/uptime | /usr/bin/awk '{print $1}' | /usr/bin/awk -F'.' '{print $1}'`" -gt "120" ] )
-    then
-        /bin/echo  "SCALING_MODE=${SCALING_MODE}" > ${HOME}/config/scalingprofile/profile.cnf
-        /bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> ${HOME}/config/scalingprofile/profile.cnf
-    fi
 fi
 
 SCALING_MODE="`/bin/grep "SCALING_MODE" ${HOME}/config/scalingprofile/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
