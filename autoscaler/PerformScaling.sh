@@ -23,7 +23,7 @@
 #######################################################################################################
 #set -x
 
-if ( [ "`${HOME}providerscripts/utilities/TimeSinceInstallation.sh`" -lt "20" ] )
+if ( [ "`${HOME}/providerscripts/utilities/TimeSinceInstallation.sh`" -lt "20" ] )
 then
     exit
 fi
