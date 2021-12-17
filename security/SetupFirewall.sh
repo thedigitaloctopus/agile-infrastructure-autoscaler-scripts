@@ -42,6 +42,8 @@ allips="${allips} `/bin/ls ${HOME}/config/databaseip | /usr/bin/tr '\n' ' '`"
 #allips="${allips} `/bin/ls ${HOME}/config/databasepublicip | /usr/bin/tr '\n' ' '`"
 allips="${allips} ${BUILD_CLIENT_IP}"
 
+/bin/echo "${allips}" > ${HOME}/runtime/ipsforfirewall
+
 SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
 
 #if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep eth1 | /bin/grep ALLOW`" = "" ] )
