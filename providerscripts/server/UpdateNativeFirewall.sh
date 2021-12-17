@@ -51,28 +51,16 @@ if ( [ -f ${HOME}/LINODE ] )
 then
 
     firewall_id="`/usr/local/bin/linode-cli --json firewalls list | jq '.[] | select (.label == "adt" ).id'`"
-
-    for ips in ${ips}
+    for ip in ${allips}
     do
-        ip="`/bin/echo "${ips}" | /usr/bin/awk -F'.' '{print $1  "."  $2  ".0.0/32"}'`"
-        fixedips=${fixedips}:${ip}
+        rules=${rules}"{\"addresses\":{\"ipv4\":[\"${ip}/32\"]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"${SSH_PORT},${DB_PORT}\"},"
     done
-
-    ips="`/bin/echo ${fixedips} | /bin/sed 's/:/ /g'`"
-
-    for ip in ${ips}
-    do
-        rules=${rules}"{\"addresses\":{\"ipv4\":[\"${ip}\"]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"${SSH_PORT},${DB_PORT}\"},"
-    done
-   
+    rules="[`/bin/echo ${rules} | /bin/sed 's/,$//g'`,"
     firewall_build_machine_id="`/usr/local/bin/linode-cli --json firewalls list | jq '.[] | select (.label == "adt-build-machine" ).id'`"
-    build_machine_rules="`/usr/local/bin/linode-cli --markdown firewalls rules-list 37262 | /bin/grep addresses | /usr/bin/awk -F'|' '{print $2}' | /bin/sed 's/ //g' | /usr/bin/tr "'" '"'`,"
-    rules=${rules}${build_machine_rules}"{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"443,80,22\"},{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"ICMP\"}"   
-    
-    if ( [ "${ip}" != "" ] )
-    then
-       /usr/local/bin/linode-cli firewalls rules-update --inbound  "\'[${rules}]\'" ${firewall_id}
-    fi
+    build_machine_rules="`/usr/local/bin/linode-cli --markdown firewalls rules-list ${firewall_build_machine_id}  | /bin/grep addresses | /usr/bin/awk -F'|' '{print $2}' | /bin/sed 's/ //g' | /usr/bin/tr "'" '"'`,"
+    standard_rules="{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"443,80,22\"},{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"ICMP\"}]"   
+    allrules="${rules}${build_machine_rules}${standard_rules}"
+    /usr/local/bin/linode-cli firewalls rules-update --inbound  "${allrules}" ${firewall_id}
 
 fi
 
