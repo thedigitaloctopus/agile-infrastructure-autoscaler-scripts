@@ -33,8 +33,8 @@ fi
 
 . ${HOME}/providerscripts/utilities/SetupInfrastructureIPs.sh
 
-
-allips="${allips} `/bin/ls ${HOME}/config/autoscalerip | /usr/bin/tr '\n' ' '`"
+allips=""
+allips="`/bin/ls ${HOME}/config/autoscalerip | /usr/bin/tr '\n' ' '`"
 allips="${allips} `/bin/ls ${HOME}/config/autoscalerpublicip | /usr/bin/tr '\n' ' '`"
 allips="${allips} `/bin/ls ${HOME}/config/webserverips | /usr/bin/tr '\n' ' '`"
 allips="${allips} `/bin/ls ${HOME}/config/webserverpublicips | /usr/bin/tr '\n' ' '`"
