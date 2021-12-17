@@ -33,6 +33,14 @@ fi
 
 . ${HOME}/providerscripts/utilities/SetupInfrastructureIPs.sh
 
+
+allips="${allips} `/bin/ls ${HOME}/config/autoscalerip | /usr/bin/tr '\n' ' '`"
+allips="${allips} `/bin/ls ${HOME}/config/autoscalerpublicip | /usr/bin/tr '\n' ' '`"
+allips="${allips} `/bin/ls ${HOME}/config/webserverips | /usr/bin/tr '\n' ' '`"
+allips="${allips} `/bin/ls ${HOME}/config/webserverpublicips | /usr/bin/tr '\n' ' '`"
+allips="${allips} `/bin/ls ${HOME}/config/databaseip | /usr/bin/tr '\n' ' '`"
+allips="${allips} `/bin/ls ${HOME}/config/databasepublicip | /usr/bin/tr '\n' ' '`"
+
 SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
 
 #if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep eth1 | /bin/grep ALLOW`" = "" ] )
