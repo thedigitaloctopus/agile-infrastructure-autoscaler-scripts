@@ -53,15 +53,24 @@ then
 
     ips="`/bin/ls ${HOME}/config/autoscalerip`"
 
-    for ip in ${ips}
+    for ips in ${ips}
     do
-        ip="`/bin/echo "${ip}" | /usr/bin/awk -F'.' '{print $1  "."  $2  ".0.0/32"}'`"
+        ips="`/bin/echo "${ip}" | /usr/bin/awk -F'.' '{print $1  "."  $2  ".0.0/32"}'`"
     done
-   
+    
+    firewall_build_machine_id="`/usr/local/bin/linode-cli --json firewalls list | jq '.[] | select (.label == "adt-build-machine" ).id'`"
+    rules="`/usr/local/bin/linode-cli firewalls rules-list ${firewall_build_machine_id} | /bin/grep addresses | /usr/bin/awk -F'x' '{print $2}'`"
+    
+    rules=${rules}",{\"addresses\":{\"ipv4\":[\"${ip}\"]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"${SSH_PORT},${DB_PORT}\"},{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"443,80,22\"},{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"ICMP\"}"   
+    
     if ( [ "${ip}" != "" ] )
     then
-        /usr/local/bin/linode-cli firewalls rules-update --inbound  "[{\"addresses\":{\"ipv4\":[\"${ip}\"]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"${SSH_PORT},${DB_PORT}\"},{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"443,80,22\"},{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"ICMP\"}]" ${firewall_id}
+       # /usr/local/bin/linode-cli firewalls rules-update --inbound  "[{\"addresses\":{\"ipv4\":[\"${ip}\"]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"${SSH_PORT},${DB_PORT}\"},{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"443,80,22\"},{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"ICMP\"}]" ${firewall_id}
+       
+       /usr/local/bin/linode-cli firewalls rules-update --inbound  "[${rules}]" ${firewall_id}
     fi
+    
+
 fi
 
 if ( [ -f ${HOME}/VULTR ] )
