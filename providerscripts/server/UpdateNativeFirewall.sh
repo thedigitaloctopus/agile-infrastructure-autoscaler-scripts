@@ -46,7 +46,19 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] )
 then
-    :
+    firewall_id="`/usr/local/bin/linode-cli --json firewalls list | jq '.[] | select (.label == "adt" ).id'`"
+
+    ips="`/bin/ls ${HOME}/config/autoscalerip`"
+
+    for ip in ${ips}
+    do
+        ip="`/bin/echo "${ip}" | /usr/bin/awk -F'.' '{print $1  "."  $2  ".0.0/32"}'`"
+    done
+
+    if ( [ "${ip}" = "" ] )
+    then
+        /usr/local/bin/linode-cli firewalls rules-update --inbound  "[{\"addresses\":{\"ipv4\":[\"${ip}\"]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"${SSH_PORT}\"}]" ${firewall_id}
+    fi
 fi
 
 if ( [ -f ${HOME}/VULTR ] )
