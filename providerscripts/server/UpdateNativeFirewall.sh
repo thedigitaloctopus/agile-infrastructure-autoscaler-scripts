@@ -55,7 +55,7 @@ then
         ip="`/bin/echo "${ip}" | /usr/bin/awk -F'.' '{print $1  "."  $2  ".0.0/32"}'`"
     done
 
-    if ( [ "${ip}" = "" ] )
+    if ( [ "${ip}" != "" ] )
     then
         /usr/local/bin/linode-cli firewalls rules-update --inbound  "[{\"addresses\":{\"ipv4\":[\"${ip}\"]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"${SSH_PORT}\"}]" ${firewall_id}
     fi
