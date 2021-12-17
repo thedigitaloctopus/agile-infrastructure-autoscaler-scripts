@@ -20,6 +20,9 @@
 #########################################################################################
 #set -x
 
+SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
+DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPORT'`"
+
 if ( [ -f ${HOME}/DROPLET ] )
 then
     :
