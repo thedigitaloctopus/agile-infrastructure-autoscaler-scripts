@@ -51,6 +51,11 @@ if ( [ -f ${HOME}/LINODE ] )
 then
 
     allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
+    
+    if ( [ "${1}" != "" ] )
+    then
+        allips="${allips} ${1}"
+    fi
 
     firewall_id="`/usr/local/bin/linode-cli --json firewalls list | jq '.[] | select (.label == "adt" ).id'`"
     for ip in ${allips}
