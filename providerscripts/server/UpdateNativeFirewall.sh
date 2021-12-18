@@ -52,12 +52,16 @@ then
 
     allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
     
+    linode_id=""
+    
     if ( [ "${1}" != "" ] )
     then
         allips="${allips} ${1}"
+        linode_id="`/usr/local/bin/linode-cli --json linodes list | jq --arg tmp_ip "${1}" '.[] | select (.ipv4 | tostring | contains ($tmp_ip))'.id`"
     fi
 
     firewall_id="`/usr/local/bin/linode-cli --json firewalls list | jq '.[] | select (.label == "adt" ).id'`"
+    
     for ip in ${allips}
     do
         rules=${rules}"{\"addresses\":{\"ipv4\":[\"${ip}/32\"]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"${SSH_PORT},${DB_PORT}\"},"
@@ -68,6 +72,10 @@ then
     standard_rules="{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"443,80,22\"},{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"ICMP\"}]"   
     allrules="${rules}${build_machine_rules}${standard_rules}"
     /usr/local/bin/linode-cli firewalls rules-update --inbound  "${allrules}" ${firewall_id}
+    if ( [ "${linode_id}" != "" ] )
+    then
+         /usr/local/bin/linode-cli firewalls device-create --id ${linode_id} --type linode ${firewall_id} 
+    fi
 
 fi
 
