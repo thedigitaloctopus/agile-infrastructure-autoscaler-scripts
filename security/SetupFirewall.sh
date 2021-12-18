@@ -44,6 +44,21 @@ allips="${allips} ${BUILD_CLIENT_IP}"
 
 /bin/echo "${allips}" > ${HOME}/runtime/ipsforfirewall
 
+
+#If a webserver has been shutdown we need to periodically clean up any ip addresses that it has left in the native firewalling system
+#This is necessary because we only update the native firewalling system when new machines are added and if no new machines are added
+#We will have redundant ip addresses in our firewalling system
+if ( [ ! -f ${HOME}/runtime/FIREWALL-REFRESH ] )
+then
+    /bin/touch ${HOME}/runtime/FIREWALL-REFRESH
+fi
+
+if ( [ "`/usr/bin/find ${HOME}/runtime/FIREWALL-REFRESH -type f -mmin +15`" != "" ] )
+then
+    /bin/touch ${HOME}/runtime/FIREWALL-REFRESH
+    ${HOME}/providerscripts/server/UpdateNativeFirewall.sh
+fi
+
 SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
 
 #if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep eth1 | /bin/grep ALLOW`" = "" ] )
