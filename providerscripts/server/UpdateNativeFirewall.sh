@@ -74,7 +74,7 @@ then
     /usr/local/bin/linode-cli firewalls rules-update --inbound  "${allrules}" ${firewall_id}
     if ( [ "${linode_id}" != "" ] )
     then
-         /usr/local/bin/linode-cli firewalls device-create --id ${linode_id} --type linode ${firewall_id} 
+         /usr/local/bin/linode-cli firewalls device-create --id ${linode_id} --type linode ${firewall_id} 2>/dev/null #Redirect to null in case already added
     fi
 
 fi
