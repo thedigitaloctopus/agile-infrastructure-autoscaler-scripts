@@ -35,11 +35,11 @@ fi
 
 allips=""
 allips="`/bin/ls ${HOME}/config/autoscalerip | /usr/bin/tr '\n' ' '`"
-#allips="${allips} `/bin/ls ${HOME}/config/autoscalerpublicip | /usr/bin/tr '\n' ' '`"
+allips="${allips} `/bin/ls ${HOME}/config/autoscalerpublicip | /usr/bin/tr '\n' ' '`"
 allips="${allips} `/bin/ls ${HOME}/config/webserverips | /usr/bin/tr '\n' ' '`"
-#allips="${allips} `/bin/ls ${HOME}/config/webserverpublicips | /usr/bin/tr '\n' ' '`"
+allips="${allips} `/bin/ls ${HOME}/config/webserverpublicips | /usr/bin/tr '\n' ' '`"
 allips="${allips} `/bin/ls ${HOME}/config/databaseip | /usr/bin/tr '\n' ' '`"
-#allips="${allips} `/bin/ls ${HOME}/config/databasepublicip | /usr/bin/tr '\n' ' '`"
+allips="${allips} `/bin/ls ${HOME}/config/databasepublicip | /usr/bin/tr '\n' ' '`"
 allips="${allips} ${BUILD_CLIENT_IP}"
 
 /bin/echo "${allips}" > ${HOME}/runtime/ipsforfirewall
