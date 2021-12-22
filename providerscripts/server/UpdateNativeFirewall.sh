@@ -74,15 +74,9 @@ if ( [ -f ${HOME}/LINODE ] )
 then
 
     allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
-    
-  #  linode_id=""
-    
-  #  if ( [ "${1}" != "" ] )
-   # then
-       # allips="${allips} ${1}"
-        linode_id="`/usr/local/bin/linode-cli --json linodes list | jq --arg tmp_ip "${1}" '.[] | select (.ipv4 | tostring | contains ($tmp_ip))'.id`"
-  #  fi
-
+    allproxyips="`/bin/cat ${HOME}/runtime/ipsforproxyserversfirewall`"
+    allips="${allips} ${allproxyips}"
+    linode_id="`/usr/local/bin/linode-cli --json linodes list | jq --arg tmp_ip "${1}" '.[] | select (.ipv4 | tostring | contains ($tmp_ip))'.id`"
     firewall_id="`/usr/local/bin/linode-cli --json firewalls list | jq '.[] | select (.label == "adt" ).id'`"
     
     iplist=""
