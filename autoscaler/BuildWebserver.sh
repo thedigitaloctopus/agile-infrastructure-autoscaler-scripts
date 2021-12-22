@@ -227,7 +227,7 @@ fi
 
 ${HOME}/providerscripts/server/UpdateNativeFirewall.sh ${private_ip}
 
-. ${HOME}/providerscripts/cloudhost/TightenDBaaSFirewall.sh
+. ${HOME}/providerscripts/security/firewall/TightenDBaaSFirewall.sh
 
 if ( [ ! -d ${HOME}/runtime/protectedfromtermination ] )
 then
