@@ -23,7 +23,7 @@
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
 #############################################################################################
 #############################################################################################
-set -x
+#set -x
 
 #If we are trying to build a webserver before the toolkit has been fully installed, we don't want to do anything, so exit
 if ( [ ! -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
