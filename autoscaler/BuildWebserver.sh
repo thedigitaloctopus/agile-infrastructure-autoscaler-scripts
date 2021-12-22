@@ -145,7 +145,7 @@ fi
 #Autoscalers need access to all webserver's port 22 from the get go
 for autoscaler_ip in ${ASIPS}
 do
-    ${HOME}/providerscripts/server/UpdateNativeFirewall.sh ${autoscaler_ip} 22
+    ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${autoscaler_ip} 22
 done
 
 #Non standard Variable assignments
@@ -225,7 +225,7 @@ then
     exit
 fi
 
-${HOME}/providerscripts/server/UpdateNativeFirewall.sh ${private_ip}
+${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${private_ip}
 
 . ${HOME}/providerscripts/security/firewall/TightenDBaaSFirewall.sh
 
