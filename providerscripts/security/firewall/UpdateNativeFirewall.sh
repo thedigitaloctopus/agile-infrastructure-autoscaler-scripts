@@ -31,7 +31,7 @@ fi
 if ( [ -f ${HOME}/EXOSCALE ] )
 then
     
-    allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
+   # allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
 
    # if ( [ "${2}" = "" ] )
    # then
@@ -40,11 +40,13 @@ then
    #    /usr/bin/exo compute security-group rule add adt --network ${1}/32 --port ${2}
    #fi
     
-   for ip in ${allips}
-   do
-       /usr/bin/exo compute security-group rule add adt --network ${ip}/32 --port ${SSH_PORT}
-       /usr/bin/exo compute security-group rule add adt --network ${ip}/32 --port ${DB_PORT}
-   done
+  # for ip in ${allips}
+  # do
+       /usr/bin/exo compute security-group rule add adt --network ${1}/32 --port ${SSH_PORT}
+       /usr/bin/exo compute security-group rule add adt --network ${1}/32 --port ${DB_PORT}
+       /usr/bin/exo compute security-group rule add adt --network ${2}/32 --port ${SSH_PORT}
+       /usr/bin/exo compute security-group rule add adt --network ${2}/32 --port ${DB_PORT}
+  # done
    id=""
    id="`/usr/bin/exo -O json compute security-group show adt | jq --argjson tmp_port "443" '(.ingress_rules[] | select (.start_port == $tmp_port) | select (.network == "0.0.0.0/0") | .id)' | /bin/sed 's/"//g'`"
    if ( [ "${id}" = "" ] )
