@@ -44,8 +44,11 @@ then
   # do
     /usr/bin/exo compute security-group rule add adt --network ${1}/32 --port ${SSH_PORT}
     /usr/bin/exo compute security-group rule add adt --network ${1}/32 --port ${DB_PORT}
+    /usr/bin/exo compute security-group rule add adt --network ${1}/32 --port 22
     /usr/bin/exo compute security-group rule add adt --network ${2}/32 --port ${SSH_PORT}
     /usr/bin/exo compute security-group rule add adt --network ${2}/32 --port ${DB_PORT}
+    /usr/bin/exo compute security-group rule add adt --network ${2}/32 --port 22
+
   # done
    id=""
    id="`/usr/bin/exo -O json compute security-group show adt | jq --argjson tmp_port "443" '(.ingress_rules[] | select (.start_port == $tmp_port) | select (.network == "0.0.0.0/0") | .id)' | /bin/sed 's/"//g'`"
