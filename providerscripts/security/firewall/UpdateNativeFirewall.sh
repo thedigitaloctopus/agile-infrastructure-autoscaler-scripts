@@ -42,8 +42,8 @@ then
     
    for ip in ${allips}
    do
-       /usr/bin/exo compute security-group rule add adt --network ${ip} --port ${SSH_PORT}
-       /usr/bin/exo compute security-group rule add adt --network ${ip} --port ${DB_PORT}
+       /usr/bin/exo compute security-group rule add adt --network ${ip}/32 --port ${SSH_PORT}
+       /usr/bin/exo compute security-group rule add adt --network ${ip}/32 --port ${DB_PORT}
    done
    id=""
    id="`/usr/bin/exo -O json compute security-group show adt | jq --argjson tmp_port "443" '(.ingress_rules[] | select (.start_port == $tmp_port) | select (.network == "0.0.0.0/0") | .id)' | /bin/sed 's/"//g'`"
