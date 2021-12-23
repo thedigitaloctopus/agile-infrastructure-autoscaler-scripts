@@ -225,7 +225,9 @@ then
     exit
 fi
 
-${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${private_ip}
+/bin/echo "${ip} ${private_ip}" >> ${HOME}/runtime/ipsforfirewall
+
+${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh 
 
 . ${HOME}/providerscripts/security/firewall/TightenDBaaSFirewall.sh
 
