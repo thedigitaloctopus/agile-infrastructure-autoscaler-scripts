@@ -30,20 +30,6 @@ fi
 
 if ( [ -f ${HOME}/EXOSCALE ] )
 then
-   if ( [ -f ${HOME}/runtime/ipsforproxyserversfirewall ] )
-   then
-       allproxyips="`/bin/cat ${HOME}/runtime/ipsforproxyserversfirewall`"
-   
-       if ( [ ! -f ${HOME}/runtime/PROXY-FIREWALL-SET ] )
-       then
-           for ip in ${allproxyips}
-           do
-               /usr/bin/exo compute security-group rule add adt --network ${ip}/32 --port ${SSH_PORT}
-           done
-           /bin/touch ${HOME}/runtime/PROXY-FIREWALL-SET 
-       fi
-   fi
-
    # allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
 
    # if ( [ "${2}" = "" ] )
