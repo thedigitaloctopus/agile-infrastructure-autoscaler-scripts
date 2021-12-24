@@ -153,26 +153,26 @@ then
         #Note 164 is a special os id to say that we are building from a snapshot and not a standard image
         snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
 
-        /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image "private/${snapshot_id}" --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
-        server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
-        /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
+        /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --private_ip --image "private/${snapshot_id}" --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
+       # server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
+        #/usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
         /bin/echo "SNAPPED"
     else
         if ( [ "`/bin/echo ${distribution} | /bin/grep 'Ubuntu 20.04'`" != "" ] )
         then
-            /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image linode/ubuntu20.04 --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
-            server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
-            /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
+            /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --private_ip --image linode/ubuntu20.04 --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
+       #     server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
+         #   /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
         elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Debian 10'`" != "" ] )
         then
-            /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image linode/debian10 --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
-            server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
-            /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
+            /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --private_ip --image linode/debian10 --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
+          #  server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
+          #  /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
         elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Debian 11'`" != "" ] )
         then
-            /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image linode/debian11 --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
-            server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
-            /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
+            /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --private_ip --image linode/debian11 --type ${server_size} --group "Agile Deployment Toolkit" --label "${server_name}"
+         #   server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
+         #   /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
         fi
     fi
 fi
