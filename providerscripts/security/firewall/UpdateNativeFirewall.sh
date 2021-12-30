@@ -89,14 +89,24 @@ then
         iplist=$iplist"\"${ip}/32\","
     done
     iplist="`/bin/echo ${iplist} | /bin/sed 's/,$//g' | /bin/sed 's/"/\\"/g'`"
-    rules=${rules}"{\"addresses\":{\"ipv4\":[${iplist}]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"${SSH_PORT},${DB_PORT}\"},"
+    rules=${rules}"{\"addresses\":{\"ipv4\":[${iplist}]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"${SSH_PORT},${DB_PORT},22\"},"
 
     rules="[`/bin/echo ${rules} | /bin/sed 's/,$//g'`,"
     firewall_build_machine_id="`/usr/local/bin/linode-cli --json firewalls list | jq '.[] | select (.label == "adt-build-machine" ).id'`"
     build_machine_rules="`/usr/local/bin/linode-cli --markdown firewalls rules-list ${firewall_build_machine_id}  | /bin/grep addresses | /usr/bin/awk -F'|' '{print $2}' | /bin/sed 's/ //g' | /usr/bin/tr "'" '"'`,"
-    standard_rules="{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"443,80,22\"},{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"ICMP\"}]"   
+        
+   . ${BUILD_HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
+                                
+    if ( [ "${alldnsproxyips}" = "" ] )
+    then
+        standard_rules="{\"addresses\":{\"ipv4\":[${alldnsproxyips}]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"443,80\"},{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"ICMP\"}]"
+    else
+        standard_rules="{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"443,80\"},{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"ICMP\"}]"   
+    fi
     allrules="${rules}${build_machine_rules}${standard_rules}"
     /usr/local/bin/linode-cli firewalls rules-update --inbound  "${allrules}" ${firewall_id}
+    
+        
     if ( [ "${linode_id}" != "" ] )
     then
          /usr/local/bin/linode-cli firewalls device-create --id ${linode_id} --type linode ${firewall_id} 2>/dev/null #Redirect to null in case already added
