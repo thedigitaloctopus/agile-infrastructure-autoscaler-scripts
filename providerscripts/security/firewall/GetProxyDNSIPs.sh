@@ -1,5 +1,7 @@
 #!/bin/sh
 
+alldnsproxyips=""
+
 if ( [ "${DNS_CHOICE}" = "cloudflare" ] )
 then
     if ( [ "${CLOUDHOST}" = "exoscale" ] )
