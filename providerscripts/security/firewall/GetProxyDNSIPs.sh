@@ -1,6 +1,7 @@
 #!/bin/sh
 
 alldnsproxyips=""
+CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
 
 if ( [ "${DNS_CHOICE}" = "cloudflare" ] )
 then
