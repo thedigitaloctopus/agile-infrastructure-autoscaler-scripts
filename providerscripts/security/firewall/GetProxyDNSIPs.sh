@@ -2,6 +2,7 @@
 
 alldnsproxyips=""
 CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
+DNS_CHOICE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DNSCHOICE'`"
 
 if ( [ "${DNS_CHOICE}" = "cloudflare" ] )
 then
