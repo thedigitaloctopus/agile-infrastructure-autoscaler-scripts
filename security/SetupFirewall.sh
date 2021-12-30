@@ -51,6 +51,7 @@ allips="${allips} ${BUILD_CLIENT_IP}"
 if ( [ ! -f ${HOME}/runtime/FIREWALL-REFRESH ] )
 then
     /bin/touch ${HOME}/runtime/FIREWALL-REFRESH
+    ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
 fi
 
 if ( [ "`/usr/bin/find ${HOME}/runtime/FIREWALL-REFRESH -type f -mmin +15`" != "" ] )
