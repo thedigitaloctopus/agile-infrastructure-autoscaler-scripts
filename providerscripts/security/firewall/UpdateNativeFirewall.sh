@@ -95,9 +95,9 @@ then
     firewall_build_machine_id="`/usr/local/bin/linode-cli --json firewalls list | jq '.[] | select (.label == "adt-build-machine" ).id'`"
     build_machine_rules="`/usr/local/bin/linode-cli --markdown firewalls rules-list ${firewall_build_machine_id}  | /bin/grep addresses | /usr/bin/awk -F'|' '{print $2}' | /bin/sed 's/ //g' | /usr/bin/tr "'" '"'`,"
         
-   . ${BUILD_HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
+   . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
                                 
-    if ( [ "${alldnsproxyips}" = "" ] )
+    if ( [ "${alldnsproxyips}" != "" ] )
     then
         standard_rules="{\"addresses\":{\"ipv4\":[${alldnsproxyips}]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"443,80\"},{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"ICMP\"}]"
     else
