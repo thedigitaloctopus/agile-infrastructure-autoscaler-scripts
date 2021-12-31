@@ -5,8 +5,19 @@ CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`
 DNS_CHOICE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DNSCHOICE'`"
 
 autoscalerips=""
-autoscalerips="\"`/bin/ls ${HOME}/config/autoscalerip | /usr/bin/tr '\n' ' ' | /bin/sed 's/ $//g'`/32\","
-autoscalerips="${autoscalerips}\"`/bin/ls ${HOME}/config/autoscalerpublicip | /usr/bin/tr '\n' ' ' | /bin/sed 's/ $//g'`/32\""
+autoscalerips="`/bin/ls ${HOME}/config/autoscalerip | /usr/bin/tr '\n' ' '`"
+autoscalerpublicips="`/bin/ls ${HOME}/config/autoscalerpublicip | /usr/bin/tr '\n' ' '`"
+autoscalerips=${autoscalerips}${autoscalerpublicips}
+
+preparedautoscalerips=""
+
+for autoscalerip in ${autoscalerips}
+do
+    autoscalerip="\"${autoscalerip}/32\","
+    preparedautoscalerips=${preparedautoscalerips}${autoscalerip}
+done
+
+autoscalerips="`/bin/echo ${preparedautoscalerips} | /bin/sed 's/,$//g'`"
 
 if ( [ "${DNS_CHOICE}" = "cloudflare" ] )
 then
