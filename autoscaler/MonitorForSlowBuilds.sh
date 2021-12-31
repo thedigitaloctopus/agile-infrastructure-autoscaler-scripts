@@ -65,5 +65,6 @@ do
     fi
     
     /bin/rm ${HOME}/config/beingbuiltips/${strippedip}
+    /bin/rm ${HOME}/config/beingbuiltpublicips/${ip}
     /bin/rm ${HOME}/runtime/autoscalelock.file
 done
