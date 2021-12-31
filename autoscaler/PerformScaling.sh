@@ -73,8 +73,8 @@ then
     exit
 fi
 
-SCALING_MODE="`/bin/grep "SCALING_MODE" ${HOME}/config/scalingprofile/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
-NO_WEBSERVERS="`/bin/grep "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
+SCALING_MODE="`/bin/grep -a "SCALING_MODE" ${HOME}/config/scalingprofile/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
+NO_WEBSERVERS="`/bin/grep -a "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
 
 ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'NUMBERWS' "${NO_WEBSERVERS}"
 
