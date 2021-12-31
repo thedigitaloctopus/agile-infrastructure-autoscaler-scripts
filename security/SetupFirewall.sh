@@ -40,6 +40,8 @@ allips="${allips} `/bin/ls ${HOME}/config/webserverips | /usr/bin/tr '\n' ' '`"
 allips="${allips} `/bin/ls ${HOME}/config/webserverpublicips | /usr/bin/tr '\n' ' '`"
 allips="${allips} `/bin/ls ${HOME}/config/databaseip | /usr/bin/tr '\n' ' '`"
 allips="${allips} `/bin/ls ${HOME}/config/databasepublicip | /usr/bin/tr '\n' ' '`"
+allips="${allips} `/bin/ls ${HOME}/config/beingbuildips | /usr/bin/tr '\n' ' '`"
+allips="${allips} `/bin/ls ${HOME}/config/beingbuiltpublicips | /usr/bin/tr '\n' ' '`"
 allips="${allips} ${BUILD_CLIENT_IP}"
 
 /bin/echo "${allips}" > ${HOME}/runtime/ipsforfirewall
