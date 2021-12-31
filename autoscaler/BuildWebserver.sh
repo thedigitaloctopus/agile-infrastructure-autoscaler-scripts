@@ -262,6 +262,7 @@ fi
 #we reach the end of the build process so if this persists for an excessive amount of time, the "slow builds" script on the
 #autoscaler knows that something is hanging or has gone wrong with the build and it clears things up.
 /usr/bin/touch ${HOME}/config/beingbuiltips/${private_ip}
+/usr/bin/touch ${HOME}/config/beingbuiltpublicips/${ip}
 /usr/bin/touch ${HOME}/config/webserverips/${private_ip}
 /usr/bin/touch ${HOME}/config/webserverpublicips/${ip}
 
@@ -484,6 +485,11 @@ else
             /bin/rm ${HOME}/config/beingbuiltips/${private_ip}
         fi
         
+        if ( [ -f ${HOME}/config/beingbuiltpublicips/${ip} ] )
+        then
+            /bin/rm ${HOME}/config/beingbuiltpublicips/${ip}
+        fi
+        
         if ( [ -f ${HOME}/runtime/autoscalelock.file ] )
         then
             /bin/rm ${HOME}/runtime/autoscalelock.file
@@ -633,6 +639,11 @@ else
     then
         /bin/rm ${HOME}/config/beingbuiltips/${private_ip}
     fi
+    
+    if ( [ -f ${HOME}/config/beingbuiltpublicips/${ip} ] )
+    then
+        /bin/rm ${HOME}/config/beingbuiltpublicips/${ip}
+    fi
     ${HOME}/autoscaler/AddIPToDNS.sh ${ip}
     /bin/echo "${ip}"
 fi
@@ -642,6 +653,11 @@ fi
 if ( [ -f ${HOME}/config/beingbuiltips/${private_ip} ] )
 then
     /bin/rm ${HOME}/config/beingbuiltips/${private_ip}
+fi
+
+if ( [ -f ${HOME}/config/beingbuiltpublicips/${ip} ] )
+then
+    /bin/rm ${HOME}/config/beingbuiltpublicips/${ip}
 fi
 
 #Output how long the build took
