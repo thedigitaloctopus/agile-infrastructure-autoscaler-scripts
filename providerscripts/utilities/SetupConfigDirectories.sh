@@ -25,6 +25,11 @@ then
     /bin/mkdir -p ${HOME}/config/beingbuiltips
     /bin/chmod 700 ${HOME}/config/beingbuiltips
 fi
+if ( [ ! -d ${HOME}/config/beingbuiltpublicips ] )
+then
+    /bin/mkdir -p ${HOME}/config/beingbuiltpublicips
+    /bin/chmod 700 ${HOME}/config/beingbuiltpublicips
+fi
 if ( [ ! -d ${HOME}/config/webserverpublicips ] )
 then
     /bin/mkdir -p ${HOME}/config/webserverpublicips
