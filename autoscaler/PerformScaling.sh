@@ -60,7 +60,7 @@ NO_WEBSERVERS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'NUMBERW
 if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" = "" ] )
 then
    exit
-elif ( [ ! -f ${HOME}/config/scalingprofile/profile.cnf ] || [ "`/bin/grep "SCALING_MODE" ${HOME}/config/scalingprofile/profile.cnf`" = "" ] || [ "`/bin/grep "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf`" = "" ] )
+elif ( [ ! -f ${HOME}/config/scalingprofile/profile.cnf ] )
 then
     /bin/mkdir ${HOME}/config/scalingprofile
     /bin/cp /dev/null ${HOME}/config/scalingprofile/profile.cnf
