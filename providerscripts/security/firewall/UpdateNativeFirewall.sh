@@ -60,19 +60,16 @@ then
         for ip in ${alldnsproxyips}
         do
             standard_rules=${standard_rules}"protocol:tcp,ports:443,address:${ip} "    
-        #    standard_rules=${standard_rules}"protocol:tcp,ports:80,address:${ip} "    
         done
     else
         standard_rules=${standard_rules}"protocol:tcp,ports:443,address:0.0.0.0/0 "    
-        #standard_rules=${standard_rules}"protocol:tcp,ports:80,address:0.0.0.0/0 "    
-        standard_rules=${standard_rules}"protocol:icmp,address:0.0.0.0/0 "    
     fi
-
+    
+    standard_rules=${standard_rules}"protocol:icmp,address:0.0.0.0/0 "    
     standard_rules="`/bin/echo ${standard_rules} | /bin/sed 's/\"//g'`"
  
     /usr/local/bin/doctl compute firewall add-rules ${firewall_id} --inbound-rules "${rules}"
     /usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${droplet_id}
-  #  /usr/local/bin/doctl compute firewall add-droplets ${firewall_build_machine_id} --droplet-ids ${droplet_id}
     
     if ( [ -f ${HOME}/runtime/INSTALLEDSUCCESSFULLY ] )
     then
