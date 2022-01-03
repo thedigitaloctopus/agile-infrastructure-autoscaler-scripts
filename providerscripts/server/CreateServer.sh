@@ -49,7 +49,7 @@ then
         os_choice="${snapshotid}"
         key_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'KEYID'`"
         
-        /usr/local/bin/doctl compute droplet create "${server_name}" --size "${server_size}"  --tag-name "adt" --image "${os_choice}"  --region "${region}" --ssh-keys "${key_id}" --enable-private-networking
+        /usr/local/bin/doctl compute droplet create "${server_name}" --size "${server_size}" --image "${os_choice}"  --region "${region}" --ssh-keys "${key_id}" --enable-private-networking
         #We pass back a string as a token to say that we built from a snapshot
         /bin/echo "SNAPPED"
 elif ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "0" ] )
@@ -57,7 +57,7 @@ elif ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1
         #If we are here, then it is a regular build process
         #We know that if this fails, it will be called again so no need for checks
         /bin/echo "${0} `/bin/date`: Building a new webserver using the standard build method" >> ${HOME}/logs/MonitoringLog.log
-        /usr/local/bin/doctl compute droplet create "${server_name}" --size "${server_size}"  --tag-name "adt" --image "${os_choice}"  --region "${region}" --ssh-keys "${key_id}" --enable-private-networking
+        /usr/local/bin/doctl compute droplet create "${server_name}" --size "${server_size}" --image "${os_choice}"  --region "${region}" --ssh-keys "${key_id}" --enable-private-networking
 
         #Pass back a token to say it was a standard build
         /bin/echo "STANDARD"
