@@ -23,10 +23,6 @@
 SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
 DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPORT'`"
 
-root@nuocialAS:/home/XNqpOevyWRWBgtaRSzTX/providerscripts/security/firewall# cat 1
-SSH_PORT="1035"
-DB_PORT="2035"
-
 if ( [ -f ${HOME}/DROPLET ] )
 then
     allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
