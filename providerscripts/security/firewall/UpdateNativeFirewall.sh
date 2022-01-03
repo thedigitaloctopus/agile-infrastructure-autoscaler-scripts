@@ -23,6 +23,10 @@
 SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
 DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPORT'`"
 
+root@nuocialAS:/home/XNqpOevyWRWBgtaRSzTX/providerscripts/security/firewall# cat 1
+SSH_PORT="1035"
+DB_PORT="2035"
+
 if ( [ -f ${HOME}/DROPLET ] )
 then
     allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
@@ -43,6 +47,8 @@ then
         rules=${rules}"protocol:tcp,ports:${SSH_PORT},address:${ip} "    
     done 
 
+    rules="`/bin/echo ${rules} | /bin/sed 's/"//g'`"
+
     firewall_build_machine_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-build-machine" ).id' | /bin/sed 's/"//g'`"
         
    . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
@@ -54,31 +60,30 @@ then
         for ip in ${alldnsproxyips}
         do
             standard_rules=${standard_rules}"protocol:tcp,ports:443,address:${ip} "    
-            standard_rules=${standard_rules}"protocol:tcp,ports:80,address:${ip} "    
+        #    standard_rules=${standard_rules}"protocol:tcp,ports:80,address:${ip} "    
         done
     else
         standard_rules=${standard_rules}"protocol:tcp,ports:443,address:0.0.0.0/0 "    
-        standard_rules=${standard_rules}"protocol:tcp,ports:80,address:0.0.0.0/0 "    
+        #standard_rules=${standard_rules}"protocol:tcp,ports:80,address:0.0.0.0/0 "    
         standard_rules=${standard_rules}"protocol:icmp,address:0.0.0.0/0 "    
     fi
 
-  #  allrules="${rules}${build_machine_rules}${standard_rules}"
-  #  allrules="`/bin/echo ${allrules} | /bin/sed 's/"//g'`"
-
-
+    standard_rules="`/bin/echo ${standard_rules} | /bin/sed 's/\"//g'`"
+ 
     /usr/local/bin/doctl compute firewall add-rules ${firewall_id} --inbound-rules "${rules}"
     /usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${droplet_id}
     /usr/local/bin/doctl compute firewall add-droplets ${firewall_build_machine_id} --droplet-ids ${droplet_id}
     
-    websever_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-webserver-machines" ).id' | /bin/sed 's/"//g'`"
+    webserver_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-webserver-machines" ).id' | /bin/sed 's/"//g'`"
     
     if ( [ "${webserver_firewall_id}" = "" ] )
     then
         /usr/local/bin/doctl compute firewall create --name "adt-webserver-machines" --outbound-rules "protocol:tcp,ports:all,address:0.0.0.0/0 protocol:udp,ports:all,address:0.0.0.0/0 protocol:icmp,address:0.0.0.0/0"
         websever_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-webserver-machines" ).id' | /bin/sed 's/"//g'`"
     fi
+
     /usr/local/bin/doctl compute firewall add-rules ${webserver_firewall_id} --inbound-rules "${standard_rules}"
-    /usr/local/bin/doctl compute firewall add-droplets ${websever_firewall_id} --droplet-ids ${droplet_id}
+    /usr/local/bin/doctl compute firewall add-droplets ${webserver_firewall_id} --droplet-ids ${droplet_id}
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] )
