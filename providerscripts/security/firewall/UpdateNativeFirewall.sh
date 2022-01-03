@@ -40,7 +40,8 @@ then
     
     for ip in ${iplist}
     do
-        rules=${rules}"protocol:tcp,ports:${SSH_PORT},address:${ip} "    
+        rules=${rules}"protocol:tcp,ports:${SSH_PORT},address:${ip} "   
+        rules=${rules}"protocol:tcp,ports:${DB_PORT},address:${ip} "    
     done 
 
     rules="`/bin/echo ${rules} | /bin/sed 's/"//g'`"
