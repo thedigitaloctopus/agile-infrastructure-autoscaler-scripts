@@ -72,7 +72,7 @@ then
  
     /usr/local/bin/doctl compute firewall add-rules ${firewall_id} --inbound-rules "${rules}"
     /usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${droplet_id}
-    /usr/local/bin/doctl compute firewall add-droplets ${firewall_build_machine_id} --droplet-ids ${droplet_id}
+  #  /usr/local/bin/doctl compute firewall add-droplets ${firewall_build_machine_id} --droplet-ids ${droplet_id}
     
     if ( [ -f ${HOME}/runtime/INSTALLEDSUCCESSFULLY ] )
     then
