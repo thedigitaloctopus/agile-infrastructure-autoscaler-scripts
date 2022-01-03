@@ -26,7 +26,7 @@ DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPORT'`"
 if ( [ -f ${HOME}/DROPLET ] )
 then
     allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
-    droplet_id="`/usr/local/bin/doctl compute droplet list | /bin/grep "${1}" | /usr/bin/awk '{print $1}' | /usr/bin/head -n +2`"    
+    droplet_id="`/usr/local/bin/doctl compute droplet list | /bin/grep "${1}" | /usr/bin/awk '{print $1}' | /bin/sed 's/ //g'`"    
 
     firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt" ).id' | /bin/sed 's/"//g'`"
     
