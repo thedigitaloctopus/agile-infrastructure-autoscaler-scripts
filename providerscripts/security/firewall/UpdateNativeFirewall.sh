@@ -25,7 +25,49 @@ DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPORT'`"
 
 if ( [ -f ${HOME}/DROPLET ] )
 then
-    :
+    allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
+    droplet_id="`/usr/local/bin/doctl compute droplet list | /bin/grep "${1}" | /usr/bin/awk '{print $1}'`"    
+
+    firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt" ).id' | /bin/sed 's/"//g'`"
+    
+    iplist=""
+    for ip in ${allips}
+    do
+        iplist=$iplist"\"${ip}/32\" "
+    done
+
+    iplist="`/bin/echo ${iplist} | /bin/sed 's/"/\\"/g'`"
+    
+    for ip in ${iplist}
+    do
+        rules=${rules}"protocol:tcp,ports:${SSH_PORT},address:${ip} "    
+    done 
+
+    firewall_build_machine_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-build-machine" ).id' | /bin/sed 's/"//g'`"
+        
+   . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
+
+    if ( [ "${alldnsproxyips}" != "" ] )
+    then
+        for ip in ${alldnsproxyips}
+        do
+            standard_rules=${standard_rules}"protocol:tcp,ports:443,address:${ip} "    
+            standard_rules=${standard_rules}"protocol:tcp,ports:80,address:${ip} "    
+        done
+    else
+        standard_rules=${standard_rules}"protocol:tcp,ports:443,address:0.0.0.0/0 "    
+        standard_rules=${standard_rules}"protocol:tcp,ports:80,address:0.0.0.0/0 "    
+        standard_rules=${standard_rules}"protocol:icmp,address:0.0.0.0/0 "    
+    fi
+
+    allrules="${rules}${build_machine_rules}${standard_rules}"
+    allrules="`/bin/echo ${allrules} | /bin/sed 's/"//g'`"
+
+
+    /usr/local/bin/doctl compute firewall add-rules ${firewall_id} --inbound-rules "${allrules}"
+    /usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${droplet_id}
+    /usr/local/bin/doctl compute firewall add-droplets ${firewall_build_machine_id} --droplet-ids ${droplet_id}
+
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] )
