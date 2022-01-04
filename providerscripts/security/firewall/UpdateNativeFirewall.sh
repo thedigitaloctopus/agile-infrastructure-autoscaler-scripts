@@ -23,6 +23,8 @@
 SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
 DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPORT'`"
 
+/bin/touch ${HOME}/runtime/FIREWALL-INITIAL
+
 if ( [ -f ${HOME}/DROPLET ] )
 then
     allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
