@@ -56,10 +56,10 @@ then
     ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
 fi
 
-if ( [ ! -f ${HOME}/runtime/FIREWALL-INITIAL ] )
-then
-    ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
-fi
+#if ( [ ! -f ${HOME}/runtime/FIREWALL-INITIAL ] )
+#then
+#    ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
+#fi
 
 if ( [ "`/usr/bin/find ${HOME}/runtime/FIREWALL-REFRESH -type f -mmin +15`" != "" ] )
 then
