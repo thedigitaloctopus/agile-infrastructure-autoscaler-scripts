@@ -31,7 +31,7 @@ then
     exit
 fi
 
-if ( [ -f ${HOME}/runtime/INSTALLEDSUCCESSFULLY ] )
+if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
 then
     if ( [ ! -f ${HOME}/runtime/FIREWALL-INITIAL ] )
     then
