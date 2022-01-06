@@ -31,6 +31,11 @@ then
     exit
 fi
 
+if ( [ ! -f ${HOME}/runtime/INSTALLEDSUCCESSFULLY ] )
+then
+    exit
+fi
+
 . ${HOME}/providerscripts/utilities/SetupInfrastructureIPs.sh
 
 allips=""
@@ -46,6 +51,12 @@ allips="${allips} ${BUILD_CLIENT_IP}"
 
 /bin/echo "${allips}" > ${HOME}/runtime/ipsforfirewall
 
+if ( [ ! -f ${HOME}/runtime/FIREWALL-INITIAL ] )
+then
+    /bin/touch ${HOME}/runtime/FIREWALL-INITIAL
+    ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
+fi
+    
 #If a webserver has been shutdown we need to periodically clean up any ip addresses that it has left in the native firewalling system
 #This is necessary because we only update the native firewalling system when new machines are added and if no new machines are added
 #We will have redundant ip addresses in our firewalling system
@@ -55,11 +66,6 @@ then
     ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
 fi
 
-#if ( [ ! -f ${HOME}/runtime/FIREWALL-INITIAL ] )
-#then
-#    ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
-#fi
-
 if ( [ "`/usr/bin/find ${HOME}/runtime/FIREWALL-REFRESH -type f -mmin +5`" != "" ] )
 then
     /bin/touch ${HOME}/runtime/FIREWALL-REFRESH
@@ -67,18 +73,6 @@ then
 fi
 
 SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
-
-#if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep eth1 | /bin/grep ALLOW`" = "" ] )
-#then
-#    /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow in on eth1 to any port ${SSH_PORT}
-#    /bin/sleep 5
-#fi
-
-#if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ens7 | /bin/grep ALLOW`" = "" ] )
-#then
-#    /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow in on ens7 to any port ${SSH_PORT}
-#    /bin/sleep 5
-#fi
 
 if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${BUILD_CLIENT_IP} | /bin/grep ALLOW`" = "" ] )
 then
@@ -88,16 +82,6 @@ then
     ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${BUILD_CLIENT_IP} ${SSH_PORT}
     /bin/sleep 5
 fi
-
-#NEW_BUILD_CLIENT_IP="`/bin/ls /tmp/BUILDCLIENTIP/* | /usr/bin/awk -F'/' '{print $NF}'`"
-#if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${NEW_BUILD_CLIENT_IP} | /bin/grep ALLOW`" = "" ] )
-#then
-#    /usr/sbin/ufw default deny incoming
-#    /usr/sbin/ufw default allow outgoing
-#    /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${NEW_BUILD_CLIENT_IP} to any port ${SSH_PORT}
-#    /bin/sleep 5
-#fi
-
 
 for autoscalerip in `/bin/ls ${HOME}/config/autoscalerip`
 do
