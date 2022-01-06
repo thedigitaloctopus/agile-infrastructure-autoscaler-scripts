@@ -31,9 +31,13 @@ then
     exit
 fi
 
-if ( [ ! -f ${HOME}/runtime/INSTALLEDSUCCESSFULLY ] )
+if ( [ -f ${HOME}/runtime/INSTALLEDSUCCESSFULLY ] )
 then
-    exit
+    if ( [ ! -f ${HOME}/runtime/FIREWALL-INITIAL ] )
+    then
+        /bin/touch ${HOME}/runtime/FIREWALL-INITIAL
+        ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
+    fi
 fi
 
 . ${HOME}/providerscripts/utilities/SetupInfrastructureIPs.sh
@@ -51,11 +55,7 @@ allips="${allips} ${BUILD_CLIENT_IP}"
 
 /bin/echo "${allips}" > ${HOME}/runtime/ipsforfirewall
 
-if ( [ ! -f ${HOME}/runtime/FIREWALL-INITIAL ] )
-then
-    /bin/touch ${HOME}/runtime/FIREWALL-INITIAL
-    ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
-fi
+
     
 #If a webserver has been shutdown we need to periodically clean up any ip addresses that it has left in the native firewalling system
 #This is necessary because we only update the native firewalling system when new machines are added and if no new machines are added
@@ -66,7 +66,7 @@ then
     ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
 fi
 
-if ( [ "`/usr/bin/find ${HOME}/runtime/FIREWALL-REFRESH -type f -mmin +5`" != "" ] )
+if ( [ "`/usr/bin/find ${HOME}/runtime/FIREWALL-REFRESH -type f -mmin +15`" != "" ] )
 then
     /bin/touch ${HOME}/runtime/FIREWALL-REFRESH
     ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
