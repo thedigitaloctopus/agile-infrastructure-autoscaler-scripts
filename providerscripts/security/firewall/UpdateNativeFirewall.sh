@@ -23,7 +23,7 @@
 SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
 DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPORT'`"
 
-if ( [ ! -f ${HOME}/runtime/INSTALLEDSUCCESSFULLY ] )
+if ( [ ! -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
 then
    exit
 fi
