@@ -29,13 +29,17 @@ if ( [ -f ${HOME}/DROPLET ] )
 then
     allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
 
-    if ( [ "${1}" != "" ] )
-    then
-        droplet_id="`/usr/local/bin/doctl compute droplet list | /bin/grep "${1}" | /usr/bin/awk '{print $1}' | /bin/sed 's/ //g'`"    
-    else
-        droplet_id="`/usr/local/bin/doctl compute droplet list | /usr/bin/awk '{print $1}' | /usr/bin/tail -n +2`"    
-        droplet_id="`/bin/echo ${droplet_id} | /bin/sed 's/ /,/g'`"
-    fi
+  #  if ( [ "${1}" != "" ] )
+  #  then
+  #      droplet_id="`/usr/local/bin/doctl compute droplet list | /bin/grep "${1}" | /usr/bin/awk '{print $1}' | /bin/sed 's/ //g'`"    
+  #  else
+  #      droplet_id="`/usr/local/bin/doctl compute droplet list | /usr/bin/awk '{print $1}' | /usr/bin/tail -n +2`"    
+  #      droplet_id="`/bin/echo ${droplet_id} | /bin/sed 's/ /,/g'`"
+  #  fi
+  
+   droplet_ids="`/usr/local/bin/doctl compute droplet list | /bin/grep 'autoscaler' | /usr/bin/awk '{print $1}' | /bin/sed 's/ //g'`"    
+   droplet_ids="${droplet_ids} `/usr/local/bin/doctl compute droplet list | /bin/grep 'webserver' | /usr/bin/awk '{print $1}' | /bin/sed 's/ //g'`"    
+   droplet_ids="${droplet_ids} `/usr/local/bin/doctl compute droplet list | /bin/grep 'database' | /usr/bin/awk '{print $1}' | /bin/sed 's/ //g'`" 
 
     firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt" ).id' | /bin/sed 's/"//g'`"
     
@@ -66,7 +70,7 @@ then
     fi
 
     /usr/local/bin/doctl compute firewall add-rules ${firewall_id} --inbound-rules "${rules}"
-    /usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${droplet_id}
+    /usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${droplet_ids}
 
    . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
    
