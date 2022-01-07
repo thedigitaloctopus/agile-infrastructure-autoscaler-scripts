@@ -83,7 +83,7 @@ then
         /usr/local/bin/doctl compute firewall create --name "adt-autoscaling" 
         autoscaling_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-autoscaling" ).id' | /bin/sed 's/"//g'`"
     else
-        /bin/echo "y" | /usr/local/bin/doctl compute firewall delete ${autoscaling-firewall_id}
+        /bin/echo "y" | /usr/local/bin/doctl compute firewall delete ${autoscaling_firewall_id}
         /usr/local/bin/doctl compute firewall create --name "adt-autoscaling" 
         autoscaling_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-autoscaling" ).id' | /bin/sed 's/"//g'`"
     fi
