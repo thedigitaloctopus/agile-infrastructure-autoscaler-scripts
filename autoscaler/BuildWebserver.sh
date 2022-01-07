@@ -225,7 +225,7 @@ then
     exit
 fi
 
-#/bin/echo " ${ip} ${private_ip}" >> ${HOME}/runtime/ipsforfirewall
+/bin/echo " ${ip} ${private_ip}" >> ${HOME}/runtime/ipsforfirewall
 
 ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${private_ip}
 
@@ -660,7 +660,7 @@ then
     /bin/rm ${HOME}/config/beingbuiltpublicips/${ip}
 fi
 
-${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
+#${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
 
 #Output how long the build took
 end=`/bin/date +%s`
