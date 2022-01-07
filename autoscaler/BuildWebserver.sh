@@ -143,10 +143,10 @@ then
 fi
 
 #Autoscalers need access to all webserver's port 22 from the get go
-#for autoscaler_ip in ${ASIPS}
-#do
-#    ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${autoscaler_ip} 22
-#done
+for autoscaler_ip in ${ASIPS}
+do
+    ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${autoscaler_ip} 22
+done
 
 #Non standard Variable assignments
 WEBSITE_NAME="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{print $2}'`"
@@ -227,7 +227,7 @@ fi
 
 #/bin/echo " ${ip} ${private_ip}" >> ${HOME}/runtime/ipsforfirewall
 
-#${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${private_ip}
+${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${private_ip}
 
 . ${HOME}/providerscripts/security/firewall/TightenDBaaSFirewall.sh
 
