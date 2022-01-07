@@ -31,15 +31,6 @@ then
     exit
 fi
 
-if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
-then
-    if ( [ ! -f ${HOME}/runtime/FIREWALL-INITIAL ] )
-    then
-        /bin/touch ${HOME}/runtime/FIREWALL-INITIAL
-        ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
-    fi
-fi
-
 . ${HOME}/providerscripts/utilities/SetupInfrastructureIPs.sh
 
 allips=""
