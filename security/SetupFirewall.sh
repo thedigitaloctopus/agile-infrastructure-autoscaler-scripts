@@ -66,7 +66,7 @@ then
     ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
 fi
 
-if ( [ "`/usr/bin/find ${HOME}/runtime/FIREWALL-REFRESH -type f -mmin +15`" != "" ] )
+if ( [ "`/usr/bin/find ${HOME}/runtime/FIREWALL-REFRESH -type f -mmin +5`" != "" ] )
 then
     /bin/touch ${HOME}/runtime/FIREWALL-REFRESH
     ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
