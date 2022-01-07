@@ -20,6 +20,11 @@
 #########################################################################################
 #set -x
 
+OUT_FILE="firewall-build-out-`/bin/date | /bin/sed 's/ //g'`"
+exec 1>>${HOME}/logs/${OUT_FILE}
+ERR_FILE="firewall-build-err-`/bin/date | /bin/sed 's/ //g'`"
+exec 2>>${HOME}/logs/${ERR_FILE}
+
 SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
 DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPORT'`"
 
