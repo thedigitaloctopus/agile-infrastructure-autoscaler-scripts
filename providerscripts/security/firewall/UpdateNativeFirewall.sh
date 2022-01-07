@@ -48,6 +48,8 @@ then
 
     firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt" ).id' | /bin/sed 's/"//g'`"
     
+    autoscaling_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-autoscaling" ).id' | /bin/sed 's/"//g'`"
+    
     iplist=""
     for ip in ${allips}
     do
@@ -59,10 +61,12 @@ then
     for ip in ${iplist}
     do
         rules=${rules}"protocol:tcp,ports:${SSH_PORT},address:${ip} "    
-        rules=${rules}"protocol:tcp,ports:${DB_PORT},address:${ip} "    
+        rules=${rules}"protocol:tcp,ports:${DB_PORT},address:${ip} "   
+        autoscalingrules=${autoscalingrules}"protocol:tcp,ports:22,address:${ip} " 
     done 
 
     rules="`/bin/echo ${rules} | /bin/sed 's/"//g'`"
+    autoscalingrules="`/bin/echo ${autoscalingrules} | /bin/sed 's/"//g'`"
 
     if ( [ "${firewall_id}" = "" ] )
     then
@@ -73,9 +77,22 @@ then
         /usr/local/bin/doctl compute firewall create --name "adt" --outbound-rules "protocol:tcp,ports:all,address:0.0.0.0/0 protocol:udp,ports:all,address:0.0.0.0/0 protocol:icmp,address:0.0.0.0/0"
         firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt" ).id' | /bin/sed 's/"//g'`"
     fi
+    
+    if ( [ "${autoscaling_firewall_id}" = "" ] )
+    then
+        /usr/local/bin/doctl compute firewall create --name "adt-autoscaling" 
+        autoscaling_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-autoscaling" ).id' | /bin/sed 's/"//g'`"
+    else
+        /bin/echo "y" | /usr/local/bin/doctl compute firewall delete ${autoscaling-firewall_id}
+        /usr/local/bin/doctl compute firewall create --name "adt-autoscaling" 
+        autoscaling_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-autoscaling" ).id' | /bin/sed 's/"//g'`"
+    fi
 
     /usr/local/bin/doctl compute firewall add-rules ${firewall_id} --inbound-rules "${rules}"
     /usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${droplet_ids}
+    
+    /usr/local/bin/doctl compute firewall add-rules ${autoscaling_firewall_id} --inbound-rules "${autoscalingrules}"
+    /usr/local/bin/doctl compute firewall add-droplets ${autoscaling_firewall_id} --droplet-ids ${droplet_ids}
 
    . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
    
