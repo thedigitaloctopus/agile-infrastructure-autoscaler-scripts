@@ -64,7 +64,12 @@ allips="${allips} ${BUILD_CLIENT_IP}"
 
 /bin/echo "${allips}" > ${HOME}/runtime/ipsforfirewall
 
-  
+if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] && [ ! -f ${HOME}/runtime/FIREWALL-INITIAL ] )
+then
+    /bin/touch ${HOME}/runtime/FIREWALL-INITIAL
+    ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
+fi
+
 #if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] && [ ! -f ${HOME}/runtime/FIREWALL-REFRESH ] )
 #then
 #    /bin/touch ${HOME}/runtime/FIREWALL-REFRESH
