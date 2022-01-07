@@ -61,11 +61,11 @@ then
     ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
 fi
 
-#if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] && [ ! -f ${HOME}/runtime/FIREWALL-REFRESH ] )
-#then
-#    /bin/touch ${HOME}/runtime/FIREWALL-REFRESH
-#    ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
-#fi
+if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] && [ ! -f ${HOME}/runtime/FIREWALL-REFRESH ] )
+then
+    /bin/rm ${HOME}/runtime/FIREWALL-REFRESH
+    ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
+fi
 
 #if ( [ "`/usr/bin/find ${HOME}/runtime/FIREWALL-REFRESH -type f -mmin +5`" != "" ] )
 #then
