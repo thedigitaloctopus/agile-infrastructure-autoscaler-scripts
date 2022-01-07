@@ -104,7 +104,7 @@ do
     then
        /bin/sleep 5
        /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${autoscalerip}
-       ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${autoscalerip} 
+    #   ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${autoscalerip} 
     fi
 done
     
@@ -114,7 +114,7 @@ do
     then
         /bin/sleep 5
         /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${publicautoscalerip}
-        ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${publicautoscalerip}
+     #   ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${publicautoscalerip}
     fi
 done
 
@@ -124,7 +124,7 @@ do
     if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${ip} | /bin/grep ALLOW`" = "" ] )
     then
         /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${ip} to any port ${SSH_PORT}
-        ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${SSH_PORT}
+      #  ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${SSH_PORT}
         /bin/sleep 5
     fi
 done
@@ -135,7 +135,7 @@ do
     if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${ip} | /bin/grep ALLOW`" = "" ] )
     then
         /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${ip} to any port ${SSH_PORT}
-        ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${SSH_PORT}
+      #  ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${SSH_PORT}
         /bin/sleep 5
     fi
 done
@@ -146,7 +146,7 @@ do
     if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${ip} | /bin/grep ALLOW`" = "" ] )
     then
         /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${ip} to any port ${SSH_PORT}
-        ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${SSH_PORT}
+      #  ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${SSH_PORT}
         /bin/sleep 5
     fi
 done
@@ -156,7 +156,7 @@ do
     if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${ip} | /bin/grep ALLOW`" = "" ] )
     then
         /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${ip} to any port ${SSH_PORT}
-        ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${SSH_PORT}
+       # ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${SSH_PORT}
         /bin/sleep 5
     fi
 done
