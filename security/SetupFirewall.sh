@@ -49,14 +49,22 @@ allips="${allips} `/bin/ls ${HOME}/config/webserverips | /usr/bin/tr '\n' ' '`"
 allips="${allips} `/bin/ls ${HOME}/config/webserverpublicips | /usr/bin/tr '\n' ' '`"
 allips="${allips} `/bin/ls ${HOME}/config/databaseip | /usr/bin/tr '\n' ' '`"
 allips="${allips} `/bin/ls ${HOME}/config/databasepublicip | /usr/bin/tr '\n' ' '`"
-allips="${allips} `/bin/ls ${HOME}/config/beingbuiltips | /usr/bin/tr '\n' ' '`"
-allips="${allips} `/bin/ls ${HOME}/config/beingbuiltpublicips | /usr/bin/tr '\n' ' '`"
+beingbuiltips="${allips} `/bin/ls ${HOME}/config/beingbuiltips | /usr/bin/tr '\n' ' '`"
+beingbuiltips="${allips} `/bin/ls ${HOME}/config/beingbuiltpublicips | /usr/bin/tr '\n' ' '`"
+
+for ip in ${beingbuildips}
+do
+    if ( [ "`/bin/echo ${allips} | /bin/grep ${ip}`" = "" ] )
+    then
+        allips="${allips}" ${ip}
+    fi
+done
+
 allips="${allips} ${BUILD_CLIENT_IP}"
 
 /bin/echo "${allips}" > ${HOME}/runtime/ipsforfirewall
 
-
-    
+  
 #If a webserver has been shutdown we need to periodically clean up any ip addresses that it has left in the native firewalling system
 #This is necessary because we only update the native firewalling system when new machines are added and if no new machines are added
 #We will have redundant ip addresses in our firewalling system
