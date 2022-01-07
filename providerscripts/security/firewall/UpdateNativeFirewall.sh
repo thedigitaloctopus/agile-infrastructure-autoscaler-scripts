@@ -80,11 +80,11 @@ then
     
     if ( [ "${autoscaling_firewall_id}" = "" ] )
     then
-        /usr/local/bin/doctl compute firewall create --name "adt-autoscaling" 
+        /usr/local/bin/doctl compute firewall create --name "adt-autoscaling" --outbound-rules "protocol:tcp,ports:all,address:0.0.0.0/0 protocol:udp,ports:all,address:0.0.0.0/0 protocol:icmp,address:0.0.0.0/0"
         autoscaling_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-autoscaling" ).id' | /bin/sed 's/"//g'`"
     else
         /bin/echo "y" | /usr/local/bin/doctl compute firewall delete ${autoscaling_firewall_id}
-        /usr/local/bin/doctl compute firewall create --name "adt-autoscaling" 
+        /usr/local/bin/doctl compute firewall create --name "adt-autoscaling" --outbound-rules "protocol:tcp,ports:all,address:0.0.0.0/0 protocol:udp,ports:all,address:0.0.0.0/0 protocol:icmp,address:0.0.0.0/0"
         autoscaling_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-autoscaling" ).id' | /bin/sed 's/"//g'`"
     fi
 
