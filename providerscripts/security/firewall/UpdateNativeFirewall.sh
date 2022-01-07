@@ -91,9 +91,9 @@ then
     else
         standard_rules=${standard_rules}"protocol:tcp,ports:443,address:0.0.0.0/0 "    
         #standard_rules=${standard_rules}"protocol:tcp,ports:80,address:0.0.0.0/0 "    
-        standard_rules=${standard_rules}"protocol:icmp,address:0.0.0.0/0 "    
     fi
-
+    
+    standard_rules=${standard_rules}"protocol:icmp,address:0.0.0.0/0 "    
     standard_rules="`/bin/echo ${standard_rules} | /bin/sed 's/\"//g'`"
  
     webserver_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-webserver-machines" ).id' | /bin/sed 's/"//g'`"
