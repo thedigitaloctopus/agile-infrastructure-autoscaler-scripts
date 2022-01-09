@@ -149,29 +149,46 @@ kernel.panic=10" >> /etc/sysctl.conf
 
 /bin/echo "${0} `/bin/date`: Installed software required by the build" >> ${HOME}/logs/MonitoringLog.log
 #Install the programs that we need to use when building the autoscaler
+>&2 /bin/echo "${0} Update.sh"
 ${HOME}/installscripts/Update.sh ${BUILDOS}
+>&2 /bin/echo "${0} Upgrade.sh"
 ${HOME}/installscripts/Upgrade.sh ${BUILDOS}
+>&2 /bin/echo "${0} InstallUFW.sh"
 ${HOME}/installscripts/InstallUFW.sh ${BUILDOS}
+>&2 /bin/echo "${0} InstallCurl.sh"
 ${HOME}/installscripts/InstallCurl.sh ${BUILDOS}
+>&2 /bin/echo "${0} InstallSSHPass.sh"
 ${HOME}/installscripts/InstallSSHPass.sh ${BUILDOS}
+>&2 /bin/echo "${0} InstallBC.sh"
 ${HOME}/installscripts/InstallBC.sh ${BUILDOS}
+>&2 /bin/echo "${0} InstallJQ.sh"
 ${HOME}/installscripts/InstallJQ.sh ${BUILDOS}
+>&2 /bin/echo "${0} InstallSendEmail.sh"
 ${HOME}/installscripts/InstallSendEmail.sh ${BUILDOS}
+>&2 /bin/echo "${0} InstallLibioSocket.sh"
 ${HOME}/installscripts/InstallLibioSocket.sh ${BUILDOS}
+>&2 /bin/echo "${0} InstallLibnetSsleay.sh"
 ${HOME}/installscripts/InstallLibnetSsleay.sh ${BUILDOS}
+>&2 /bin/echo "${0} InstallSysStat.sh"
 ${HOME}/installscripts/InstallSysStat.sh ${BUILDOS}
+>&2 /bin/echo "${0} InstallSSHFS.sh"
 ${HOME}/installscripts/InstallSSHFS.sh ${BUILDOS}
+>&2 /bin/echo "${0} InstallS3FS.sh"
 ${HOME}/installscripts/InstallS3FS.sh ${BUILDOS}
+>&2 /bin/echo "${0} InstallRsync.sh"
 ${HOME}/installscripts/InstallRsync.sh ${BUILDOS}
 
 if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh ENABLEEFS:1`" = "1" ] )
 then
+    >&2 /bin/echo "${0} InstallNFS.sh"
     ${HOME}/installscripts/InstallNFS.sh ${BUILDOS}
 fi
 
+>&2 /bin/echo "${0} Install Monitoring Gear"
 ${HOME}/providerscripts/utilities/InstallMonitoringGear.sh
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+>&2 /bin/echo "${0} Setting up timezone"
 /bin/echo "${0} `/bin/date`: Setting timezone" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 #Set the time on the machine
@@ -190,6 +207,7 @@ else
 fi
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+>&2 /bin/echo "${0} Installing cloudtools"
 /bin/echo "${0} `/bin/date`: Installing cloudtools" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 #Install the tools for our particular cloudhost provider
@@ -197,6 +215,7 @@ fi
 
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+>&2 /bin/echo "${0} Getting repos from git"
 /bin/echo "${0} `/bin/date`: Getting infrastructure repositories from git" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 #Setup git in the root directory - where the configuration scripts are kept
@@ -216,22 +235,26 @@ ${HOME}/bootstrap/GitPull.sh ${INFRASTRUCTURE_REPOSITORY_PROVIDER} ${INFRASTRUCT
 /usr/bin/find ${HOME} -not -path '*/\.*' -type f -print0 | xargs -0 chmod 0500 # for files
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+>&2 /bin/echo "${0} Setting up the script which allows us to root"
 /bin/echo "${0} `/bin/date`: Setting up the script which allows us to root" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/mv ${HOME}/providerscripts/utilities/Super.sh ${HOME}/.ssh
 /bin/chmod 400 ${HOME}/.ssh/Super.sh
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+>&2 /bin/echo "${0} Installing Datastore tools"
 /bin/echo "${0} `/bin/date`: Installing Datastore tools" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 
 . ${HOME}/providerscripts/datastore/InstallDatastoreTools.sh
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+>&2 /bin/echo "${0} Configure our SSH settings"
 /bin/echo "${0} `/bin/date`: Configuring our SSH settings" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+>&2 /bin/echo "${0} Disabling password authentication"
 /bin/echo "${0} `/bin/date`: Disabling password authentication" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 
@@ -239,6 +262,7 @@ ${HOME}/bootstrap/GitPull.sh ${INFRASTRUCTURE_REPOSITORY_PROVIDER} ${INFRASTRUCT
 /bin/sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+>&2 /bin/echo "${0} Changing our preferred SSH port"
 /bin/echo "${0} `/bin/date`: Changing to our preferred SSH port" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 
@@ -251,6 +275,7 @@ else
 fi
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+>&2 /bin/echo "${0} Preventing root logins"
 /bin/echo "${0} `/bin/date`: Preventing root logins" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 
@@ -265,6 +290,7 @@ else
 fi
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+>&2 /bin/echo "${0} Ensuring SSH connections are long lasting"
 /bin/echo "${0} `/bin/date`: Ensuring SSH connections are long lasting" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 
@@ -282,6 +308,7 @@ DEVELOPMENT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DEVELOPME
 PRODUCTION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'PRODUCTION'`"
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+>&2 /bin/echo "${0} Initialising Cron"
 /bin/echo "${0} `/bin/date`: Initialising cron" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 
@@ -297,6 +324,7 @@ ${HOME}/providerscripts/utilities/GetIP.sh
 /bin/touch ${HOME}/runtime/AUTOSCALER_READY
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+>&2 /bin/echo "${0} Enabling firewall"
 /bin/echo "${0} `/bin/date`: Enabling the firewall" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 
@@ -315,6 +343,7 @@ ${HOME}/providerscripts/utilities/GetIP.sh
 /bin/chown -R ${SERVER_USER}.${SERVER_USER} ${HOME}
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+>&2 /bin/echo "${0} Rebooting the autoscaler post installation"
 /bin/echo "${0} `/bin/date`: Rebooting the autoscaler post installation" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 
