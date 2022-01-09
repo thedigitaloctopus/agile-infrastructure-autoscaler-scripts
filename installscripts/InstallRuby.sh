@@ -26,10 +26,10 @@ fi
 
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
-    /usr/bin/apt-get -qq install ruby
+    /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq install ruby
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
-    /usr/bin/apt-get -qq install ruby
+    /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq install ruby
 fi
