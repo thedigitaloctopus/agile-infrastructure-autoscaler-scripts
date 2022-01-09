@@ -46,8 +46,8 @@ fi
 if ( [ "${CLOUDHOST}" = "linode" ] )
 then
     /bin/echo "${0} `/bin/date`: Building for the Linode provider" >> ${HOME}/logs/MonitoringLog.log
-  #  ${HOME}/installscripts/Update.sh "${BUILDOS}"
-    ${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS}
+    ${HOME}/installscripts/Update.sh "${BUILDOS}"
+  #  ${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS}
     ${HOME}/installscripts/InstallPIP.sh "${BUILDOS}"
     ${HOME}/installscripts/InstallLinodeCLI.sh "${BUILDOS}"
     /bin/chmod 400 ${HOME}/.config/linode-cli
