@@ -28,21 +28,21 @@ fi
 if ( [ "${BUILD_OS}" = "ubuntu" ] )
 then
    # /usr/bin/apt-get -qq -y dist-upgrade --allow-change-held-packages
-    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq dist-upgrade -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef -y --allow-downgrades --allow-remove-essential --allow-change-held-packages
+    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq dist-upgrade  -o DPkg::Lock::Timeout=-1 -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef -y --allow-downgrades --allow-remove-essential --allow-change-held-packages
     while ( [ "$?" != "0" ] )
     do 
         /bin/sleep 10
-        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq dist-upgrade -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef -y --allow-downgrades --allow-remove-essential --allow-change-held-packages
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq dist-upgrade  -o DPkg::Lock::Timeout=-1 -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef -y --allow-downgrades --allow-remove-essential --allow-change-held-packages
     done
 fi
 
 if ( [ "${BUILD_OS}" = "debian" ] )
 then
     #/usr/bin/apt-get -qq -y dist-upgrade --allow-change-held-packages
-    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq dist-upgrade -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef -y --allow-downgrades --allow-remove-essential --allow-change-held-packages
+    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq dist-upgrade  -o DPkg::Lock::Timeout=-1 -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef -y --allow-downgrades --allow-remove-essential --allow-change-held-packages
     while ( [ "$?" != "0" ] )
     do 
         /bin/sleep 10
-        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq dist-upgrade -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef -y --allow-downgrades --allow-remove-essential --allow-change-held-packages
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq dist-upgrade  -o DPkg::Lock::Timeout=-1 -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef -y --allow-downgrades --allow-remove-essential --allow-change-held-packages
     done
 fi
