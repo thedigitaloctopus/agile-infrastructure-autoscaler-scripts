@@ -26,7 +26,7 @@ fi
 
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
-    /usr/bin/apt-get -qq install python3-pip
+    /usr/bin/apt-get  -o DPkg::Lock::Timeout=-1 -qq install python3-pip
     /bin/rm /usr/bin/python
     /bin/ln -s /usr/bin/python3 /usr/bin/python
     /bin/rm /usr/bin/pip
@@ -36,7 +36,7 @@ fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
-    /usr/bin/apt-get -qq install python3-pip
+    /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq install python3-pip
     /bin/rm /usr/bin/python
     /bin/ln -s /usr/bin/python3 /usr/bin/python
     /bin/rm /usr/bin/pip
