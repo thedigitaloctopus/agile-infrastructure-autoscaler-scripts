@@ -43,13 +43,16 @@ allips="${allips} `/bin/ls ${HOME}/config/databasepublicip | /usr/bin/tr '\n' ' 
 beingbuiltips="${allips} `/bin/ls ${HOME}/config/beingbuiltips | /usr/bin/tr '\n' ' '`"
 beingbuiltips="${allips} `/bin/ls ${HOME}/config/beingbuiltpublicips | /usr/bin/tr '\n' ' '`"
 
-for ip in ${beingbuildips}
-do
-    if ( [ "`/bin/echo ${allips} | /bin/grep ${ip}`" = "" ] )
-    then
-        allips="${allips}" ${ip}
-    fi
-done
+if ( [ "${beingbuiltips}" != "" ] )
+then
+    for ip in ${beingbuiltips}
+    do
+        if ( [ "`/bin/echo ${allips} | /bin/grep ${ip}`" = "" ] )
+        then
+            allips="${allips}" ${ip}
+        fi
+    done
+fi
 
 allips="${allips} ${BUILD_CLIENT_IP}"
 
