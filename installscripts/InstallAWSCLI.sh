@@ -26,7 +26,7 @@ fi
 
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
-    /usr/bin/apt-get install unzip
+    /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  install unzip
     /usr/bin/curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
     /usr/bin/unzip -o awscliv2.zip
     ./aws/install
@@ -37,7 +37,7 @@ fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
-    /usr/bin/apt-get install unzip
+    /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  install unzip
     /usr/bin/curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
     /usr/bin/unzip -o awscliv2.zip
     ./aws/install
