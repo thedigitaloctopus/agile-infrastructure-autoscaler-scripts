@@ -20,7 +20,7 @@
 #########################################################################################
 #set -x
 
-if ( [ ! -f ${HOME}/logs/firewall ] )
+if ( [ ! -d ${HOME}/logs/firewall ] )
 then
     /bin/mkdir -p ${HOME}/logs/firewall
 fi
