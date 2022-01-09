@@ -26,11 +26,11 @@ fi
 
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
-    /usr/bin/apt-get -qq install libio-socket-ssl-perl
+    /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq install libio-socket-ssl-perl
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
-    /usr/bin/apt-get -qq install libio-socket-ssl-perl
+    /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq install libio-socket-ssl-perl
 fi
 
