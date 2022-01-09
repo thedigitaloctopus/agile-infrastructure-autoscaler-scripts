@@ -26,11 +26,11 @@ fi
 
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
-    /usr/bin/apt-get -qq install bc
+    /usr/bin/apt-get  -o DPkg::Lock::Timeout=-1 -qq install bc
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
-    /usr/bin/apt-get -qq install bc
+    /usr/bin/apt-get  -o DPkg::Lock::Timeout=-1 -qq install bc
 fi
 
