@@ -27,11 +27,11 @@ fi
 
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
-    /usr/bin/apt-get -f install
+    /usr/bin/apt-get  -o DPkg::Lock::Timeout=-1 -f install
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
-    /usr/bin/apt-get -f install
+    /usr/bin/apt-get  -o DPkg::Lock::Timeout=-1 -f install
 fi
 
