@@ -64,9 +64,9 @@ then
     ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
 fi
 
-if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] && [ ! -f ${HOME}/runtime/FIREWALL-REFRESH ] )
+if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] && [ -f ${HOME}/runtime/FIREWALL-REFRESH ] )
 then
-    /bin/touch ${HOME}/runtime/FIREWALL-REFRESH
+    /bin/rm ${HOME}/runtime/FIREWALL-REFRESH
     ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
 fi
 
