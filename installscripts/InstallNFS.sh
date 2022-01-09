@@ -27,10 +27,10 @@ fi
 
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
-    /usr/bin/apt-get -qq -y install nfs-common
+    /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nfs-common
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
-    /usr/bin/apt-get -qq -y install nfs-common
+    /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nfs-common
 fi
