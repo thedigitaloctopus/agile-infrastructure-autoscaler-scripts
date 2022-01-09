@@ -27,13 +27,13 @@ fi
 
 if ( [ "${BUILD_OS}" = "ubuntu" ] )
 then
-    /usr/bin/apt-get -qq -y install python3-setuptools
+    /usr/bin/apt-get  -o DPkg::Lock::Timeout=-1 -qq -y install python3-setuptools
     /usr/bin/pip3 install linode-cli --upgrade
 fi
 
 if ( [ "${BUILD_OS}" = "debian" ] )
 then
-    /usr/bin/apt-get -qq -y install python3-setuptools
+    /usr/bin/apt-get  -o DPkg::Lock::Timeout=-1 -qq -y install python3-setuptools
     /usr/bin/pip3 install linode-cli --upgrade
 fi
 
