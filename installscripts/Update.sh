@@ -28,24 +28,24 @@ fi
 if ( [ "${BUILD_OS}" = "ubuntu" ] )
 then
     /usr/bin/yes | /usr/bin/dpkg --configure -a
-    /usr/bin/apt install -y -qq apt-utils 2&1>/dev/null
-    /usr/bin/apt-get -qq -y update --allow-change-held-packages
+    /usr/bin/apt-get install  -o DPkg::Lock::Timeout=-1 -y -qq apt-utils 2&1>/dev/null
+    /usr/bin/apt-get  -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages
     while ( [ "$?" != "0" ] )
     do 
         /bin/sleep 10
-        /usr/bin/apt-get -qq -y update --allow-change-held-packages
+        /usr/bin/apt-get  -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages
     done
 fi
 
 if ( [ "${BUILD_OS}" = "debian" ] )
 then
     /usr/bin/yes | /usr/bin/dpkg --configure -a
-    /usr/bin/apt install -y -qq apt-utils 2&1>/dev/null
-    /usr/bin/apt-get -qq -y update --allow-change-held-packages
+    /usr/bin/apt-get install -o DPkg::Lock::Timeout=-1 -y -qq apt-utils 2&1>/dev/null
+    /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages
     while ( [ "$?" != "0" ] )
     do 
         /bin/sleep 10
-        /usr/bin/apt-get -qq -y update --allow-change-held-packages
+        /usr/bin/apt-get  -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages
     done
 fi
 
