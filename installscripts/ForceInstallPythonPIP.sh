@@ -26,11 +26,11 @@ fi
 
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
-    /usr/bin/apt-get -qq -y -f install python-pip
+    /usr/bin/apt-get  -o DPkg::Lock::Timeout=-1 -qq -y -f install python-pip
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
-    /usr/bin/apt-get -qq -y -f install python-pip
+    /usr/bin/apt-get  -o DPkg::Lock::Timeout=-1 -qq -y -f install python-pip
 fi
 
