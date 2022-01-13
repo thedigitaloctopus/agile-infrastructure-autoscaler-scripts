@@ -25,7 +25,7 @@ then
     BUILD_OS="${1}"
 fi
 
-version="`/usr/bin/curl https://golang.org/dl/ | /bin/grep download | /bin/grep -v darwin | /bin/grep filename | /bin/grep  linux | /bin/grep amd64 | /bin/sed 's/.*>go//g' | /bin/grep -v rc | /bin/grep -v beta | /bin/grep -v alpha | /bin/sed 's/\.linux.*//g' | /usr/bin/head -1`"
+version="`/usr/bin/curl https://go.dev/dl/ | /bin/grep download | /bin/grep -v darwin | /bin/grep filename | /bin/grep  linux | /bin/grep amd64 | /bin/sed 's/.*>go//g' | /bin/grep -v rc | /bin/grep -v beta | /bin/grep -v alpha | /bin/sed 's/\.linux.*//g' | /usr/bin/head -1`"
 
 if ( [ "${BUILD_OS}" = "ubuntu" ] )
 then
