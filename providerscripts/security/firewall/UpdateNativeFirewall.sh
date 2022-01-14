@@ -228,7 +228,59 @@ fi
 
 if ( [ -f ${HOME}/VULTR ] )
 then
-    :
+    export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
+    allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
+    machine_id="`/usr/bin/vultr instance list | /bin/grep ${1} | /usr/bin/awk '{print $1}'`"
+    firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w '^adt$' | /usr/bin/awk '{print $1}'`"
+
+    iplist=""
+    for ip in ${allips}
+    do
+        iplist=$iplist"${ip}/32 "
+    done
+
+    iplist="`/bin/echo ${iplist} | /bin/sed 's/ $//g' | /bin/sed 's/^ //g'`"
+
+    if ( [ "${iplist}" != "" ] )
+    then
+        for ip in ${iplist}
+        do
+            /usr/bin/vultr firewall rule create --id ${firewall_id} --port ${SSH_PORT} --protocol tcp --size 32 --type v4 -s ${ip}
+            /usr/bin/vultr firewall rule create --id ${firewall_id} --port ${DB_PORT} --protocol tcp --size 32 --type v4 -s ${ip}
+            /usr/bin/vultr firewall rule create --id ${firewall_id} --port 22 --protocol tcp --size 32 --type v4 -s ${ip}
+        done
+    fi
+ 
+    firewall_build_machine_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w '^adt-build-machine$' | /usr/bin/awk '{print $1}'`"
+    build_machine_rules="`/usr/bin/vultr firewall rule list ${firewall_build_machine_id} | /bin/grep -v icmp | /usr/bin/tail -n +2 | /usr/bin/head -n -2 | /usr/bin/awk 'BEGIN { OFS = ":"; } {print $4,$5}' | /bin/sed '/^:$/d'`"
+
+    for rule in ${rules}  
+    do
+       port="`/bin/echo ${rule} | /usr/bin/awk -F':' '{print $1}'`"
+       ip="`/bin/echo ${rule} | /usr/bin/awk -F':' '{print $1}'`"
+       /usr/bin/vultr firewall rule create --id ${firewall_build_machine_id} --port ${port} --protocol tcp --size 32 --type v4 -s ${ip}
+    done
+        
+   . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
+
+   if ( [ "${alldnsproxyips}" = "" ] )
+   then
+       /usr/bin/vultr firewall rule create --id ${firewall_id} --port 443 --protocol tcp --size 32 --type v4 -s 0.0.0.0/0
+       /usr/bin/vultr firewall rule create --id ${firewall_id} --port 80 --protocol tcp --size 32 --type v4 -s 0.0.0.0/0
+       /usr/bin/vultr firewall rule create --id ${firewall_id} --protocol icmp --size 32 --type v4 -s 0.0.0.0/0
+   else 
+       for ip in ${alldnsproxyips}
+       do
+           /usr/bin/vultr firewall rule create --id ${firewall_id} --port 443 --protocol tcp --size 32 --type v4 -s ${ip}
+           /usr/bin/vultr firewall rule create --id ${firewall_id} --port 80 --protocol tcp --size 32 --type v4 -s ${ip}
+       done
+       /usr/bin/vultr firewall rule create --id ${firewall_id} --protocol icmp --size 32 --type v4 -s 0.0.0.0/0
+   fi
+    
+   if ( [ "${machine_id}" != "" ] )
+   then
+        /usr/bin/vultr instance update-firewall-group -f ${firewall_id} -i ${machine_id}
+   fi
 fi
 
 if ( [ -f ${HOME}/AWS ] )
