@@ -288,12 +288,22 @@ then
        done
        /usr/bin/vultr firewall rule create --id ${firewall_id} --protocol icmp --size 32 --type v4 -s 0.0.0.0/0
    fi
+   
+   webserver_ids="`/usr/bin/vultr instance list | /bin/grep webserver | /usr/bin/awk '{print $1}'`"
     
    if ( [ "${machine_id}" != "" ] )
    then
         /usr/bin/vultr instance update-firewall-group -f ${firewall_id} -i ${machine_id}
-        /usr/bin/vultr instance update-firewall-group -f ${webserver_firewall_id} -i ${machine_id}
    fi
+   
+   if ( [ "${webserver_ids}" != "" ] )
+   then
+       for webserver_id in ${webserver_ids}
+       do
+           /usr/bin/vultr instance update-firewall-group -f ${webserver_firewall_id} -i ${webserver_id}
+       done
+   fi
+
 fi
 
 if ( [ -f ${HOME}/AWS ] )
