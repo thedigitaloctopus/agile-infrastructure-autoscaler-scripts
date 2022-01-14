@@ -227,7 +227,7 @@ fi
 
 /bin/echo " ${ip} ${private_ip} " >> ${HOME}/runtime/ipsforfirewall
 
-${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${private_ip}
+#${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${private_ip}
 
 . ${HOME}/providerscripts/security/firewall/TightenDBaaSFirewall.sh
 
