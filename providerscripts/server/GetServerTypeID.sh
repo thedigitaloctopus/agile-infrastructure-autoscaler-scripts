@@ -26,6 +26,7 @@ cloudhost="${3}"
 
 BUILDOS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOS'`"
 BUILDOSVERSION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOSVERSION'`"
+REGION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
 
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
@@ -64,7 +65,8 @@ then
     #Clonk
     #/usr/bin/vultr plans | grep "${server_size}" | grep SSD | /usr/bin/awk '{print $1}' | /usr/bin/sort | /usr/bin/tail -1
     #Official
-    /usr/bin/vultr plans list | /bin/grep "${server_size}" | /usr/bin/awk '{print $1}'
+    #/usr/bin/vultr plans list | /bin/grep "${server_size}" | /usr/bin/awk '{print $1}'
+    /usr/bin/vultr plans list | /bin/grep ${REGION} | /bin/grep vc2 | /usr/bin/tr '\t' 'X' | /bin/grep "${server_size}X" | /usr/bin/awk -F'X' '{print $1}'
 fi
 
 if ( [ -f ${HOME}/AWS ] ||  [ "${cloudhost}" = "aws" ] )
