@@ -21,7 +21,7 @@
 #set -x #THIS MUST NOT BE SWITCHED ON DURING NORMAL USE, SCRIPT BREAK
 
 #This stream manipulation is required for correct function, please do not remove or comment out
-exec >${HOME}/logs/FIREWALL_CONFIGURATION.log
+exec >${HOME}/logs/firewall/FIREWALL_CONFIGURATION.log
 exec 2>&1
 
 SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
