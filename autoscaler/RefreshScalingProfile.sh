@@ -24,7 +24,7 @@
 #set -x
 if ( [ -f ${HOME}/config/scalingprofile/profile.cnf ] )
 then
-    if ( [ "`/bin/grep -cvP '\S' ${HOME}/config/scalingprofile/profile.cnf`" -gt "60" ] )
+    if ( [ "`/bin/grep -cvPa '\S' ${HOME}/config/scalingprofile/profile.cnf`" -gt "60" ] )
     then
         /bin/sed -i '/^ $/d' ${HOME}/config/scalingprofile/profile.cnf
     else
