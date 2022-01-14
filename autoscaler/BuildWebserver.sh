@@ -279,14 +279,14 @@ then
 
     $?="-1" 2>/dev/null
 
-    while ( [ "$?" != "0" ] && [ "${count}" -lt "5" ] && [ "${CLOUDHOST_PASSWORD}" = "" ] )
+    while ( [ "$?" != "0" ] && [ "${count}" -lt "10" ] && [ "${CLOUDHOST_PASSWORD}" = "" ] )
     do
         count="`/usr/bin/expr ${count} + 1`"
         /bin/sleep 10
         /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS1} -o "PasswordAuthentication no" ${DEFAULT_USER}@${ip} "exit"
     done
 
-    if ( [ "${count}" = "5" ] || [ "${CLOUDHOST_PASSWORD}" != "" ] )
+    if ( [ "${count}" = "10" ] || [ "${CLOUDHOST_PASSWORD}" != "" ] )
     then
         #If we get to here, it means the ssh key failed, lets, then, try authenticating by password
         if ( [ ! -f /usr/bin/sshpass ] )
