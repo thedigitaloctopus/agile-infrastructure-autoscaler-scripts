@@ -238,7 +238,6 @@ if ( [ "${firewall_id}" = "" ] )
 then
     firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
 else
-    firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt$' | /usr/bin/awk '{print $1}'`"
     while ( [ "${firewall_id}" != "" ] )
     do
         /usr/bin/vultr firewall group delete ${firewall_id}
