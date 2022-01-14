@@ -661,8 +661,6 @@ then
 fi
 
 ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
-/usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /sbin/shutdown -r now"
-
 
 #Output how long the build took
 end=`/bin/date +%s`
