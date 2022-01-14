@@ -232,6 +232,7 @@ then
 #############################################################################################################################################################
 ###THERE IS A BASIC CODE OUTLINE HERE, BUT I DIDN'T REALISE THAT VULTR ONLY SUPPORTS A VPS MACHINE BEING ATTACHED TO 1 FIREWALL WHICH IS NO GOOD FOR MY NEEDS
 ###SO, NATIVE FIREWALL PROTECTION IS NOT SUPPORTED ON VULTR SERVER MACHINES, ALTHOUGH IT IS STILL USED ON THE BUILD MACHINE
+###UFW based protection is still there, but, if you want more protection you could enable DDOS protection in the CreateServer.sh script when it creates your machines
 #############################################################################################################################################################
 #  export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
 #  allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
