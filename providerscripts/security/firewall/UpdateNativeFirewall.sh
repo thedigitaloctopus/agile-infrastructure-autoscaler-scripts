@@ -232,7 +232,9 @@ then
     allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
     machine_id="`/usr/bin/vultr instance list | /bin/grep ${1} | /usr/bin/awk '{print $1}'`"
     firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w '^adt$' | /usr/bin/awk '{print $1}'`"
-
+    webserver_ids="`/usr/bin/vultr instance list | /bin/grep webserver | /usr/bin/awk '{print $1}'`"
+    autoscaler_ips="`/usr/bin/vultr instance list | /bin/grep autoscaler | /usr/bin/awk '{print $2}'`"
+    
     iplist=""
     for ip in ${allips}
     do
@@ -274,6 +276,31 @@ then
     fi
 
     /usr/bin/vultr firewall group update ${webserver_firewall_id} "adt-webserver-machines"
+    
+    autoscaling_firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt-autoscaling' | /usr/bin/awk '{print $1}'`"
+
+    if ( [ "${autoscaling_firewall_id}" = "" ] )
+    then
+        autoscaling_firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
+    else
+        /usr/bin/vultr firewall group delete ${firewall_id}
+        autoscaling_firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
+    fi
+
+    /usr/bin/vultr firewall group update ${autoscaling_firewall_id} "adt-autoscaling"
+   
+    for ip in ${autoscaler_ips}
+    do
+        /usr/bin/vultr firewall rule create --id ${autoscaling_firewall_id} --port 22 --protocol tcp --size 32 --type v4 -s ${ip}/32
+    done
+    
+   if ( [ "${webserver_ids}" != "" ] )
+   then
+       for webserver_id in ${webserver_ids}
+       do
+           /usr/bin/vultr instance update-firewall-group -f ${autoscaler_firewall_id} -i ${webserver_id}
+       done
+   fi
 
    if ( [ "${alldnsproxyips}" = "" ] )
    then
@@ -289,7 +316,6 @@ then
        /usr/bin/vultr firewall rule create --id ${firewall_id} --protocol icmp --size 32 --type v4 -s 0.0.0.0/0
    fi
    
-   webserver_ids="`/usr/bin/vultr instance list | /bin/grep webserver | /usr/bin/awk '{print $1}'`"
     
    if ( [ "${machine_id}" != "" ] )
    then
