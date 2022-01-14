@@ -262,17 +262,29 @@ then
     done
         
    . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
+   
+    webserver_firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt-webserver-machines' | /usr/bin/awk '{print $1}'`"
+
+    if ( [ "${webserver_firewall_id}" = "" ] )
+    then
+        webserver_firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
+    else
+        /usr/bin/vultr firewall group delete ${firewall_id}
+        webserver_firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
+    fi
+
+    /usr/bin/vultr firewall group update ${webserver_firewall_id} "adt-webserver-machines"
 
    if ( [ "${alldnsproxyips}" = "" ] )
    then
-       /usr/bin/vultr firewall rule create --id ${firewall_id} --port 443 --protocol tcp --size 32 --type v4 -s 0.0.0.0/0
-       /usr/bin/vultr firewall rule create --id ${firewall_id} --port 80 --protocol tcp --size 32 --type v4 -s 0.0.0.0/0
+       /usr/bin/vultr firewall rule create --id ${webserver_firewall_id} --port 443 --protocol tcp --size 32 --type v4 -s 0.0.0.0/0
+       /usr/bin/vultr firewall rule create --id ${webserver_firewall_id} --port 80 --protocol tcp --size 32 --type v4 -s 0.0.0.0/0
        /usr/bin/vultr firewall rule create --id ${firewall_id} --protocol icmp --size 32 --type v4 -s 0.0.0.0/0
    else 
        for ip in ${alldnsproxyips}
        do
-           /usr/bin/vultr firewall rule create --id ${firewall_id} --port 443 --protocol tcp --size 32 --type v4 -s ${ip}
-           /usr/bin/vultr firewall rule create --id ${firewall_id} --port 80 --protocol tcp --size 32 --type v4 -s ${ip}
+           /usr/bin/vultr firewall rule create --id ${webserver_firewall_id} --port 443 --protocol tcp --size 32 --type v4 -s ${ip}
+           /usr/bin/vultr firewall rule create --id ${webserver_firewall_id} --port 80 --protocol tcp --size 32 --type v4 -s ${ip}
        done
        /usr/bin/vultr firewall rule create --id ${firewall_id} --protocol icmp --size 32 --type v4 -s 0.0.0.0/0
    fi
@@ -280,6 +292,7 @@ then
    if ( [ "${machine_id}" != "" ] )
    then
         /usr/bin/vultr instance update-firewall-group -f ${firewall_id} -i ${machine_id}
+        /usr/bin/vultr instance update-firewall-group -f ${webserver_firewall_id} -i ${machine_id}
    fi
 fi
 
