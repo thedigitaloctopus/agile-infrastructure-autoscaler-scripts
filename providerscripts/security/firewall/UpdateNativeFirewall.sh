@@ -32,6 +32,8 @@ exec 2>>${HOME}/logs/firewall/${ERR_FILE}
 
 SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
 DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPORT'`"
+BUILD_CLIENT_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDCLIENTIP'`"
+
 
 if ( [ ! -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
 then
@@ -260,6 +262,8 @@ fi
 /usr/bin/vultr firewall rule create --id ${firewall_id} --port ${SSH_PORT} --protocol tcp --size 24 --type v4 -s ${private_network_ip}
 /usr/bin/vultr firewall rule create --id ${firewall_id} --port ${DB_PORT} --protocol tcp --size 24 --type v4 -s ${private_network_ip}
 /usr/bin/vultr firewall rule create --id ${firewall_id} --port 22 --protocol tcp --size 24 --type v4 -s ${private_network_ip}
+/usr/bin/vultr firewall rule create --id ${firewall_id} --port ${SSH_PORT} --protocol tcp --size 32 --type v4 -s ${BUILD_CLIENT_IP}
+
 
 firewall_build_machine_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt-build-machine' | /usr/bin/awk '{print $1}'`"
 build_machine_rules="`/usr/bin/vultr firewall rule list ${firewall_build_machine_id} | /bin/grep -v icmp | /usr/bin/tail -n +2 | /usr/bin/head -n -2 | /usr/bin/awk 'BEGIN { OFS = ":"; } {print $4,$5}' | /bin/sed '/^:$/d'`"
