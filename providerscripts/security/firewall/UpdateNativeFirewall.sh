@@ -238,13 +238,12 @@ if ( [ "${firewall_id}" = "" ] )
 then
     firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
 else
-    :
- #   while ( [ "${firewall_id}" != "" ] )
- #   do
- #       /usr/bin/vultr firewall group delete ${firewall_id}
- #       firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt$' | /usr/bin/awk '{print $1}'`"
- #   done
- #   firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
+    while ( [ "${firewall_id}" != "" ] )
+    do
+        /usr/bin/vultr firewall group delete ${firewall_id}
+        firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt$' | /usr/bin/awk '{print $1}'`"
+    done
+    firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
 fi
 
 /usr/bin/vultr firewall group update ${firewall_id} "adt"
