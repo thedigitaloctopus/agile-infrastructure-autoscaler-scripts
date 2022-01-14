@@ -271,7 +271,7 @@ then
     then
         webserver_firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
     else
-        /usr/bin/vultr firewall group delete ${firewall_id}
+        /usr/bin/vultr firewall group delete ${webserver_firewall_id}
         webserver_firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
     fi
 
@@ -283,7 +283,7 @@ then
     then
         autoscaling_firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
     else
-        /usr/bin/vultr firewall group delete ${firewall_id}
+        /usr/bin/vultr firewall group delete ${autoscaling_firewall_id}
         autoscaling_firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
     fi
 
