@@ -230,68 +230,67 @@ fi
 
 if ( [ -f ${HOME}/VULTR ] )
 then
-export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-#private_network_ip="`/usr/bin/vultr network list | grep "Default private network" | /usr/bin/awk '{print $6}'`/24"
-firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt$' | /usr/bin/awk '{print $1}'`"
+    export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
+    firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt$' | /usr/bin/awk '{print $1}'`"
 
-if ( [ "${firewall_id}" = "" ] )
-then
-    firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
-else
-    while ( [ "${firewall_id}" != "" ] )
+    if ( [ "${firewall_id}" = "" ] )
+    then
+        firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
+    else
+        while ( [ "${firewall_id}" != "" ] )
+        do
+            /usr/bin/vultr firewall group delete ${firewall_id}
+            firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt$' | /usr/bin/awk '{print $1}'`"
+        done
+        firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
+    fi
+
+    /usr/bin/vultr firewall group update ${firewall_id} "adt"
+
+    . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
+
+    if ( [ "${alldnsproxyips}" != "" ] )
+    then
+        # I couldn't get this command to work, it was giving an error message so it is commented out and the command below used instead which is not ideal
+        #  /usr/bin/vultr firewall rule create --id ${firewall_id} --protocol tcp --port 443 --size 32 --type v4 --source cloudflare
+        /usr/bin/vultr firewall rule create --id ${firewall_id} --port 443 --protocol tcp --size 32 --type v4 -s 0.0.0.0/0
+        /usr/bin/vultr firewall rule create --id ${firewall_id} --protocol icmp --size 32 --type v4 -s 0.0.0.0/0
+    else 
+        /usr/bin/vultr firewall rule create --id ${firewall_id} --port 443 --protocol tcp --size 32 --type v4 -s 0.0.0.0/0
+       /usr/bin/vultr firewall rule create --id ${firewall_id} --protocol icmp --size 32 --type v4 -s 0.0.0.0/0
+    fi
+
+    firewall_build_machine_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt-build-machine' | /usr/bin/awk '{print $1}'`"
+    build_machine_rules="`/usr/bin/vultr firewall rule list ${firewall_build_machine_id} | /bin/grep -v icmp | /usr/bin/tail -n +2 | /usr/bin/head -n -2 | /usr/bin/awk 'BEGIN { OFS = ":"; } {print $4,$5}' | /bin/sed '/^:$/d'`"
+
+    autoscaler_ips="`/usr/bin/vultr instance list | /bin/grep autoscaler | /usr/bin/awk '{print $2}' | /usr/bin/tr '\n' ' '`"
+    webserver_ips="`/usr/bin/vultr instance list | /bin/grep webserver | /usr/bin/awk '{print $2}' | /usr/bin/tr '\n' ' '`"
+    database_ips="`/usr/bin/vultr instance list | /bin/grep database | /usr/bin/awk '{print $2}' | /usr/bin/tr '\n' ' '`"
+    machine_ips="${autoscaler_ips} ${webserver_ips} ${database_ips}"
+
+    for ip in ${machine_ips}
     do
-        /usr/bin/vultr firewall group delete ${firewall_id}
-        firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt$' | /usr/bin/awk '{print $1}'`"
-    done
-    firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
-fi
-
-/usr/bin/vultr firewall group update ${firewall_id} "adt"
-
-. ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
-
-if ( [ "${alldnsproxyips}" = "" ] )
-then
-    # I couldn't get this command to work, it was giving an error message so it is commented out and the command below used instead which is not ideal
-    #  /usr/bin/vultr firewall rule create --id ${firewall_id} --protocol tcp --port 443 --size 32 --type v4 --source cloudflare
-    /usr/bin/vultr firewall rule create --id ${firewall_id} --port 443 --protocol tcp --size 32 --type v4 -s 0.0.0.0/0
-    /usr/bin/vultr firewall rule create --id ${firewall_id} --protocol icmp --size 32 --type v4 -s 0.0.0.0/0
-else 
-    /usr/bin/vultr firewall rule create --id ${firewall_id} --port 443 --protocol tcp --size 32 --type v4 -s 0.0.0.0/0
-    /usr/bin/vultr firewall rule create --id ${firewall_id} --protocol icmp --size 32 --type v4 -s 0.0.0.0/0
-fi
-
-firewall_build_machine_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt-build-machine' | /usr/bin/awk '{print $1}'`"
-build_machine_rules="`/usr/bin/vultr firewall rule list ${firewall_build_machine_id} | /bin/grep -v icmp | /usr/bin/tail -n +2 | /usr/bin/head -n -2 | /usr/bin/awk 'BEGIN { OFS = ":"; } {print $4,$5}' | /bin/sed '/^:$/d'`"
-
-autoscaler_ips="`/usr/bin/vultr instance list | /bin/grep autoscaler | /usr/bin/awk '{print $2}' | /usr/bin/tr '\n' ' '`"
-webserver_ips="`/usr/bin/vultr instance list | /bin/grep webserver | /usr/bin/awk '{print $2}' | /usr/bin/tr '\n' ' '`"
-database_ips="`/usr/bin/vultr instance list | /bin/grep database | /usr/bin/awk '{print $2}' | /usr/bin/tr '\n' ' '`"
-machine_ips="${autoscaler_ips} ${webserver_ips} ${database_ips}"
-
-for ip in ${machine_ips}
-do
-    for rule in ${build_machine_rules}  
-    do
-        port="`/bin/echo ${rule} | /usr/bin/awk -F':' '{print $1}'`"
-        ip="`/bin/echo ${rule} | /usr/bin/awk -F':' '{print $2}'`"
-        /usr/bin/vultr firewall rule create --id ${firewall_id} --port ${port} --protocol tcp --size 32 --type v4 -s ${ip}
-    done
+        for rule in ${build_machine_rules}  
+        do
+            port="`/bin/echo ${rule} | /usr/bin/awk -F':' '{print $1}'`"
+            ip="`/bin/echo ${rule} | /usr/bin/awk -F':' '{print $2}'`"
+            /usr/bin/vultr firewall rule create --id ${firewall_id} --port ${port} --protocol tcp --size 32 --type v4 -s ${ip}
+        done
     
-    /usr/bin/vultr firewall rule create --id ${firewall_id} --port ${SSH_PORT} --protocol tcp --size 32 --type v4 -s ${ip}
-    /usr/bin/vultr firewall rule create --id ${firewall_id} --port ${DB_PORT} --protocol tcp --size 32 --type v4 -s ${ip}
-    /usr/bin/vultr firewall rule create --id ${firewall_id} --port 22 --protocol tcp --size 32 --type v4 -s ${ip}
-done
+        /usr/bin/vultr firewall rule create --id ${firewall_id} --port ${SSH_PORT} --protocol tcp --size 32 --type v4 -s ${ip}
+        /usr/bin/vultr firewall rule create --id ${firewall_id} --port ${DB_PORT} --protocol tcp --size 32 --type v4 -s ${ip}
+        /usr/bin/vultr firewall rule create --id ${firewall_id} --port 22 --protocol tcp --size 32 --type v4 -s ${ip}
+    done
 
-autoscaler_ids="`/usr/bin/vultr instance list | /bin/grep autoscaler | /usr/bin/awk '{print $1}' | /usr/bin/tr '\n' ' '`"
-webserver_ids="`/usr/bin/vultr instance list | /bin/grep webserver | /usr/bin/awk '{print $1}' | /usr/bin/tr '\n' ' '`"
-database_ids="`/usr/bin/vultr instance list | /bin/grep database | /usr/bin/awk '{print $1}' | /usr/bin/tr '\n' ' '`"
-machine_ids="${autoscaler_ids} ${webserver_ids} ${database_ids}"
+    autoscaler_ids="`/usr/bin/vultr instance list | /bin/grep autoscaler | /usr/bin/awk '{print $1}' | /usr/bin/tr '\n' ' '`"
+    webserver_ids="`/usr/bin/vultr instance list | /bin/grep webserver | /usr/bin/awk '{print $1}' | /usr/bin/tr '\n' ' '`"
+    database_ids="`/usr/bin/vultr instance list | /bin/grep database | /usr/bin/awk '{print $1}' | /usr/bin/tr '\n' ' '`"
+    machine_ids="${autoscaler_ids} ${webserver_ids} ${database_ids}"
 
-for machine_id in ${machine_ids}
-do
-    /usr/bin/vultr instance update-firewall-group -f ${firewall_id} -i ${machine_id}
-done
+    for machine_id in ${machine_ids}
+    do
+        /usr/bin/vultr instance update-firewall-group -f ${firewall_id} -i ${machine_id}
+    done
 
 fi
 
