@@ -49,7 +49,7 @@ then
     #Clonk
     #/usr/bin/vultr server list | /bin/grep ".*${server_type}" | /usr/bin/awk '{print $3}' | /bin/sed 's/IP//g' | /bin/sed '/^$/d'
     #Official
-    /usr/bin/vultr instance list | /bin/grep ".*${server_type}" | /usr/bin/awk '{print $2}' | /bin/grep '[0-9].[0-9].[0-9].[0-9]'
+    /usr/bin/vultr instance list | /bin/grep ".*${server_type}" | /usr/bin/awk '{print $2}' 
 fi
 
 if ( [ -f ${HOME}/AWS ] || [ "${cloudhost}" = "aws" ] )
