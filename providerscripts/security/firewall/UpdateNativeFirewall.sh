@@ -288,6 +288,7 @@ then
         webserver_ids="`${HOME}/providerscripts/server/ListServerIDs.sh webserver ${CLOUDHOST}`"
         database_ids="`${HOME}/providerscripts/server/ListServerIDs.sh database ${CLOUDHOST}`"
         machine_ids="${autoscaler_ids} ${webserver_ids} ${database_ids}"
+        machine_ids="`/bin/echo ${machine_ids} | /usr/bin/tr '\n' ' '`"
 
         for machine_id in ${machine_ids}
         do
