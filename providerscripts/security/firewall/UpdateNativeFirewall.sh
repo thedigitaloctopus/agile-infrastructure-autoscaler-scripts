@@ -235,19 +235,18 @@ then
     
     if ( [ "${firewall_id}" = "" ] )
     then
-        firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
-        /usr/bin/vultr firewall group update ${firewall_id} "adt"
-    fi
-    
-    autoscaler_ids="`/usr/bin/vultr instance list | /bin/grep autoscaler | /usr/bin/awk '{print $1}' | /usr/bin/tr '\n' ' '`"
-    webserver_ids="`/usr/bin/vultr instance list | /bin/grep webserver | /usr/bin/awk '{print $1}' | /usr/bin/tr '\n' ' '`"
-    database_ids="`/usr/bin/vultr instance list | /bin/grep database | /usr/bin/awk '{print $1}' | /usr/bin/tr '\n' ' '`"
-    machine_ids="${autoscaler_ids} ${webserver_ids} ${database_ids}"
+       /bin/echo "NO ADT FIREWALL FOUND"
+    else
+        autoscaler_ids="`/usr/bin/vultr instance list | /bin/grep autoscaler | /usr/bin/awk '{print $1}' | /usr/bin/tr '\n' ' '`"
+        webserver_ids="`/usr/bin/vultr instance list | /bin/grep webserver | /usr/bin/awk '{print $1}' | /usr/bin/tr '\n' ' '`"
+        database_ids="`/usr/bin/vultr instance list | /bin/grep database | /usr/bin/awk '{print $1}' | /usr/bin/tr '\n' ' '`"
+        machine_ids="${autoscaler_ids} ${webserver_ids} ${database_ids}"
 
-    for machine_id in ${machine_ids}
-    do
-        /usr/bin/vultr instance update-firewall-group -f ${firewall_id} -i ${machine_id} 2>/dev/null
-    done
+        for machine_id in ${machine_ids}
+        do
+            /usr/bin/vultr instance update-firewall-group -f ${firewall_id} -i ${machine_id} 2>/dev/null
+        done
+    fi
 
 
 
