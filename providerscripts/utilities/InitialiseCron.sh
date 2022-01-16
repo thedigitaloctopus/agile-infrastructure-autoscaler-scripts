@@ -57,7 +57,7 @@
 
 #These scripts will run at a reboot event
 /bin/echo "@reboot export HOME="${HOMEDIR}" && ${HOME}/providerscripts/cloudhost/ConfigureProvider.sh" >> /var/spool/cron/crontabs/root
-/bin/echo "@reboot export HOME="${HOMEDIR}" && ${HOME}/cron/SetupFirewallFromCron.sh reboot" >> /var/spool/cron/crontabs/root
+#/bin/echo "@reboot export HOME="${HOMEDIR}" && ${HOME}/cron/SetupFirewallFromCron.sh reboot" >> /var/spool/cron/crontabs/root
 
 SERVER_TIMEZONE_CONTINENT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERTIMEZONECONTINENT'`"
 SERVER_TIMEZONE_CITY="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERTIMEZONECITY'`"
