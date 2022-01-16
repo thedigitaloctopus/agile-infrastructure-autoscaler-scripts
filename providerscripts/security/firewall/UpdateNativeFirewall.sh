@@ -245,6 +245,10 @@ then
 
         /usr/bin/vultr firewall group update ${firewall_id} "adt"
         
+        for ip in "`/bin/cat ${HOME}/runtime/authorised-ips.dat | /usr/bin/tr '\n' ' '`"
+        do
+            /usr/bin/vultr firewall rule create --id ${firewall_id} --port ${SSH_PORT} --protocol tcp --size 32 --type v4 -s ${ip}
+        done
         . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
 
         if ( [ "${alldnsproxyips}" != "" ] )
