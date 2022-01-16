@@ -69,7 +69,7 @@ then
     ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
 fi
 
-if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] && [ -f ${HOME}/runtime/FIREWALL-REFRESH ] )
+if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] && ( [ -f ${HOME}/runtime/FIREWALL-REFRESH ] || [ "`/usr/bin/find ${HOME}/runtime/FIREWALL-REFRESH -type f -mmin +15`" != "" ] ) )
 then
     /bin/rm ${HOME}/runtime/FIREWALL-REFRESH
     ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
