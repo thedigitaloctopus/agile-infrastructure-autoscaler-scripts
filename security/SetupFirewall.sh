@@ -81,10 +81,10 @@ fi
 #    ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
 #fi
 
-if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] && [ "${1}" = "reboot" ] )
-then
-    ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
-fi
+#if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] && [ "${1}" = "reboot" ] )
+#then
+#    ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
+#fi
 
 SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
 
