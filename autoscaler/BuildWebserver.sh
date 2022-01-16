@@ -225,11 +225,6 @@ then
     exit
 fi
 
-/bin/echo " ${ip} ${private_ip} " >> ${HOME}/runtime/ipsforfirewall
-
-${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${private_ip}
-
-. ${HOME}/providerscripts/security/firewall/TightenDBaaSFirewall.sh
 
 if ( [ ! -d ${HOME}/runtime/protectedfromtermination ] )
 then
@@ -265,6 +260,10 @@ fi
 /usr/bin/touch ${HOME}/config/beingbuiltpublicips/${ip}
 /usr/bin/touch ${HOME}/config/webserverips/${private_ip}
 /usr/bin/touch ${HOME}/config/webserverpublicips/${ip}
+
+/bin/echo " ${ip} ${private_ip} " >> ${HOME}/runtime/ipsforfirewall
+${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${private_ip}
+. ${HOME}/providerscripts/security/firewall/TightenDBaaSFirewall.sh
 
 /usr/sbin/ufw allow from ${private_ip}
 /usr/sbin/ufw allow from ${ip}
