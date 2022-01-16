@@ -20,6 +20,11 @@
 #######################################################################################################
 #set -x #THIS MUST NOT BE SWITCHED ON DURING NORMAL USE, SCRIPT BREAK
 
+if ( [ ! -d ${HOME}/logs/firewall ] )
+then
+    /bin/mkdir -p ${HOME}/logs/firewall
+fi
+
 #This stream manipulation is required for correct function, please do not remove or comment out
 exec >${HOME}/logs/firewall/FIREWALL_CONFIGURATION.log
 exec 2>&1
