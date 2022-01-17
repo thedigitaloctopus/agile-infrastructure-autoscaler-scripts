@@ -49,6 +49,22 @@ iswebserverup ()
     else
         file=""
     fi
+    
+    connectable="0"
+    pingcount="0"
+    
+    while ( [ "${connectable}" = "0" ] && [ "${pingcount}" -lt "20" ] )
+    do
+        /usr/bin/ping -c 10
+    
+        if ( [ "$?" = "0" ] )
+        then
+            connectable="1"
+        fi
+        
+        pingcount="`/usr/bin/expr ${pingcount} + 1`"
+   
+   fi
 
     while ( [ "${count}" != "4" ] && [ "${status}" = "down" ] )
     do
