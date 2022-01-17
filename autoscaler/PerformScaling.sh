@@ -153,12 +153,16 @@ then
         if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
         then
             /bin/echo "${0} `/bin/date`: I have calculated that a webserver needs booting so am booting a new one from a snapshot" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+            /bin/touch ${HOME}/runtime/BUILDING_WEBSERVER
             newip="`${HOME}/autoscaler/BuildWebserver.sh`"
+            /bin/rm ${HOME}/runtime/BUILDING_WEBSERVER
            # /bin/echo "${0} `/bin/date`:  Rebooting autoscaler before next scaling event so that memory doesn't run out which sometimes happens on small machines" >> ${HOME}/logs/ScalingEventsLog.log
            # /usr/sbin/shutdown -r now
         else
             /bin/echo "${0} `/bin/date`:  I have calculated that a webserver needs booting so am booting a new one as a regular build (not a snapshot)" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+            /bin/touch ${HOME}/runtime/BUILDING_WEBSERVER
             newip="`${HOME}/autoscaler/BuildWebserver.sh`"
+            /bin/rm ${HOME}/runtime/BUILDING_WEBSERVER
         fi
         if ( [ "${newip}" != "" ] )
         then
