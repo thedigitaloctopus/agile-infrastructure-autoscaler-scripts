@@ -44,7 +44,7 @@ fi
 #If there's an build processes hanging around from previous attempts, purge them so we are nice and clean
 if ( [ -f ${HOME}/runtime/BUILDING_WEBSERVER ] )
 then
-    if ( [ "`/usr/bin/find ${HOME}/runtime/BUILDING_WEBSERVER -type f -mmin +30`" != "" ] )
+    if ( [ "`/usr/bin/find ${HOME}/runtime/BUILDING_WEBSERVER -type f -mmin +26`" != "" ] )
     then
         for pid in "`/bin/pgrep BuildWebserver`"
         do
