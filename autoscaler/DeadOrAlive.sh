@@ -53,7 +53,7 @@ iswebserverup ()
     connectable="0"
     pingcount="0"
     
-    while ( [ "${connectable}" = "0" ] && [ "${pingcount}" -lt "20" ] )
+    while ( [ "${connectable}" = "0" ] && [ "${pingcount}" -lt "30" ] )
     do
         /usr/bin/ping -c 10
     
@@ -65,17 +65,20 @@ iswebserverup ()
         pingcount="`/usr/bin/expr ${pingcount} + 1`"
    
    fi
-
-    while ( [ "${count}" != "4" ] && [ "${status}" = "down" ] )
-    do
-        if ( [ "`/usr/bin/curl -m 3 --insecure -I "https://${1}:443/${file}" 2>&1 | /bin/grep \"HTTP\" | /bin/grep -w \"200\|301\"`" ] ) 
-        then
-            status="up"
-        else
-            count="`/usr/bin/expr ${count} + 1`"
-            /bin/sleep 5
-        fi
-   done
+   
+   if ( [ "${connectable}" = "1" ] )
+   then
+        while ( [ "${count}" != "4" ] && [ "${status}" = "down" ] )
+        do
+            if ( [ "`/usr/bin/curl -m 3 --insecure -I "https://${1}:443/${file}" 2>&1 | /bin/grep \"HTTP\" | /bin/grep -w \"200\|301\"`" ] ) 
+            then
+                status="up"
+            else
+                count="`/usr/bin/expr ${count} + 1`"
+                /bin/sleep 5
+            fi
+       done
+   fi
 
     if ( [ "${status}" = "up" ] )
     then
