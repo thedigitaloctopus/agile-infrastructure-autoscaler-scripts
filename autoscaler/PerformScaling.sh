@@ -42,11 +42,18 @@ then
 fi
 
 #If there's an build processes hanging around from previous attempts, purge them so we are nice and clean
-for pid in "`/bin/pgrep BuildWebserver`"
-do
-    if ( [ "${pid}" != "" ] )
+if ( [ -f ${HOME}/runtime/BUILDING_WEBSERVER ] )
+then
+    if ( [ "`/usr/bin/find ${HOME}/runtime/BUILDING_WEBSERVER -type f -mmin +30`" != "" ] )
     then
-       /bin/kill ${pid}
+        for pid in "`/bin/pgrep BuildWebserver`"
+        do
+            if ( [ "${pid}" != "" ] )
+            then
+                /bin/kill -9 ${pid}
+            fi
+            /bin/rm ${HOME}/runtime/BUILDING_WEBSERVER
+        done
     fi
 done
 
