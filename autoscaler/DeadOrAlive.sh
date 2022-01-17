@@ -55,7 +55,7 @@ iswebserverup ()
     
     while ( [ "${connectable}" = "0" ] && [ "${pingcount}" -lt "30" ] )
     do
-        /usr/bin/ping -c 10 ${1}
+        /usr/bin/ping -c 10 ${1} 2>&1 >/dev/null
     
         if ( [ "$?" = "0" ] )
         then
