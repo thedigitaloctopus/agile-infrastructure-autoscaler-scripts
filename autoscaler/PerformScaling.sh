@@ -54,8 +54,10 @@ then
             fi
             /bin/rm ${HOME}/runtime/BUILDING_WEBSERVER
         done
+    else
+       exit
     fi
-done
+fi
 
 #################################################ESSENTIAL#########################################################
 #To configure how many websevers are deployed, you can edit the file at:  ${HOME}/config/scalingprofile/profile.cnf 
