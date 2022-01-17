@@ -52,8 +52,8 @@ then
             then
                 /bin/kill -9 ${pid}
             fi
-            /bin/rm ${HOME}/runtime/BUILDING_WEBSERVER
         done
+        /bin/rm ${HOME}/runtime/BUILDING_WEBSERVER
     else
        exit
     fi
