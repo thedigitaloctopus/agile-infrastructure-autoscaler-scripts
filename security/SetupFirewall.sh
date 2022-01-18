@@ -66,12 +66,13 @@ allips="${allips} ${BUILD_CLIENT_IP}"
 if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] && [ ! -f ${HOME}/runtime/FIREWALL-INITIAL ] )
 then
     /bin/touch ${HOME}/runtime/FIREWALL-INITIAL
+    /bin/touch ${HOME}/runtime/FIREWALL-REFRESH
     ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
 fi
 
 if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] && ( [ -f ${HOME}/runtime/FIREWALL-REFRESH ] || [ "`/usr/bin/find ${HOME}/runtime/FIREWALL-REFRESH -type f -mmin +15`" != "" ] ) )
 then
-    /bin/rm ${HOME}/runtime/FIREWALL-REFRESH
+    /bin/touch ${HOME}/runtime/FIREWALL-REFRESH
     ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
 fi
 
