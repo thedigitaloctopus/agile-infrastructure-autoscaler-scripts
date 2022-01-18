@@ -73,7 +73,10 @@ fi
 if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] && ( [ -f ${HOME}/runtime/FIREWALL-REFRESH ] || [ "`/usr/bin/find ${HOME}/runtime/FIREWALL-REFRESH -type f -mmin +15`" != "" ] ) )
 then
     /bin/touch ${HOME}/runtime/FIREWALL-REFRESH
-    ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
+    if ( [ ! -f ${HOME}/runtime/BUILDING_WEBSERVER ] )
+    then
+        ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
+    fi
 fi
 
 #if ( [ "`/usr/bin/find ${HOME}/runtime/FIREWALL-REFRESH -type f -mmin +5`" != "" ] )
