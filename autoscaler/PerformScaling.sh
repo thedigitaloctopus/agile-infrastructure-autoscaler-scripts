@@ -23,7 +23,7 @@
 #######################################################################################################
 #set -x
 
-if ( [ "`${HOME}/providerscripts/utilities/TimeSinceInstallation.sh`" -lt "20" ] )
+if ( [ "`${HOME}/providerscripts/utilities/TimeSinceInstallation.sh`" -lt "20" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh AUTOSCALE`" != "1" ] )
 then
     exit
 fi
