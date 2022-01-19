@@ -46,7 +46,7 @@ if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] )
 then
     if ( [ ! -f ${HOME}/config/${SERVER_USER} ] )
     then
-        /bin/rm -r ${HOME}/config/* ${HOME}/config_cache/*
+        /bin/rm -r ${HOME}/config/*
         /bin/sleep 5
         /bin/touch ${HOME}/config/${SERVER_USER}
     fi
@@ -56,11 +56,6 @@ if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] &&  [ "`/bin/ls ${HOME}
 then
    ${HOME}/providerscripts/utilities/SetupConfigDirectories.sh
     exit
-fi
-
-if ( [ ! -d ${HOME}/config_cache ] )
-then
-    /bin/mkdir ${HOME}/config_cache
 fi
 
 if ( [ "${DATASTORE_PROVIDER}" = "amazonS3" ] )
@@ -86,9 +81,9 @@ then
                  fi
             done
         else
-            /bin/rm -r ${HOME}/config/* ${HOME}/config_cache/* ${HOME}/config_cache/.* 2>/dev/null
+            /bin/rm -r ${HOME}/config/* 2>/dev/null
             /usr/bin/s3cmd mb s3://${configbucket}
-            /usr/bin/s3fs -o nonempty,allow_other,kernel_cache,use_path_request_style,sigv2 -o use_cache=${HOME}/config_cache -ourl=https://${endpoint} ${configbucket} ${HOME}/config
+            /usr/bin/s3fs -o nonempty,allow_other,use_path_request_style,sigv2 -ourl=https://${endpoint} ${configbucket} ${HOME}/config
         fi
     fi
 fi
@@ -97,36 +92,36 @@ if ( [ "${DATASTORE_PROVIDER}" = "digitalocean" ] )
 then
     export AWSACCESSKEYID=`/bin/grep 'access_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
     export AWSSECRETACCESSKEY=`/bin/grep 'secret_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
-    /bin/rm -r ${HOME}/config/* ${HOME}/config_cache/* ${HOME}/config_cache/.* 2>/dev/null
+    /bin/rm -r ${HOME}/config/*  2>/dev/null
     /usr/bin/s3cmd mb s3://${configbucket}
-    /usr/bin/s3fs -o nonempty,allow_other,kernel_cache,use_path_request_style,sigv2 -o use_cache=${HOME}/config_cache -ourl=https://${endpoint} ${configbucket} ${HOME}/config
+    /usr/bin/s3fs -o nonempty,allow_other,use_path_request_style,sigv2 -ourl=https://${endpoint} ${configbucket} ${HOME}/config
 fi
 
 if ( [ "${DATASTORE_PROVIDER}" = "exoscale" ] )
 then
     export AWSACCESSKEYID=`/bin/grep 'access_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
     export AWSSECRETACCESSKEY=`/bin/grep 'secret_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
-    /bin/rm -r ${HOME}/config/* ${HOME}/config_cache/* ${HOME}/config_cache/.* 2>/dev/null
+    /bin/rm -r ${HOME}/config/* 2>/dev/null
     /usr/bin/s3cmd mb s3://${configbucket}
-    /usr/bin/s3fs -o nonempty,allow_other,kernel_cache,use_path_request_style -o use_cache=${HOME}/config_cache -ourl=https://${endpoint} ${configbucket} ${HOME}/config
+    /usr/bin/s3fs -o nonempty,allow_other,use_path_request_style -ourl=https://${endpoint} ${configbucket} ${HOME}/config
 fi
 
 if ( [ "${DATASTORE_PROVIDER}" = "linode" ] )
 then
     export AWSACCESSKEYID=`/bin/grep 'access_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
     export AWSSECRETACCESSKEY=`/bin/grep 'secret_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
-    /bin/rm -r ${HOME}/config/* ${HOME}/config_cache/* ${HOME}/config_cache/.* 2>/dev/null
+    /bin/rm -r ${HOME}/config/* 2>/dev/null
     /usr/bin/s3cmd mb s3://${configbucket}
-    /usr/bin/s3fs -o nonempty,allow_other,kernel_cache,use_path_request_style -o use_cache=${HOME}/config_cache -ourl=https://${endpoint} ${configbucket} ${HOME}/config
+    /usr/bin/s3fs -o nonempty,allow_other,use_path_request_style -ourl=https://${endpoint} ${configbucket} ${HOME}/config
 fi
 
 if ( [ "${DATASTORE_PROVIDER}" = "vultr" ] )
 then
     export AWSACCESSKEYID=`/bin/grep 'access_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
     export AWSSECRETACCESSKEY=`/bin/grep 'secret_key' ~/.s3cfg | /usr/bin/awk '{print $NF}'`
-    /bin/rm -r ${HOME}/config/* ${HOME}/config_cache/* ${HOME}/config_cache/.* 2>/dev/null
+    /bin/rm -r ${HOME}/config/* 2>/dev/null
     /usr/bin/s3cmd mb s3://${configbucket}
-    /usr/bin/s3fs -o nonempty,allow_other,kernel_cache,use_path_request_style,sigv2 -o use_cache=${HOME}/config_cache -ourl=https://${endpoint} ${configbucket} ${HOME}/config
+    /usr/bin/s3fs -o nonempty,allow_other,use_path_request_style,sigv2 -ourl=https://${endpoint} ${configbucket} ${HOME}/config
 fi
 
 SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
