@@ -225,9 +225,6 @@ then
     exit
 fi
 
-#There is an intermittent issue with vultr and so I have put a fix here. If it gets resolved I will remove this fix
-. ${HOME}/providerscripts/server/VultrIssueFix.sh
-
 if ( [ ! -d ${HOME}/runtime/protectedfromtermination ] )
 then
     /bin/mkdir -p ${HOME}/runtime/protectedfromtermination
@@ -645,8 +642,14 @@ else
     then
         /bin/rm ${HOME}/config/beingbuiltpublicips/${ip}
     fi
-    ${HOME}/autoscaler/AddIPToDNS.sh ${ip}
-    /bin/echo "${ip}"
+    #There is an intermittent issue with vultr and so I have put a fix here. If it gets resolved I will remove this fix
+    ok="1"
+    . ${HOME}/providerscripts/server/VultrIssueFix.sh
+    if ( [ "${ok}" = "1" ] )
+    then
+        ${HOME}/autoscaler/AddIPToDNS.sh ${ip}
+        /bin/echo "${ip}"
+    fi
 fi
 
 /bin/echo "${0} `/bin/date`: Either way, successful or not the build process for machine with ip: ${ip} has completed" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
