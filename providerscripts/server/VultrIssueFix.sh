@@ -8,5 +8,6 @@ then
         /bin/sleep 300
         /bin/echo "${0} `/bin/date` : ${ip} is being destroyed because it couldn't be connected to after spawning it from a snapshot" >> ${HOME}/logs/${logdir}/MonitoringLog.log
         ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
+        ok="0"
     fi
 fi
