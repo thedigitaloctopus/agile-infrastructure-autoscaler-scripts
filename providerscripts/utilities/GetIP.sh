@@ -45,7 +45,7 @@ then
     
     if ( [ ! -L /dev/disk/byuuid/${uuid} ] )
     then
-       /usr/bin/ln -s /dev/disk/byuuid/${uuid} /dev/vda1
+       /usr/bin/ln -s /dev/vda1 /dev/disk/byuuid/${uuid} 
     fi
     
     if ( [ "${BUILDOS}" = "debian" ] )
