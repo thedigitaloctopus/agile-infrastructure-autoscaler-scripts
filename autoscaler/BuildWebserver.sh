@@ -225,6 +225,8 @@ then
     exit
 fi
 
+#There is an intermittent issue with vultr and so I have put a fix here. If it gets resolved I will remove this fix
+. ${HOME}/providerscripts/server/VultrIssueFix.sh
 
 if ( [ ! -d ${HOME}/runtime/protectedfromtermination ] )
 then
