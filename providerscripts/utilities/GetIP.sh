@@ -45,6 +45,10 @@ then
     
     if ( [ ! -L /dev/disk/byuuid/${uuid} ] )
     then
+       if ( [ ! -d /dev/disk/byuuid/ ] )
+       then
+           /bin/mkdir -p /dev/disk/byuuid/
+       fi
        /usr/bin/ln -s /dev/vda1 /dev/disk/byuuid/${uuid} 
     fi
     
