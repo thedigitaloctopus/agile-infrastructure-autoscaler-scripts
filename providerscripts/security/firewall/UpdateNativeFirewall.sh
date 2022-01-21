@@ -240,6 +240,13 @@ then
    
    export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
    firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt$' | /usr/bin/awk '{print $1}'`"
+   
+   rule_nos="`/usr/bin/vultr firewall rule list ${firewall_id} | /usr/bin/awk '{print $1,$4}' | /bin/grep 22$ | /usr/bin/awk '{print $1}' | /usr/bin/tr '\n' ' '`"
+       
+   for rule_no in ${rule_nos}
+   do
+       /usr/bin/vultr firewall rule delete ${firewall_id} ${rule_no}
+   done
            
   # while ( [ "${firewall_id}" != "" ] )
   # do
@@ -284,10 +291,13 @@ then
            /usr/bin/vultr firewall rule create --id ${firewall_id} --port ${SSH_PORT} --protocol tcp --size 32 --type v4 -s ${machine_ip}
            /usr/bin/vultr firewall rule create --id ${firewall_id} --port ${DB_PORT} --protocol tcp --size 32 --type v4 -s ${machine_ip}
        fi
-           
+          
        if ( [ "`/bin/echo ${autoscaler_ips} | /bin/grep ${machine_ip}`" != "" ] )
        then
-           /usr/bin/vultr firewall rule create --id ${firewall_id} --port 22 --protocol tcp --size 32 --type v4 -s ${machine_ip}
+           if ( [ "`/bin/ls ${HOME}/config/beingbuiltpublicips | /bin/grep ${machine_ip}`" != "" ] )
+           then
+               /usr/bin/vultr firewall rule create --id ${firewall_id} --port 22 --protocol tcp --size 32 --type v4 -s ${machine_ip}
+           fi
        fi   
    done
        
@@ -308,7 +318,10 @@ then
            
        if ( [ "`/bin/echo ${autoscaler_private_ips} | /bin/grep ${machine_private_ip}`" != "" ] )
        then
-           /usr/bin/vultr firewall rule create --id ${firewall_id} --port 22 --protocol tcp --size 32 --type v4 -s ${machine_private_ip}
+           if ( [ "`/bin/ls ${HOME}/config/beingbuiltips | /bin/grep ${machine_private_ip}`" != "" ] )
+           then
+               /usr/bin/vultr firewall rule create --id ${firewall_id} --port 22 --protocol tcp --size 32 --type v4 -s ${machine_private_ip}
+           fi
        fi    
    done
        
