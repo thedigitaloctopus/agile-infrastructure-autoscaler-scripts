@@ -234,10 +234,22 @@ then
     export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
     firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt$' | /usr/bin/awk '{print $1}'`"
        
+       while ( [ -f ${HOME}/config/FIREWALL-UPDATING ] )
+       do
+           /bin/sleep 10
+       done
+       
+       /bin/touch ${HOME}/config/FIREWALL-UPDATING
+       
        while ( [ "${firewall_id}" != "" ] )
        do
-           /usr/bin/vultr firewall group delete ${firewall_id}
-           firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt$' | /usr/bin/awk '{print $1}'`"
+           rule_nos="`/usr/bin/vultr firewall rule list ${firewall_id} | /bin/sed '1d' | sed -n '/======/q;p' | /usr/bin/awk '{print $1}' | /usr/bin/tr '\n' ' '`"
+           for rule_no in ${rule_nos}
+           do
+               /usr/bin/vultr firewall rule list ${firewall_id} ${rule_no}
+           done
+           #/usr/bin/vultr firewall group delete ${firewall_id}
+           #firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt$' | /usr/bin/awk '{print $1}'`"
            /bin/sleep 5
        done
    
@@ -310,7 +322,8 @@ then
         do
             /usr/bin/vultr instance update-firewall-group -f ${firewall_id} -i ${machine_id}
         done
-  
+        
+        /bin/rm ${HOME}/config/FIREWALL-UPDATING
 fi
 
 
