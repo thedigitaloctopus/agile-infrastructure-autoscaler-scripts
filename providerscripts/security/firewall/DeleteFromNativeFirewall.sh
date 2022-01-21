@@ -58,7 +58,7 @@ then
            
    if ( [ "${firewall_id}" != "" ] )
    then
-       rule_nos="`/usr/bin/vultr firewall rule list ${firewall_id} | /bin/grep ${1} | /bin/sed '1d' | sed -n '/======/q;p' | /usr/bin/awk '{print $1}' | /usr/bin/tr '\n' ' '`"
+       rule_nos="`/usr/bin/vultr firewall rule list ${firewall_id} | /bin/grep ${1} | /usr/bin/awk '{print $1}' | /usr/bin/tr '\n' ' '`"
        for rule_no in ${rule_nos}
        do
            /usr/bin/vultr firewall rule delete ${firewall_id} ${rule_no}
