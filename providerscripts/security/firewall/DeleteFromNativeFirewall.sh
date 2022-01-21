@@ -46,12 +46,12 @@ fi
 
 if ( [ -f ${HOME}/VULTR ] )
 then
-   while ( [ -f ${HOME}/config/FIREWALL-UPDATING ] )
-   do
-       /bin/sleep 10
-   done
+ #  while ( [ -f ${HOME}/config/FIREWALL-UPDATING ] )
+ #  do
+ #      /bin/sleep 10
+ #  done
        
-   /bin/touch ${HOME}/config/FIREWALL-UPDATING
+  # /bin/touch ${HOME}/config/FIREWALL-UPDATING
    
    export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
    firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt$' | /usr/bin/awk '{print $1}'`"
@@ -65,7 +65,7 @@ then
        done
    done
    
-   /bin/rm ${HOME}/config/FIREWALL-UPDATING
+  # /bin/rm ${HOME}/config/FIREWALL-UPDATING
 fi
 
 if ( [ -f ${HOME}/AWS ] )
