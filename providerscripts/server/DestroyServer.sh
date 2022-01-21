@@ -153,7 +153,7 @@ then
         /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
         /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
         ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${server_ip}
-        ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${private_server_ip}
+       # ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${private_server_ip}
        # ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${SSH_PORT} ${private_server_ip}
        # ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${DB_PORT} ${private_server_ip}
        # ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh 22 ${server_ip}
