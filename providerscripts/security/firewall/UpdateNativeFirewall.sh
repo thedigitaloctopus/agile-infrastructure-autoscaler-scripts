@@ -241,22 +241,24 @@ then
    export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
    firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt$' | /usr/bin/awk '{print $1}'`"
            
-   while ( [ "${firewall_id}" != "" ] )
-   do
-       rule_nos="`/usr/bin/vultr firewall rule list ${firewall_id} | /bin/sed '1d' | sed -n '/======/q;p' | /usr/bin/awk '{print $1}' | /usr/bin/tr '\n' ' '`"
-       for rule_no in ${rule_nos}
-       do
-           /usr/bin/vultr firewall rule delete ${firewall_id} ${rule_no}
-       done
-       #/usr/bin/vultr firewall group delete ${firewall_id}
-       #firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt$' | /usr/bin/awk '{print $1}'`"
-       /bin/sleep 5
-   done
+  # while ( [ "${firewall_id}" != "" ] )
+  # do
+  #     rule_nos="`/usr/bin/vultr firewall rule list ${firewall_id} | /bin/sed '1d' | sed -n '/======/q;p' | /usr/bin/awk '{print $1}' | /usr/bin/tr '\n' ' '`"
+  #     for rule_no in ${rule_nos}
+  #     do
+  #         /usr/bin/vultr firewall rule delete ${firewall_id} ${rule_no}
+  #     done
+  #     #/usr/bin/vultr firewall group delete ${firewall_id}
+  #     #firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt$' | /usr/bin/awk '{print $1}'`"
+  #     /bin/sleep 5
+  # done
    
-   firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
-
-   /usr/bin/vultr firewall group update ${firewall_id} "adt"
-        
+   if ( [ "${firewall_id}" = "" ] )
+   then
+       firewall_id="`/usr/bin/vultr firewall group create | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"  
+       /usr/bin/vultr firewall group update ${firewall_id} "adt"
+   fi
+   
    . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
 
    if ( [ "${alldnsproxyips}" != "" ] )
