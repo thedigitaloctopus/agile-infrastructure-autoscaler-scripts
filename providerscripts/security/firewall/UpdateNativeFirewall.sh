@@ -144,48 +144,26 @@ fi
 
 if ( [ -f ${HOME}/EXOSCALE ] )
 then
-   # allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
+   allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
 
-   # if ( [ "${2}" = "" ] )
-   # then
-   #     /usr/bin/exo compute security-group rule add adt --network ${1}/32 --port 1-65535
-   # else
-   #    /usr/bin/exo compute security-group rule add adt --network ${1}/32 --port ${2}
-   #fi
-    
-  # for ip in ${allips}
-  # do
-    /usr/bin/exo compute security-group rule add adt --network ${1}/32 --port ${SSH_PORT}
-    /usr/bin/exo compute security-group rule add adt --network ${1}/32 --port ${DB_PORT}
-    /usr/bin/exo compute security-group rule add adt --network ${1}/32 --port 22
-    /usr/bin/exo compute security-group rule add adt --network ${2}/32 --port ${SSH_PORT}
-    /usr/bin/exo compute security-group rule add adt --network ${2}/32 --port ${DB_PORT}
-    /usr/bin/exo compute security-group rule add adt --network ${2}/32 --port 22
+   for ip in ${allips}
+   do
+       /usr/bin/exo compute security-group rule add adt --network ${ip}/32 --port ${SSH_PORT} 2>/dev/null
+       /usr/bin/exo compute security-group rule add adt --network ${ip}/32 --port ${DB_PORT} 2>/dev/null
+       /usr/bin/exo compute security-group rule add adt --network ${ip}/32 --port 22 2>/dev/null
+   done
 
-  # done
-   id=""
-   id="`/usr/bin/exo -O json compute security-group show adt | jq --argjson tmp_port "443" '(.ingress_rules[] | select (.start_port == $tmp_port) | select (.network == "0.0.0.0/0") | .id)' | /bin/sed 's/"//g'`"
-   if ( [ "${id}" = "" ] )
-   then
+   . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
+                                
+    if ( [ "${alldnsproxyips}" != "" ] )
+    then
+       for ip in ${alldnsproxyips}
+       do
+           /usr/bin/exo compute security-group rule add adt --network ${ip} --port 443
+       done
+    else
        /usr/bin/exo compute security-group rule add adt --network 0.0.0.0/0 --port 443
-   fi
-   
-   id=""
-   id="`/usr/bin/exo -O json compute security-group show adt | jq --argjson tmp_port "80" '(.ingress_rules[] | select (.start_port == $tmp_port) | select (.network == "0.0.0.0/0") | .id)' | /bin/sed 's/"//g'`"
-   if ( [ "${id}" = "" ] )
-   then
-       /usr/bin/exo compute security-group rule add adt --network 0.0.0.0/0 --port 80
-   fi
-
-
-    #Delete the general access rule, if it exists, that we setup during the build process
-
-   # if ( [ "${2}" != "" ] && [ "${2}" != "443" ] && [ "${2}" != "80" ] )
-   # then
-   #     port="${2}"
-   #     id="`/usr/bin/exo -O json compute security-group show adt | jq --argjson tmp_port "$port" '(.ingress_rules[] | select (.start_port == $tmp_port) | select (.network == "0.0.0.0/0") | .id)' | /bin/sed 's/"//g'`"
-   #     /usr/bin/exo  compute security-group rule delete -f adt ${id}
-   # fi
+    fi
 fi
 
 if ( [ -f ${HOME}/LINODE ] )
