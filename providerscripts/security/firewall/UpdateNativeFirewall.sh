@@ -198,11 +198,16 @@ then
     allrules="${rules}${build_machine_rules}${standard_rules}"
     /usr/local/bin/linode-cli firewalls rules-update --inbound  "${allrules}" ${firewall_id}
     
+    autoscaler_ids="`${HOME}/providerscripts/server/ListServerIDs.sh autoscaler ${CLOUDHOST}`"
+    webserver_ids="`${HOME}/providerscripts/server/ListServerIDs.sh webserver ${CLOUDHOST}`"
+    database_ids="`${HOME}/providerscripts/server/ListServerIDs.sh database ${CLOUDHOST}`"
+    machine_ids="${autoscaler_ids} ${webserver_ids} ${database_ids}"
+    machine_ids="`/bin/echo ${machine_ids} | /usr/bin/tr '\n' ' '`"
         
-    if ( [ "${linode_id}" != "" ] )
-    then
-         /usr/local/bin/linode-cli firewalls device-create --id ${linode_id} --type linode ${firewall_id} 2>/dev/null #Redirect to null in case already added
-    fi
+    for machine_id in ${machine_ids}
+    do
+         /usr/local/bin/linode-cli firewalls device-create --id ${machine_id} --type linode ${firewall_id} 2>/dev/null #Redirect to null in case already added
+    done
 
 fi
 
