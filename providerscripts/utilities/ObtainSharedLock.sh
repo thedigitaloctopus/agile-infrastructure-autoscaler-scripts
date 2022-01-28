@@ -1,7 +1,7 @@
 #!/bin/sh
 ##########################################################################################################
 # Author: Peter Winter
-# Date  : 04/07/2016
+# Date  : 04/02/2022
 # Description : When I was using S3FS, I wanted to use it as a lock mechanism at times, in other words,
 # write a file to S3FS on one machine and test for its existence on another. What I found though was that
 # when I removed the lock file on one machine it would still be listed from other machines in other words
