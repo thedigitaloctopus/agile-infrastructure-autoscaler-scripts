@@ -44,9 +44,9 @@ if ( [ -f ${HOME}/DROPLET ] )
 then
     #allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
     
-    if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
+    #if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
+    if ( [ "`${HOME}/providerscripts/utilities/ObtainSharedLock.sh FIREWALL-UPDATING`" = "1" ] )
     then
-        /bin/touch ${HOME}/config/FIREWALL-UPDATING
        
         autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
         webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
@@ -154,9 +154,10 @@ if ( [ -f ${HOME}/EXOSCALE ] )
 then
   # allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
    
-    if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
+    #if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
+    if ( [ "`${HOME}/providerscripts/utilities/ObtainSharedLock.sh FIREWALL-UPDATING`" = "1" ] )
     then
-        /bin/touch ${HOME}/config/FIREWALL-UPDATING
+       # /bin/touch ${HOME}/config/FIREWALL-UPDATING
        
         autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
         webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
@@ -195,9 +196,10 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] )
 then
-    if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
+   # if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
+    if ( [ "`${HOME}/providerscripts/utilities/ObtainSharedLock.sh FIREWALL-UPDATING`" = "1" ] )
     then
-        /bin/touch ${HOME}/config/FIREWALL-UPDATING
+    #    /bin/touch ${HOME}/config/FIREWALL-UPDATING
 
         #allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
     
@@ -259,9 +261,10 @@ fi
 
 if ( [ -f ${HOME}/VULTR ] )
 then
-    if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
+    #if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
+    if ( [ "`${HOME}/providerscripts/utilities/ObtainSharedLock.sh FIREWALL-UPDATING`" = "1" ] )
     then
-        /bin/touch ${HOME}/config/FIREWALL-UPDATING
+     #   /bin/touch ${HOME}/config/FIREWALL-UPDATING
    
         export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
         firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt$' | /usr/bin/awk '{print $1}'`"
