@@ -42,128 +42,155 @@ fi
 
 if ( [ -f ${HOME}/DROPLET ] )
 then
-    allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
-
-  #  if ( [ "${1}" != "" ] )
-  #  then
-  #      droplet_id="`/usr/local/bin/doctl compute droplet list | /bin/grep "${1}" | /usr/bin/awk '{print $1}' | /bin/sed 's/ //g'`"    
-  #  else
-  #      droplet_id="`/usr/local/bin/doctl compute droplet list | /usr/bin/awk '{print $1}' | /usr/bin/tail -n +2`"    
-  #      droplet_id="`/bin/echo ${droplet_id} | /bin/sed 's/ /,/g'`"
-  #  fi
+    #allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
+    
+    if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
+    then
+        /bin/touch ${HOME}/config/FIREWALL-UPDATING
+       
+        autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
+        webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
+        database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
+        machine_ips="${autoscaler_ips} ${webserver_ips} ${database_ips}"
+    
+        autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh autoscaler ${CLOUDHOST}`"
+        webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh webserver ${CLOUDHOST}`"
+        database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh database ${CLOUDHOST}`"
+        machine_private_ips="${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
+    
+        allips="${machine_ips} ${machine_private_ips} ${BUILD_CLIENT_IP}"
   
-    droplet_ids="`/usr/local/bin/doctl compute droplet list | /bin/grep 'autoscaler' | /usr/bin/awk '{print $1}' | /bin/sed 's/ //g'`"    
-    droplet_ids="${droplet_ids} `/usr/local/bin/doctl compute droplet list | /bin/grep 'webserver' | /usr/bin/awk '{print $1}' | /bin/sed 's/ //g'`"    
-    droplet_ids="${droplet_ids} `/usr/local/bin/doctl compute droplet list | /bin/grep 'database' | /usr/bin/awk '{print $1}' | /bin/sed 's/ //g'`" 
-    
-    droplet_ids="`/bin/echo ${droplet_ids} | /bin/sed 's/ $//g' | /bin/sed 's/ /,/g'`"
+        droplet_ids="`/usr/local/bin/doctl compute droplet list | /bin/grep 'autoscaler' | /usr/bin/awk '{print $1}' | /bin/sed 's/ //g'`"    
+        droplet_ids="${droplet_ids} `/usr/local/bin/doctl compute droplet list | /bin/grep 'webserver' | /usr/bin/awk '{print $1}' | /bin/sed 's/ //g'`"    
+        droplet_ids="${droplet_ids} `/usr/local/bin/doctl compute droplet list | /bin/grep 'database' | /usr/bin/awk '{print $1}' | /bin/sed 's/ //g'`" 
+        droplet_ids="`/bin/echo ${droplet_ids} | /bin/sed 's/ $//g' | /bin/sed 's/ /,/g'`"
 
-    firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt" ).id' | /bin/sed 's/"//g'`"
-    
-    autoscaling_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-autoscaling" ).id' | /bin/sed 's/"//g'`"
-    
-    iplist=""
-    for ip in ${allips}
-    do
-        iplist=$iplist"\"${ip}/32\" "
-    done
-
-    iplist="`/bin/echo ${iplist} | /bin/sed 's/"/\\"/g'`"
-    
-    for ip in ${iplist}
-    do
-        rules=${rules}"protocol:tcp,ports:${SSH_PORT},address:${ip} "    
-        rules=${rules}"protocol:tcp,ports:${DB_PORT},address:${ip} "   
-        autoscalingrules=${autoscalingrules}"protocol:tcp,ports:22,address:${ip} " 
-    done 
-
-    rules="`/bin/echo ${rules} | /bin/sed 's/"//g'`"
-    autoscalingrules="`/bin/echo ${autoscalingrules} | /bin/sed 's/"//g'`"
-
-    if ( [ "${firewall_id}" = "" ] )
-    then
-        /usr/local/bin/doctl compute firewall create --name "adt" --outbound-rules "protocol:tcp,ports:all,address:0.0.0.0/0 protocol:udp,ports:all,address:0.0.0.0/0 protocol:icmp,address:0.0.0.0/0"
         firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt" ).id' | /bin/sed 's/"//g'`"
-    else
-        /bin/echo "y" | /usr/local/bin/doctl compute firewall delete ${firewall_id}
-        /usr/local/bin/doctl compute firewall create --name "adt" --outbound-rules "protocol:tcp,ports:all,address:0.0.0.0/0 protocol:udp,ports:all,address:0.0.0.0/0 protocol:icmp,address:0.0.0.0/0"
-        firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt" ).id' | /bin/sed 's/"//g'`"
-    fi
-    
-    if ( [ "${autoscaling_firewall_id}" = "" ] )
-    then
-        /usr/local/bin/doctl compute firewall create --name "adt-autoscaling" --outbound-rules "protocol:tcp,ports:all,address:0.0.0.0/0 protocol:udp,ports:all,address:0.0.0.0/0 protocol:icmp,address:0.0.0.0/0"
         autoscaling_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-autoscaling" ).id' | /bin/sed 's/"//g'`"
-    else
-        /bin/echo "y" | /usr/local/bin/doctl compute firewall delete ${autoscaling_firewall_id}
-        /usr/local/bin/doctl compute firewall create --name "adt-autoscaling" --outbound-rules "protocol:tcp,ports:all,address:0.0.0.0/0 protocol:udp,ports:all,address:0.0.0.0/0 protocol:icmp,address:0.0.0.0/0"
-        autoscaling_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-autoscaling" ).id' | /bin/sed 's/"//g'`"
-    fi
-
-    /usr/local/bin/doctl compute firewall add-rules ${firewall_id} --inbound-rules "${rules}"
-    /usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${droplet_ids}
     
-    /usr/local/bin/doctl compute firewall add-rules ${autoscaling_firewall_id} --inbound-rules "${autoscalingrules}"
-    /usr/local/bin/doctl compute firewall add-droplets ${autoscaling_firewall_id} --droplet-ids ${droplet_ids}
-
-   . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
-   
-   standard_rules=""
-
-    if ( [ "${alldnsproxyips}" != "" ] )
-    then
-        for ip in ${alldnsproxyips}
+        iplist=""
+        for ip in ${allips}
         do
-            standard_rules=${standard_rules}"protocol:tcp,ports:443,address:${ip} "    
-        #    standard_rules=${standard_rules}"protocol:tcp,ports:80,address:${ip} "    
+            iplist=$iplist"\"${ip}/32\" "
         done
-    else
-        standard_rules=${standard_rules}"protocol:tcp,ports:443,address:0.0.0.0/0 "    
-        #standard_rules=${standard_rules}"protocol:tcp,ports:80,address:0.0.0.0/0 "    
-    fi
+
+        iplist="`/bin/echo ${iplist} | /bin/sed 's/"/\\"/g'`"
     
-    standard_rules=${standard_rules}"protocol:icmp,address:0.0.0.0/0 "    
-    standard_rules="`/bin/echo ${standard_rules} | /bin/sed 's/\"//g'`"
+        for ip in ${iplist}
+        do
+            rules=${rules}"protocol:tcp,ports:${SSH_PORT},address:${ip} "    
+            rules=${rules}"protocol:tcp,ports:${DB_PORT},address:${ip} "   
+            autoscalingrules=${autoscalingrules}"protocol:tcp,ports:22,address:${ip} " 
+        done 
+
+        rules="`/bin/echo ${rules} | /bin/sed 's/"//g'`"
+        autoscalingrules="`/bin/echo ${autoscalingrules} | /bin/sed 's/"//g'`"
+
+        if ( [ "${firewall_id}" = "" ] )
+        then
+            /usr/local/bin/doctl compute firewall create --name "adt" --outbound-rules "protocol:tcp,ports:all,address:0.0.0.0/0 protocol:udp,ports:all,address:0.0.0.0/0 protocol:icmp,address:0.0.0.0/0"
+            firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt" ).id' | /bin/sed 's/"//g'`"
+        else
+            /bin/echo "y" | /usr/local/bin/doctl compute firewall delete ${firewall_id}
+            /usr/local/bin/doctl compute firewall create --name "adt" --outbound-rules "protocol:tcp,ports:all,address:0.0.0.0/0 protocol:udp,ports:all,address:0.0.0.0/0 protocol:icmp,address:0.0.0.0/0"
+            firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt" ).id' | /bin/sed 's/"//g'`"
+        fi
+    
+        if ( [ "${autoscaling_firewall_id}" = "" ] )
+        then
+            /usr/local/bin/doctl compute firewall create --name "adt-autoscaling" --outbound-rules "protocol:tcp,ports:all,address:0.0.0.0/0 protocol:udp,ports:all,address:0.0.0.0/0 protocol:icmp,address:0.0.0.0/0"
+            autoscaling_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-autoscaling" ).id' | /bin/sed 's/"//g'`"
+        else
+            /bin/echo "y" | /usr/local/bin/doctl compute firewall delete ${autoscaling_firewall_id}
+            /usr/local/bin/doctl compute firewall create --name "adt-autoscaling" --outbound-rules "protocol:tcp,ports:all,address:0.0.0.0/0 protocol:udp,ports:all,address:0.0.0.0/0 protocol:icmp,address:0.0.0.0/0"
+            autoscaling_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-autoscaling" ).id' | /bin/sed 's/"//g'`"
+        fi
+
+        /usr/local/bin/doctl compute firewall add-rules ${firewall_id} --inbound-rules "${rules}"
+        /usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${droplet_ids}
+    
+        /usr/local/bin/doctl compute firewall add-rules ${autoscaling_firewall_id} --inbound-rules "${autoscalingrules}"
+        /usr/local/bin/doctl compute firewall add-droplets ${autoscaling_firewall_id} --droplet-ids ${droplet_ids}
+
+       . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
+   
+       standard_rules=""
+
+       if ( [ "${alldnsproxyips}" != "" ] )
+       then
+           for ip in ${alldnsproxyips}
+           do
+               standard_rules=${standard_rules}"protocol:tcp,ports:443,address:${ip} "    
+        #      standard_rules=${standard_rules}"protocol:tcp,ports:80,address:${ip} "    
+           done
+       else
+           standard_rules=${standard_rules}"protocol:tcp,ports:443,address:0.0.0.0/0 "    
+           #standard_rules=${standard_rules}"protocol:tcp,ports:80,address:0.0.0.0/0 "    
+       fi
+    
+       standard_rules=${standard_rules}"protocol:icmp,address:0.0.0.0/0 "    
+       standard_rules="`/bin/echo ${standard_rules} | /bin/sed 's/\"//g'`"
  
-    webserver_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-webserver-machines" ).id' | /bin/sed 's/"//g'`"
+       webserver_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-webserver-machines" ).id' | /bin/sed 's/"//g'`"
     
-    if ( [ "${webserver_firewall_id}" = "" ] )
-    then
-        /usr/local/bin/doctl compute firewall create --name "adt-webserver-machines" --outbound-rules "protocol:tcp,ports:all,address:0.0.0.0/0 protocol:udp,ports:all,address:0.0.0.0/0 protocol:icmp,address:0.0.0.0/0"
-        webserver_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-webserver-machines" ).id' | /bin/sed 's/"//g'`"
-    fi
+       if ( [ "${webserver_firewall_id}" = "" ] )
+       then
+           /usr/local/bin/doctl compute firewall create --name "adt-webserver-machines" --outbound-rules "protocol:tcp,ports:all,address:0.0.0.0/0 protocol:udp,ports:all,address:0.0.0.0/0 protocol:icmp,address:0.0.0.0/0"
+           webserver_firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-webserver-machines" ).id' | /bin/sed 's/"//g'`"
+       fi
     
-    droplet_ids="`/usr/local/bin/doctl compute droplet list | /bin/grep 'webserver' | /usr/bin/awk '{print $1}' | /bin/sed 's/ //g' | /usr/bin/tr '\n' ' '`"   
-    
-    droplet_ids="`/bin/echo ${droplet_ids} | /bin/sed 's/ $//g' | /bin/sed 's/ /,/g'`"
+       droplet_ids="`/usr/local/bin/doctl compute droplet list | /bin/grep 'webserver' | /usr/bin/awk '{print $1}' | /bin/sed 's/ //g' | /usr/bin/tr '\n' ' '`"   
+       droplet_ids="`/bin/echo ${droplet_ids} | /bin/sed 's/ $//g' | /bin/sed 's/ /,/g'`"
 
 
-    /usr/local/bin/doctl compute firewall add-rules ${webserver_firewall_id} --inbound-rules "${standard_rules}"
-    /usr/local/bin/doctl compute firewall add-droplets ${webserver_firewall_id} --droplet-ids ${droplet_ids}
+       /usr/local/bin/doctl compute firewall add-rules ${webserver_firewall_id} --inbound-rules "${standard_rules}"
+       /usr/local/bin/doctl compute firewall add-droplets ${webserver_firewall_id} --droplet-ids ${droplet_ids}
+       
+       /bin/rm ${HOME}/config/FIREWALL-UPDATING
+   fi
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] )
 then
-   allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
-
-   for ip in ${allips}
-   do
-       /usr/bin/exo compute security-group rule add adt --network ${ip}/32 --port ${SSH_PORT} 2>/dev/null
-       /usr/bin/exo compute security-group rule add adt --network ${ip}/32 --port ${DB_PORT} 2>/dev/null
-       /usr/bin/exo compute security-group rule add adt --network ${ip}/32 --port 22 2>/dev/null
-   done
-
-   . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
-                                
-    if ( [ "${alldnsproxyips}" != "" ] )
+  # allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
+   
+    if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
     then
-       for ip in ${alldnsproxyips}
-       do
-           /usr/bin/exo compute security-group rule add adt --network ${ip} --port 443
+        /bin/touch ${HOME}/config/FIREWALL-UPDATING
+       
+        autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
+        webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
+        database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
+        machine_ips="${autoscaler_ips} ${webserver_ips} ${database_ips}"
+    
+        autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh autoscaler ${CLOUDHOST}`"
+        webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh webserver ${CLOUDHOST}`"
+        database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh database ${CLOUDHOST}`"
+        machine_private_ips="${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
+    
+        allips="${machine_ips} ${machine_private_ips} ${BUILD_CLIENT_IP}"
+
+        for ip in ${allips}
+        do
+           /usr/bin/exo compute security-group rule add adt --network ${ip}/32 --port ${SSH_PORT} 2>/dev/null
+           /usr/bin/exo compute security-group rule add adt --network ${ip}/32 --port ${DB_PORT} 2>/dev/null
+           /usr/bin/exo compute security-group rule add adt --network ${ip}/32 --port 22 2>/dev/null
        done
-    else
-       /usr/bin/exo compute security-group rule add adt --network 0.0.0.0/0 --port 443
-    fi
+
+       . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
+                                
+       if ( [ "${alldnsproxyips}" != "" ] )
+       then
+           for ip in ${alldnsproxyips}
+           do
+               /usr/bin/exo compute security-group rule add adt --network ${ip} --port 443
+           done
+       else
+           /usr/bin/exo compute security-group rule add adt --network 0.0.0.0/0 --port 443
+       fi
+       
+       /bin/rm ${HOME}/config/FIREWALL-UPDATING
+   fi
 fi
 
 if ( [ -f ${HOME}/LINODE ] )
