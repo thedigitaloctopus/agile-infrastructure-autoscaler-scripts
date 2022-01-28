@@ -12,7 +12,7 @@ lock="${1}"
 if ( [ "`/usr/bin/s3cmd ls s3://${configbucket}/${lock}`" = "" ] )
 then
     /bin/touch ${HOME}/config/${lock}
-    echo "1"
+    /bin/echo "1"
 else
-    echo "0"
+    /bin/echo "0"
 fi
