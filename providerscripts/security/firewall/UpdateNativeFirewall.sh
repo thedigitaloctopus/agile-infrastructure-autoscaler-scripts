@@ -55,6 +55,7 @@ then
     droplet_ids="`/usr/local/bin/doctl compute droplet list | /bin/grep 'autoscaler' | /usr/bin/awk '{print $1}' | /bin/sed 's/ //g'`"    
     droplet_ids="${droplet_ids} `/usr/local/bin/doctl compute droplet list | /bin/grep 'webserver' | /usr/bin/awk '{print $1}' | /bin/sed 's/ //g'`"    
     droplet_ids="${droplet_ids} `/usr/local/bin/doctl compute droplet list | /bin/grep 'database' | /usr/bin/awk '{print $1}' | /bin/sed 's/ //g'`" 
+    droplet_ids="${droplet_ids} ${BUILD_CLIENT_IP}"
 
     droplet_ids="`/bin/echo ${droplet_ids} | /bin/sed 's/ $//g' | /bin/sed 's/ /,/g'`"
 
@@ -184,7 +185,7 @@ then
         database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh database ${CLOUDHOST}`"
         machine_private_ips="${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
     
-        allips="${machine_ips} ${machine_private_ips}"
+        allips="${machine_ips} ${machine_private_ips} ${BUILD_CLIENT_IP}"
     
         firewall_id="`/usr/local/bin/linode-cli --json firewalls list | jq '.[] | select (.label == "adt" ).id'`"
     
@@ -269,7 +270,7 @@ then
         autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
         webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
         database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
-        machine_ips="${autoscaler_ips} ${webserver_ips} ${database_ips}"
+        machine_ips="${autoscaler_ips} ${webserver_ips} ${database_ips} ${BUILD_CLIENT_IP}"
        
         for machine_ip in ${machine_ips}
         do              
