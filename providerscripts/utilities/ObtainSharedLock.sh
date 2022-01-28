@@ -9,6 +9,9 @@ configbucket="${configbucket}-config"
 
 lock="${1}"
 
+#Put in a small sleep to conteract race conditions a bit
+/bin/sleep `/usr/bin/awk -v min=0 -v max=30 'BEGIN{srand(); print int(min+rand()*(max-min+1))}'`
+
 if ( [ "`/usr/bin/s3cmd ls s3://${configbucket}/${lock}`" = "" ] )
 then
     /bin/touch ${HOME}/config/${lock}
