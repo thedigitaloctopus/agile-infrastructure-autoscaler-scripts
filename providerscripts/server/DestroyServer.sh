@@ -75,21 +75,24 @@ fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
-    /bin/rm ${HOME}/config/webserverips/${private_server_ip}
-    /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
-    /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
-    server_id="`/usr/local/bin/cs listVirtualMachines | jq --arg tmp_ip_address "${server_ip}" '(.virtualmachine[] | select(.nic[].ipaddress == $tmp_ip_address) | .id)' | /bin/sed 's/\"//g'`"
-    /usr/local/bin/cs destroyVirtualMachine id="${server_id}"
-    /bin/echo "${0} `/bin/date`: Destroyed a server with id ${server_id}" >> ${HOME}/logs/MonitoringLog.log
-    /bin/rm ${HOME}/config/webserverips/${private_server_ip}
-    /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
-    /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
-    ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${SSH_PORT} ${server_ip}
-    ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${DB_PORT} ${server_ip}
-    ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${SSH_PORT} ${private_server_ip}
-    ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${DB_PORT} ${private_server_ip}
-    ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh 22 ${server_ip}
-    ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh 22 ${private_server_ip}
+    if ( [ "${server_ip}" != "" ] )
+    then
+        /bin/rm ${HOME}/config/webserverips/${private_server_ip}
+        /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
+        /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
+        server_id="`/usr/local/bin/cs listVirtualMachines | jq --arg tmp_ip_address "${server_ip}" '(.virtualmachine[] | select(.nic[].ipaddress == $tmp_ip_address) | .id)' | /bin/sed 's/\"//g'`"
+        /usr/local/bin/cs destroyVirtualMachine id="${server_id}"
+        /bin/echo "${0} `/bin/date`: Destroyed a server with id ${server_id}" >> ${HOME}/logs/MonitoringLog.log
+        /bin/rm ${HOME}/config/webserverips/${private_server_ip}
+        /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
+        /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
+        ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${SSH_PORT} ${server_ip}
+        ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${DB_PORT} ${server_ip}
+        ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${SSH_PORT} ${private_server_ip}
+        ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${DB_PORT} ${private_server_ip}
+        ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh 22 ${server_ip}
+        ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh 22 ${private_server_ip}
+    fi
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
@@ -102,17 +105,12 @@ then
         server_to_delete=""
         server_to_delete="`${HOME}/providerscripts/server/GetServerName.sh ${server_ip} 'linode'`"
         server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_to_delete} | /bin/grep -v "id" | /usr/bin/awk '{print $1}'`"
-        if ( [ "`/bin/echo ${server_to_delete} | /bin/grep 'webserver'`" != "" ] )
-        then
-            /usr/local/bin/linode-cli linodes shutdown ${server_id}
-            /usr/local/bin/linode-cli linodes delete ${server_id}
-            /bin/echo "${0} `/bin/date`: Destroyed a server with name ${server_to_delete}" >> ${HOME}/logs/MonitoringLog.log
-            /bin/rm ${HOME}/config/webserverips/${private_server_ip}
-            /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
-            /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
-        else
-            /bin/echo "${0} `/bin/date` : This script is only for Destroying Webservers, refused to destroy server with ip: ${server_ip}" >> ${HOME}/logs/MonitoringLog.log
-        fi
+        /usr/local/bin/linode-cli linodes shutdown ${server_id}
+        /usr/local/bin/linode-cli linodes delete ${server_id}
+        /bin/echo "${0} `/bin/date`: Destroyed a server with name ${server_to_delete}" >> ${HOME}/logs/MonitoringLog.log
+        /bin/rm ${HOME}/config/webserverips/${private_server_ip}
+        /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
+        /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
         
         ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${SSH_PORT} ${server_ip}
         ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${DB_PORT} ${server_ip}
@@ -154,8 +152,6 @@ then
         /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
         ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${server_ip}
         ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${private_server_ip}
-    else
-        /bin/echo "${0} `/bin/date` : This script is only for Destroying Webservers, refused to destroy server with ip: ${server_ip}" >> ${HOME}/logs/MonitoringLog.log
     fi
 fi
 
@@ -181,7 +177,5 @@ then
         ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${DB_PORT} ${private_server_ip}
         ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh 22 ${server_ip}
         ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh 22 ${private_server_ip}
-    else
-        /bin/echo "${0} `/bin/date` : This script is only for Destroying Webservers, refused to destroy server with ip: ${server_ip}" >> ${HOME}/logs/MonitoringLog.log
     fi
 fi
