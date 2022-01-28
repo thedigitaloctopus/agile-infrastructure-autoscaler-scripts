@@ -36,10 +36,16 @@ lock="${1}"
 #Put in a small sleep to conteract race conditions a bit
 /bin/sleep `/usr/bin/awk -v min=0 -v max=30 'BEGIN{srand(); print int(min+rand()*(max-min+1))}'`
 
-if ( [ "`/usr/bin/s3cmd ls s3://${configbucket}/${lock}`" = "" ] )
+if ( [ "`/usr/bin/mount | /bin/grep config | /bin/grep s3fs`" != "" ] )
 then
+    if ( [ "`/usr/bin/s3cmd ls s3://${configbucket}/${lock}`" = "" ] )
+    then
+        /bin/touch ${HOME}/config/${lock}
+        /bin/echo "1"
+    else
+        /bin/echo "0"
+    fi
+else   #This is if we are using EFS which doesn't have this problem
     /bin/touch ${HOME}/config/${lock}
     /bin/echo "1"
-else
-    /bin/echo "0"
 fi
