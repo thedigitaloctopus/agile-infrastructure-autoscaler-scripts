@@ -1,5 +1,6 @@
 #!/bin/sh
 
+export HOME="`/bin/cat /home/homedir.dat`"
 
 WEBSITE_URL="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL'`"
 
