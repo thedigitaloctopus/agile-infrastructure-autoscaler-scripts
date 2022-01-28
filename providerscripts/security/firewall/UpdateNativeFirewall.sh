@@ -168,46 +168,64 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] )
 then
-
-    allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
-   # allproxyips="`/bin/cat ${HOME}/runtime/ipsforproxyserversfirewall`"
-   # allips="${allips} ${allproxyips}"
-    linode_id="`/usr/local/bin/linode-cli --json linodes list | jq --arg tmp_ip "${1}" '.[] | select (.ipv4 | tostring | contains ($tmp_ip))'.id`"
-    firewall_id="`/usr/local/bin/linode-cli --json firewalls list | jq '.[] | select (.label == "adt" ).id'`"
-    
-    iplist=""
-    for ip in ${allips}
-    do
-        iplist=$iplist"\"${ip}/32\","
-    done
-    iplist="`/bin/echo ${iplist} | /bin/sed 's/,$//g' | /bin/sed 's/"/\\"/g'`"
-    rules=${rules}"{\"addresses\":{\"ipv4\":[${iplist}]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"${SSH_PORT},${DB_PORT},22\"},"
-
-    rules="[`/bin/echo ${rules} | /bin/sed 's/,$//g'`,"
-    firewall_build_machine_id="`/usr/local/bin/linode-cli --json firewalls list | jq '.[] | select (.label == "adt-build-machine" ).id'`"
-    build_machine_rules="`/usr/local/bin/linode-cli --markdown firewalls rules-list ${firewall_build_machine_id}  | /bin/grep addresses | /usr/bin/awk -F'|' '{print $2}' | /bin/sed 's/ //g' | /usr/bin/tr "'" '"'`,"
-        
-   . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
-                                
-    if ( [ "${alldnsproxyips}" != "" ] )
+    if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
     then
-        standard_rules="{\"addresses\":{\"ipv4\":[${alldnsproxyips}]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"443,80\"},{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"ICMP\"}]"
-    else
-        standard_rules="{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"443,80\"},{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"ICMP\"}]"   
-    fi
-    allrules="${rules}${build_machine_rules}${standard_rules}"
-    /usr/local/bin/linode-cli firewalls rules-update --inbound  "${allrules}" ${firewall_id}
+        /bin/touch ${HOME}/config/FIREWALL-UPDATING
+
+        #allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
     
-    autoscaler_ids="`${HOME}/providerscripts/server/ListServerIDs.sh autoscaler ${CLOUDHOST}`"
-    webserver_ids="`${HOME}/providerscripts/server/ListServerIDs.sh webserver ${CLOUDHOST}`"
-    database_ids="`${HOME}/providerscripts/server/ListServerIDs.sh database ${CLOUDHOST}`"
-    machine_ids="${autoscaler_ids} ${webserver_ids} ${database_ids}"
-    machine_ids="`/bin/echo ${machine_ids} | /usr/bin/tr '\n' ' '`"
+        autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
+        webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
+        database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
+        machine_ips="${autoscaler_ips} ${webserver_ips} ${database_ips}"
+    
+        autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh autoscaler ${CLOUDHOST}`"
+        webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh webserver ${CLOUDHOST}`"
+        database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh database ${CLOUDHOST}`"
+        machine_private_ips="${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
+    
+        allips="${machine_ips} ${machine_private_ips}"
+    
+        firewall_id="`/usr/local/bin/linode-cli --json firewalls list | jq '.[] | select (.label == "adt" ).id'`"
+    
+        iplist=""
+        for ip in ${allips}
+        do
+            iplist=$iplist"\"${ip}/32\","
+        done
+    
+        iplist="`/bin/echo ${iplist} | /bin/sed 's/,$//g' | /bin/sed 's/"/\\"/g'`"
+        rules=${rules}"{\"addresses\":{\"ipv4\":[${iplist}]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"${SSH_PORT},${DB_PORT},22\"},"
+
+        rules="[`/bin/echo ${rules} | /bin/sed 's/,$//g'`,"
+        # firewall_build_machine_id="`/usr/local/bin/linode-cli --json firewalls list | jq '.[] | select (.label == "adt-build-machine" ).id'`"
+        # build_machine_rules="`/usr/local/bin/linode-cli --markdown firewalls rules-list ${firewall_build_machine_id}  | /bin/grep addresses | /usr/bin/awk -F'|' '{print $2}' | /bin/sed 's/ //g' | /usr/bin/tr "'" '"'`,"
         
-    for machine_id in ${machine_ids}
-    do
-         /usr/local/bin/linode-cli firewalls device-create --id ${machine_id} --type linode ${firewall_id} 2>/dev/null #Redirect to null in case already added
-    done
+        . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
+                                
+        if ( [ "${alldnsproxyips}" != "" ] )
+        then
+            standard_rules="{\"addresses\":{\"ipv4\":[${alldnsproxyips}]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"443,80\"},{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"ICMP\"}]"
+        else
+            standard_rules="{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"443,80\"},{\"addresses\":{\"ipv4\":[\"0.0.0.0/0\"]},\"action\":\"ACCEPT\",\"protocol\":\"ICMP\"}]"   
+        fi
+        #allrules="${rules}${build_machine_rules}${standard_rules}"
+        allrules="${rules}${standard_rules}"
+        /usr/local/bin/linode-cli firewalls rules-update --inbound  "${allrules}" ${firewall_id}
+    
+        autoscaler_ids="`${HOME}/providerscripts/server/ListServerIDs.sh autoscaler ${CLOUDHOST}`"
+        webserver_ids="`${HOME}/providerscripts/server/ListServerIDs.sh webserver ${CLOUDHOST}`"
+        database_ids="`${HOME}/providerscripts/server/ListServerIDs.sh database ${CLOUDHOST}`"
+        machine_ids="${autoscaler_ids} ${webserver_ids} ${database_ids}"
+        machine_ids="`/bin/echo ${machine_ids} | /usr/bin/tr '\n' ' '`"
+        
+        for machine_id in ${machine_ids}
+        do
+            /usr/local/bin/linode-cli firewalls device-create --id ${machine_id} --type linode ${firewall_id} 2>/dev/null #Redirect to null in case already added
+        done
+        
+        /bin/rm ${HOME}/config/FIREWALL-UPDATING
+   fi
 
 fi
 
