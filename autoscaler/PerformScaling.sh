@@ -136,7 +136,7 @@ noallips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${
 /bin/echo "${0} `/bin/date`: ${noprovisionedwebservers} webservers are currently provisioned and live." >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
 #If we have fewer webservers than we require, build one, if there's no webservers running it means something is wrong so prevent scaling actions
-if ( [ "${noallips}" -lt "${NO_WEBSERVERS}" ] && [ "${noallips}" != "0" ] )
+if ( [ "${noallips}" -lt "${NO_WEBSERVERS}" ] )
 then
     #It is possible that machine builds failed in which case we may have more servers running than are added to the DNS system
     #In this case, we don't want to keep building machines, so, check for it and exit
