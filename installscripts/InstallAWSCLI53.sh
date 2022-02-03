@@ -27,7 +27,7 @@ fi
 
 if ( [ "${BUILD_OS}" = "ubuntu" ] )
 then
-    download_link="`/usr/bin/curl https://github.com/barnybug/cli53/releases/latest/ | /bin/sed 's/^[^"]*"//g' | /bin/sed 's/".*$//g'`/cli53-linux-amd64"
+    download_link="`/usr/bin/curl https://github.com/barnybug/cli53/releases/latest/ | /bin/sed 's/^[^"]*"//g' | /bin/sed 's/".*$//g' | /bin/sed 's/tag/download/'`/cli53-linux-amd64"
     /usr/bin/wget ${download_link}
     /bin/mv cli53-linux-amd64 /usr/local/bin/cli53
     /bin/chmod +x /usr/local/bin/cli5
@@ -35,7 +35,7 @@ fi
 
 if ( [ "${BUILD_OS}" = "debian" ] )
 then
-    download_link="`/usr/bin/curl https://github.com/barnybug/cli53/releases/latest/ | /bin/sed 's/^[^"]*"//g' | /bin/sed 's/".*$//g'`/cli53-linux-amd64"
+    download_link="`/usr/bin/curl https://github.com/barnybug/cli53/releases/latest/ | /bin/sed 's/^[^"]*"//g' | /bin/sed 's/".*$//g' | /bin/sed 's/tag/download/'`/cli53-linux-amd64"
     /usr/bin/wget ${download_link}
     /bin/mv cli53-linux-amd64 /usr/local/bin/cli53
     /bin/chmod +x /usr/local/bin/cli5
