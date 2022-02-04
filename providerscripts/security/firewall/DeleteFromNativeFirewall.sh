@@ -71,5 +71,5 @@ fi
 if ( [ -f ${HOME}/AWS ] )
 then
     security_group_id="`/usr/bin/aws ec2 describe-security-groups | /usr/bin/jq '.SecurityGroups[] | .GroupName + " " + .GroupId' | /bin/grep AgileDeploymentToolkitSecurityGroup | /bin/sed 's/\"//g' | /usr/bin/awk '{print $NF}'`"    
-    /usr/bin/aws ec2 revoke-security-group-ingress --group-id ${security_group_id} --protocol tcp --port ${1} --cidr ${2}
+    /usr/bin/aws ec2 revoke-security-group-ingress --group-id ${security_group_id} --protocol tcp --port ${1} --cidr ${2}/32
 fi
