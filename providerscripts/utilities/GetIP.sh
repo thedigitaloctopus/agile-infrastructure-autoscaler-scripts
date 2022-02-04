@@ -29,7 +29,7 @@ fi
 IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MYIP'`"
 if ( [ "${IP}" != "`/usr/bin/hostname -I | /usr/bin/awk '{print $1}'`" ] )
 then
-    IP="`/usr/bin/hostname -I | /usr/bin/awk '{print $1}'`" ] )
+    IP="`/usr/bin/hostname -I | /usr/bin/awk '{print $1}'`"
     ${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh 'MYIP' "${IP}"
 fi
 
