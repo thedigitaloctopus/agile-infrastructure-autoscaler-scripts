@@ -20,5 +20,5 @@
 ########################################################################################
 ########################################################################################
 #set -x
-/bin/rm ${HOME}/config/webserverpublicips/*
-/bin/rm ${HOME}/config/webserverips/*
+/bin/rm ${HOME}/config/autoscalerpublicip/*
+/bin/rm ${HOME}/config/autoscalerip/*
