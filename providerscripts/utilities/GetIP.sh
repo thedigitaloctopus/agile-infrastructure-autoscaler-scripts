@@ -27,6 +27,12 @@ then
 fi
 
 IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MYIP'`"
+if ( [ "${IP}" != "`/usr/bin/hostname -I | /usr/bin/awk '{print $1}'`" ] )
+then
+    IP="`/usr/bin/hostname -I | /usr/bin/awk '{print $1}'`" ] )
+    ${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh 'MYIP' "${IP}"
+fi
+
 #if ( [ "`/usr/bin/ip addr | /bin/grep ${IP}`" != "" ] )
 #then
     /bin/echo ${IP}
@@ -34,8 +40,6 @@ IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MYIP'`"
 
 BUILDOS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOS'`"
 BUILDOSVERSION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOSVERSION'`"
-
-
 
 if ( [ -f ${HOME}/VULTR ] && [ ! -f ${HOME}/runtime/NETCONFIGURED ] )
 then
