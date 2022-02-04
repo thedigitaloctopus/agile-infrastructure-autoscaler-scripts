@@ -27,10 +27,10 @@ then
 fi
 
 IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MYIP'`"
-if ( [ "`/usr/bin/ip addr | /bin/grep ${IP}`" != "" ] )
-then
+#if ( [ "`/usr/bin/ip addr | /bin/grep ${IP}`" != "" ] )
+#then
     /bin/echo ${IP}
-fi
+#fi
 
 BUILDOS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOS'`"
 BUILDOSVERSION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOSVERSION'`"
