@@ -70,5 +70,5 @@ fi
 
 if ( [ -f ${HOME}/AWS ] )
 then
-    :
+    aws ec2 revoke-security-group-ingress --group-name AgileDeploymentToolkitSecurityGroup --protocol tcp --port ${1} --cidr ${2}
 fi
