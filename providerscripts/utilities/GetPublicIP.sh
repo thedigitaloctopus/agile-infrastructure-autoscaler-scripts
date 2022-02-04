@@ -21,10 +21,10 @@
 #set -x
 
 IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MYPUBLICIP'`"
-if ( [ "`/usr/bin/ip addr | /bin/grep ${IP}`" != "" ] )
-then
+#if ( [ "`/usr/bin/ip addr | /bin/grep ${IP}`" != "" ] )
+#then
     /bin/echo ${IP}
-else
-    exit
-fi
+#else
+#    exit
+#fi
 
