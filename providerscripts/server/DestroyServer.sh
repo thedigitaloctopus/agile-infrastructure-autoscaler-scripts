@@ -165,7 +165,7 @@ then
 
         instance_id="`/usr/bin/aws ec2 describe-instances | /usr/bin/jq '.Reservations[].Instances[] | .InstanceId + " " + .PublicIpAddress' | /bin/sed 's/\"//g' | /bin/grep ${server_ip} | /usr/bin/awk '{print $1}'`"
        # /usr/bin/aws ec2 stop-instances --instance-ids ${instance_id}
-        /usr/bin/aws ec2 terminate-instances --instance-ids ${instance_id}
+        /usr/bin/aws ec2 terminate-instances --instance-ids ${instance_id} --force
 
         /bin/echo "${0} `/bin/date`: Destroyed a server with id ${instance_id}" >> ${HOME}/logs/MonitoringLog.log
         /bin/rm ${HOME}/config/webserverips/${private_server_ip}
