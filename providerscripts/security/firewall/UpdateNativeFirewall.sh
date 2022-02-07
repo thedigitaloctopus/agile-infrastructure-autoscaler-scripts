@@ -364,7 +364,7 @@ then
     
         interface="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/`"
         subnet_id="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/${interface}/subnet-id`"
-        vpc_id="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/${interface}/vpc-id)`"
+        vpc_id="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/${interface}/vpc-id`"
 
         security_group_id="`/usr/bin/aws ec2 describe-security-groups | /usr/bin/jq '.SecurityGroups[] | .GroupName + " " + .GroupId' | /bin/grep AgileDeploymentToolkitWebserverSecurityGroup | /bin/sed 's/\"//g' | /usr/bin/awk '{print $NF}'`"
 
