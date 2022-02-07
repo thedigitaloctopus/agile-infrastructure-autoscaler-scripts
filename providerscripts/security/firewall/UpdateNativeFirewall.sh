@@ -374,30 +374,6 @@ then
             security_group_id="`/usr/bin/aws ec2 describe-security-groups | /usr/bin/jq '.SecurityGroups[] | .GroupName + " " + .GroupId' | /bin/grep  AgileDeploymentToolkitSecurityGroup | /bin/sed 's/\"//g' | /usr/bin/awk '{print $NF}'`"
         fi
 
-
-    #    autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
-    #    webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
-    #    database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
-    #    machine_ips="${autoscaler_ips} ${webserver_ips} ${database_ips}"
-    
-   #     autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh autoscaler ${CLOUDHOST}`"
-   #     webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh webserver ${CLOUDHOST}`"
-   #     database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh database ${CLOUDHOST}`"
-   #     machine_private_ips="${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
-    
-   #     allips="${machine_ips} ${machine_private_ips} ${BUILD_CLIENT_IP}"
-
-   #     for ip in ${allips}
-   #     do
-   #         /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=${SSH_PORT},ToPort=${SSH_PORT},IpRanges="[{CidrIp=${ip}/32}]" 2>/dev/null
-   #         /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=${DB_PORT},ToPort=${DB_PORT},IpRanges="[{CidrIp=${ip}/32}]" 2>/dev/null
-   #         /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=22,ToPort=22,IpRanges="[{CidrIp=${ip}/32}]" 2>/dev/null
-   #         if ( [ "${ENABLE_EFS}" = "1" ] )
-   #         then
-   #             /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=2049,ToPort=2049,IpRanges="[{CidrIp=${ip}/32}]" 2>/dev/null
-   #         fi
-   #    done
-
        . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
                                 
        if ( [ "${alldnsproxyips}" != "" ] )
@@ -410,14 +386,29 @@ then
            /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=443,ToPort=443,IpRanges="[{CidrIp=0.0.0.0/0}]" 2>/dev/null
        fi
        
-        /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --source-group AgileDeploymentToolkitSecurityGroup --port ${SSH_PORT} --cidr 0.0.0.0/0
-        /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --source-group AgileDeploymentToolkitSecurityGroup --port ${DB_PORT} --cidr 0.0.0.0/0
-        /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol icmp --source-group AgileDeploymentToolkitSecurityGroup --cidr 0.0.0.0/0
+        /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --source-group ${security_group_id} --port ${SSH_PORT} --cidr 0.0.0.0/0
+        /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --source-group ${security_group_id} --port ${DB_PORT} --cidr 0.0.0.0/0
+        /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=icmp,FromPort=-1,ToPort=-1,IpRanges='[{CidrIp=0.0.0.0/0}]'
+        
+   #     autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
+   #     webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
+   #     database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
+   #     machine_ips="${autoscaler_ips} ${webserver_ips} ${database_ips} ${BUILD_CLIENT_IP}"
+       
+   #    for machine_ip in ${machine_ips}
+   #    do              
+           /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=${SSH_PORT},ToPort=${SSH_PORT},IpRanges="[{CidrIp=${BUILD_CLIENT_IP}/32}]"
+   #    done
 
-        if ( [ "${ENABLE_EFS}" = "1" ] )
-        then
-            /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol nfs --source-group AgileDeploymentToolkitSecurityGroup --port 2049 --cidr 0.0.0.0/0
-        fi
+       if ( [ "${ENABLE_EFS}" = "1" ] )
+       then
+           /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --source-group ${security_group_id} --port 2049 --cidr 0.0.0.0/0
+       fi
+       
+       /usr/bin/aws ec2 revoke-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=0,ToPort=65535,IpRanges=[{CidrIp=0.0.0.0/0}]
+       /usr/bin/aws ec2 revoke-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=${SSH_PORT},ToPort=${SSH_PORT},IpRanges=[{CidrIp=0.0.0.0/0}]
+       /usr/bin/aws ec2 revoke-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=${DB_PORT},ToPort=${DB_PORT},IpRanges=[{CidrIp=0.0.0.0/0}]
+       /usr/bin/aws ec2 revoke-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=2049,ToPort=2049,IpRanges=[{CidrIp=0.0.0.0/0}]
        
        /bin/rm ${HOME}/config/FIREWALL-UPDATING
    fi
