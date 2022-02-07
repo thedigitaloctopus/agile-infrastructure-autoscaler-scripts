@@ -34,6 +34,8 @@ SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
 DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPORT'`"
 BUILD_CLIENT_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDCLIENTIP'`"
 CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
+ENABLE_EFS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ENABLEEFS'`"
+
 
 if ( [ ! -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
 then
@@ -393,6 +395,10 @@ then
             /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=${SSH_PORT},ToPort=${SSH_PORT},IpRanges="[{CidrIp=${ip}/32}]" 2>/dev/null
             /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=${DB_PORT},ToPort=${DB_PORT},IpRanges="[{CidrIp=${ip}/32}]" 2>/dev/null
             /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=22,ToPort=22,IpRanges="[{CidrIp=${ip}/32}]" 2>/dev/null
+            if ( [ "${ENABLE_EFS}" = "1" ] )
+            then
+                /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=2049,ToPort=2049,IpRanges="[{CidrIp=${ip}/32}]" 2>/dev/null
+            fi
        done
 
        . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
