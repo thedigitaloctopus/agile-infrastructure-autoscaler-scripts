@@ -42,9 +42,9 @@ then
 fi
 
 #If there's an build processes hanging around from previous attempts, purge them so we are nice and clean
-if ( [ -f ${HOME}/runtime/BUILDING_WEBSERVER ] )
+if ( [ -f ${HOME}/runtime/buildingwebserver.lock ] )
 then
-    if ( [ "`/usr/bin/find ${HOME}/runtime/BUILDING_WEBSERVER -type f -mmin +26`" != "" ] )
+    if ( [ "`/usr/bin/find ${HOME}/runtime/buildingwebserver.lock -type f -mmin +26`" != "" ] )
     then
         for pid in "`/bin/pgrep BuildWebserver`"
         do
@@ -53,7 +53,7 @@ then
                 /bin/kill -9 ${pid}
             fi
         done
-        /bin/rm ${HOME}/runtime/BUILDING_WEBSERVER
+        /bin/rm ${HOME}/runtime/buildingwebserver.lock
     else
        exit
     fi
@@ -161,16 +161,16 @@ then
         if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
         then
             /bin/echo "${0} `/bin/date`: I have calculated that a webserver needs booting so am booting a new one from a snapshot" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-            /bin/touch ${HOME}/runtime/BUILDING_WEBSERVER
+            /bin/touch ${HOME}/runtime/buildingwebserver.lock
             newip="`${HOME}/autoscaler/BuildWebserver.sh`"
-            /bin/rm ${HOME}/runtime/BUILDING_WEBSERVER
+            /bin/rm ${HOME}/runtime/buildingwebserver.lock
            # /bin/echo "${0} `/bin/date`:  Rebooting autoscaler before next scaling event so that memory doesn't run out which sometimes happens on small machines" >> ${HOME}/logs/ScalingEventsLog.log
            # /usr/sbin/shutdown -r now
         else
             /bin/echo "${0} `/bin/date`:  I have calculated that a webserver needs booting so am booting a new one as a regular build (not a snapshot)" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-            /bin/touch ${HOME}/runtime/BUILDING_WEBSERVER
+            /bin/touch ${HOME}/runtime/buildingwebserver.lock
             newip="`${HOME}/autoscaler/BuildWebserver.sh`"
-            /bin/rm ${HOME}/runtime/BUILDING_WEBSERVER
+            /bin/rm ${HOME}/runtime/buildingwebserver.lock
         fi
         if ( [ "${newip}" != "" ] )
         then
