@@ -362,17 +362,17 @@ then
     if ( [ "`${HOME}/providerscripts/utilities/ObtainSharedLock.sh FIREWALL-UPDATING`" = "1" ] )
     then
     
-   #     interface="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/`"
-   #     subnet_id="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/${interface}/subnet-id`"
-   #     vpc_id="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/${interface}/vpc-id)`"
+        interface="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/`"
+        subnet_id="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/${interface}/subnet-id`"
+        vpc_id="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/${interface}/vpc-id)`"
 
-#        security_group_id="`/usr/bin/aws ec2 describe-security-groups | /usr/bin/jq '.SecurityGroups[] | .GroupName + " " + .GroupId' | /bin/grep AgileDeploymentToolkitSecurityGroup | /bin/sed 's/\"//g' | /usr/bin/awk '{print $NF}'`"
+        security_group_id="`/usr/bin/aws ec2 describe-security-groups | /usr/bin/jq '.SecurityGroups[] | .GroupName + " " + .GroupId' | /bin/grep AgileDeploymentToolkitSecurityGroup | /bin/sed 's/\"//g' | /usr/bin/awk '{print $NF}'`"
 
- #       if ( [ "${security_group_id}" = "" ] )
-  #      then
-   #         /usr/bin/aws ec2 create-security-group --description "This is the security group for your agile deployment toolkit server machines" --group-name "AgileDeploymentToolkitSecurityGroup" --vpc-id=${vpc_id}
-    #        security_group_id="`/usr/bin/aws ec2 describe-security-groups | /usr/bin/jq '.SecurityGroups[] | .GroupName + " " + .GroupId' | /bin/grep  AgileDeploymentToolkitSecurityGroup | /bin/sed 's/\"//g' | /usr/bin/awk '{print $NF}'`"
-    #    fi
+        if ( [ "${security_group_id}" = "" ] )
+        then
+            /usr/bin/aws ec2 create-security-group --description "This is the security group for your agile deployment toolkit server machines" --group-name "AgileDeploymentToolkitSecurityGroup" --vpc-id=${vpc_id}
+            security_group_id="`/usr/bin/aws ec2 describe-security-groups | /usr/bin/jq '.SecurityGroups[] | .GroupName + " " + .GroupId' | /bin/grep  AgileDeploymentToolkitSecurityGroup | /bin/sed 's/\"//g' | /usr/bin/awk '{print $NF}'`"
+        fi
 
 
     #    autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
@@ -409,6 +409,15 @@ then
        else
            /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=443,ToPort=443,IpRanges="[{CidrIp=0.0.0.0/0}]" 2>/dev/null
        fi
+       
+        /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --source-group AgileDeploymentToolkitSecurityGroup --port ${SSH_PORT} --cidr 0.0.0.0/0
+        /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --source-group AgileDeploymentToolkitSecurityGroup --port ${DB_PORT} --cidr 0.0.0.0/0
+        /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol icmp --source-group AgileDeploymentToolkitSecurityGroup --cidr 0.0.0.0/0
+
+        if ( [ "${ENABLE_EFS}" = "1" ] )
+        then
+            /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol nfs --source-group AgileDeploymentToolkitSecurityGroup --port 2049 --cidr 0.0.0.0/0
+        fi
        
        /bin/rm ${HOME}/config/FIREWALL-UPDATING
    fi
