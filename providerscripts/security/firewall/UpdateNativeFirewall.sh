@@ -358,48 +358,45 @@ fi
 if ( [ -f ${HOME}/AWS ] )
 then
 
-  # allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
    
-    #if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
     if ( [ "`${HOME}/providerscripts/utilities/ObtainSharedLock.sh FIREWALL-UPDATING`" = "1" ] )
     then
-       # /bin/touch ${HOME}/config/FIREWALL-UPDATING
     
-        interface="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/`"
-        subnet_id="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/${interface}/subnet-id`"
-        vpc_id="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/${interface}/vpc-id)`"
+   #     interface="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/`"
+   #     subnet_id="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/${interface}/subnet-id`"
+   #     vpc_id="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/${interface}/vpc-id)`"
 
-        security_group_id="`/usr/bin/aws ec2 describe-security-groups | /usr/bin/jq '.SecurityGroups[] | .GroupName + " " + .GroupId' | /bin/grep AgileDeploymentToolkitSecurityGroup | /bin/sed 's/\"//g' | /usr/bin/awk '{print $NF}'`"
+#        security_group_id="`/usr/bin/aws ec2 describe-security-groups | /usr/bin/jq '.SecurityGroups[] | .GroupName + " " + .GroupId' | /bin/grep AgileDeploymentToolkitSecurityGroup | /bin/sed 's/\"//g' | /usr/bin/awk '{print $NF}'`"
 
-        if ( [ "${security_group_id}" = "" ] )
-        then
-            /usr/bin/aws ec2 create-security-group --description "This is the security group for your agile deployment toolkit server machines" --group-name "AgileDeploymentToolkitSecurityGroup" --vpc-id=${vpc_id}
-            security_group_id="`/usr/bin/aws ec2 describe-security-groups | /usr/bin/jq '.SecurityGroups[] | .GroupName + " " + .GroupId' | /bin/grep  AgileDeploymentToolkitSecurityGroup | /bin/sed 's/\"//g' | /usr/bin/awk '{print $NF}'`"
-        fi
+ #       if ( [ "${security_group_id}" = "" ] )
+  #      then
+   #         /usr/bin/aws ec2 create-security-group --description "This is the security group for your agile deployment toolkit server machines" --group-name "AgileDeploymentToolkitSecurityGroup" --vpc-id=${vpc_id}
+    #        security_group_id="`/usr/bin/aws ec2 describe-security-groups | /usr/bin/jq '.SecurityGroups[] | .GroupName + " " + .GroupId' | /bin/grep  AgileDeploymentToolkitSecurityGroup | /bin/sed 's/\"//g' | /usr/bin/awk '{print $NF}'`"
+    #    fi
 
 
-        autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
-        webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
-        database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
-        machine_ips="${autoscaler_ips} ${webserver_ips} ${database_ips}"
+    #    autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
+    #    webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
+    #    database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
+    #    machine_ips="${autoscaler_ips} ${webserver_ips} ${database_ips}"
     
-        autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh autoscaler ${CLOUDHOST}`"
-        webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh webserver ${CLOUDHOST}`"
-        database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh database ${CLOUDHOST}`"
-        machine_private_ips="${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
+   #     autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh autoscaler ${CLOUDHOST}`"
+   #     webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh webserver ${CLOUDHOST}`"
+   #     database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh database ${CLOUDHOST}`"
+   #     machine_private_ips="${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
     
-        allips="${machine_ips} ${machine_private_ips} ${BUILD_CLIENT_IP}"
+   #     allips="${machine_ips} ${machine_private_ips} ${BUILD_CLIENT_IP}"
 
-        for ip in ${allips}
-        do
-            /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=${SSH_PORT},ToPort=${SSH_PORT},IpRanges="[{CidrIp=${ip}/32}]" 2>/dev/null
-            /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=${DB_PORT},ToPort=${DB_PORT},IpRanges="[{CidrIp=${ip}/32}]" 2>/dev/null
-            /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=22,ToPort=22,IpRanges="[{CidrIp=${ip}/32}]" 2>/dev/null
-            if ( [ "${ENABLE_EFS}" = "1" ] )
-            then
-                /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=2049,ToPort=2049,IpRanges="[{CidrIp=${ip}/32}]" 2>/dev/null
-            fi
-       done
+   #     for ip in ${allips}
+   #     do
+   #         /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=${SSH_PORT},ToPort=${SSH_PORT},IpRanges="[{CidrIp=${ip}/32}]" 2>/dev/null
+   #         /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=${DB_PORT},ToPort=${DB_PORT},IpRanges="[{CidrIp=${ip}/32}]" 2>/dev/null
+   #         /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=22,ToPort=22,IpRanges="[{CidrIp=${ip}/32}]" 2>/dev/null
+   #         if ( [ "${ENABLE_EFS}" = "1" ] )
+   #         then
+   #             /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=2049,ToPort=2049,IpRanges="[{CidrIp=${ip}/32}]" 2>/dev/null
+   #         fi
+   #    done
 
        . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
                                 
