@@ -411,6 +411,8 @@ then
            /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --port ${SSH_PORT} --cidr ${machine_private_ip}/32
            /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --port ${DB_PORT} --cidr ${machine_private_ip}/32
         done
+        
+       /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp  --port 9000 --cidr 127.0.0.1/32
        
        /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=${SSH_PORT},ToPort=${SSH_PORT},IpRanges="[{CidrIp=${BUILD_CLIENT_IP}/32}]"
 
