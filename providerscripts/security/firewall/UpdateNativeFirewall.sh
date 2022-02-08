@@ -373,6 +373,8 @@ then
             /usr/bin/aws ec2 create-security-group --description "This is the security group for your agile deployment toolkit server machines" --group-name "AgileDeploymentToolkitSecurityGroup" --vpc-id=${vpc_id}
             security_group_id="`/usr/bin/aws ec2 describe-security-groups | /usr/bin/jq '.SecurityGroups[] | .GroupName + " " + .GroupId' | /bin/grep  AgileDeploymentToolkitSecurityGroup | /bin/sed 's/\"//g' | /usr/bin/awk '{print $NF}'`"
         fi
+        
+        group_owner="`/usr/bin/aws ec2 describe-security-groups --group-id ${security_group_id} | grep OwnerId | /usr/bin/awk -F':' '{print $2}' | /bin/sed 's/ //g' | /bin/sed 's/\"//g' | /bin/sed 's/,//g'`"
 
        . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
                                 
@@ -390,11 +392,10 @@ then
        # /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --source-group ${security_group_id} --port ${DB_PORT} 
        # /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --source-group ${security_group_id} --port 22 
         
-         /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol -1 --source-group ${security_group_id} --port -1
 
-        # /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --port ${SSH_PORT}
-        # /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --port ${DB_PORT} 
-        # /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --port 22 
+         /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --group-owner ${group_owner} --protocol tcp --port ${SSH_PORT}
+         /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --group-owner ${group_owner} --protocol tcp --port ${DB_PORT} 
+         /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --group-owner ${group_owner} --protocol tcp --port 22 
         /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=icmp,FromPort=-1,ToPort=-1,IpRanges='[{CidrIp=0.0.0.0/0}]'
         
    #     autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
@@ -409,7 +410,7 @@ then
 
        if ( [ "${ENABLE_EFS}" = "1" ] )
        then
-           /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --source-group ${security_group_id} --port 2049 --cidr 0.0.0.0/0
+           /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --group-owner ${group_owner} --protocol tcp --source-group ${security_group_id} --port 2049 --cidr 0.0.0.0/0
        fi
        
      #  /usr/bin/aws ec2 revoke-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=0,ToPort=65535,IpRanges=[{CidrIp=0.0.0.0/0}]
