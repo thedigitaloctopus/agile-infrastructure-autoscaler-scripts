@@ -374,8 +374,6 @@ then
             security_group_id="`/usr/bin/aws ec2 describe-security-groups | /usr/bin/jq '.SecurityGroups[] | .GroupName + " " + .GroupId' | /bin/grep  AgileDeploymentToolkitSecurityGroup | /bin/sed 's/\"//g' | /usr/bin/awk '{print $NF}'`"
         fi
         
-        group_owner="`/usr/bin/aws ec2 describe-security-groups --group-id ${security_group_id} | grep OwnerId | /usr/bin/awk -F':' '{print $2}' | /bin/sed 's/ //g' | /bin/sed 's/\"//g' | /bin/sed 's/,//g'`"
-
        . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
                                 
        if ( [ "${alldnsproxyips}" != "" ] )
@@ -393,9 +391,13 @@ then
        # /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --source-group ${security_group_id} --port 22 
         
 
-         /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --group-owner ${group_owner} --protocol tcp --port ${SSH_PORT}
-         /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --group-owner ${group_owner} --protocol tcp --port ${DB_PORT} 
-         /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --group-owner ${group_owner} --protocol tcp --port 22 
+         /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id}  --protocol tcp --port ${SSH_PORT}
+         /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id}  --protocol tcp --port ${DB_PORT} 
+         autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
+         for autoscaler_ip in ${autoscaler_ips}
+         do
+             /usr/bin/aws ec2 authorize-security-group-ingress --protocol tcp --port 22 --cidr ${autoscaler_ip}/32
+         done
         /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=icmp,FromPort=-1,ToPort=-1,IpRanges='[{CidrIp=0.0.0.0/0}]'
         
    #     autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
@@ -410,7 +412,7 @@ then
 
        if ( [ "${ENABLE_EFS}" = "1" ] )
        then
-           /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --group-owner ${group_owner} --protocol tcp --source-group ${security_group_id} --port 2049 --cidr 0.0.0.0/0
+           /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --source-group ${security_group_id} --port 2049 --cidr 0.0.0.0/0
        fi
        
      #  /usr/bin/aws ec2 revoke-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=0,ToPort=65535,IpRanges=[{CidrIp=0.0.0.0/0}]
