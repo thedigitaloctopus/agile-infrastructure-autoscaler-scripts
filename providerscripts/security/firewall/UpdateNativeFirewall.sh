@@ -384,13 +384,13 @@ then
             security_group_id1="`/usr/bin/aws ec2 describe-security-groups | /usr/bin/jq '.SecurityGroups[] | .GroupName + " " + .GroupId' | /bin/grep  AgileDeploymentToolkitWebserversSecurityGroup | /bin/sed 's/\"//g' | /usr/bin/awk '{print $NF}'`"
         fi
         
-        /usr/bin/aws ec2 authorize-security-group-ingress --group-name ${security_group_id1} --protocol tcp --port ${SSH_PORT} --source-group ${security_group_id}    
-        /usr/bin/aws ec2 authorize-security-group-ingress --group-name ${security_group_id1} --protocol tcp --port ${DB_PORT} --source-group ${security_group_id}    
-        /usr/bin/aws ec2 authorize-security-group-ingress --group-name ${security_group_id1} --protocol tcp --port 22 --source-group ${security_group_id}    
+        /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id1} --protocol tcp --port ${SSH_PORT} --source-group ${security_group_id}    
+        /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id1} --protocol tcp --port ${DB_PORT} --source-group ${security_group_id}    
+        /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id1} --protocol tcp --port 22 --source-group ${security_group_id}    
 
-        /usr/bin/aws ec2 authorize-security-group-ingress --group-name ${security_group_id} --protocol tcp --port ${SSH_PORT} --source-group ${security_group_id1}    
-        /usr/bin/aws ec2 authorize-security-group-ingress --group-name ${security_group_id} --protocol tcp --port ${DB_PORT} --source-group ${security_group_id1}    
-        /usr/bin/aws ec2 authorize-security-group-ingress --group-name ${security_group_id} --protocol tcp --port 22 --source-group ${security_group_id1} 
+        /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --port ${SSH_PORT} --source-group ${security_group_id1}    
+        /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --port ${DB_PORT} --source-group ${security_group_id1}    
+        /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --port 22 --source-group ${security_group_id1} 
         
        . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
                                 
