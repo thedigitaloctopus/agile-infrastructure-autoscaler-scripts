@@ -202,6 +202,8 @@ then
     while ( [ "${nowebservers}" -gt "${NO_WEBSERVERS}" ] )
     do
         ip="`/bin/echo ${ipstokill} | /usr/bin/cut -d " " -f ${count}`"
+        private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddressByIP.sh ${ip} ${cloudhost}`"
+
         /bin/touch ${HOME}/config/shuttingdownwebserverips/${ip}
         /bin/echo "${0} `/bin/date`: We have elected webserver ${ip} to shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
         webserver_name="`${HOME}/providerscripts/server/GetServerName.sh ${ip} ${CLOUDHOST} | grep webserver`"
@@ -258,7 +260,7 @@ then
             fi
             /bin/echo "${0} `/bin/date`: Webserver ${ip} is being destroyed" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             /bin/echo "${0} `/bin/date` : ${ip} is has been destroyed because it was excess to the defined scaling requirements" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-            ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
+            ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST} ${private_ip}
             
             DBaaS_DBSECURITYGROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaSDBSECURITYGROUP'`"
 
