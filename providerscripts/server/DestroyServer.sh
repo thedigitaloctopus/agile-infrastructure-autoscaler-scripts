@@ -184,11 +184,11 @@ then
         /bin/rm ${HOME}/config/webserverips/${private_server_ip}
         /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
         /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
-        ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${SSH_PORT} ${server_ip}
-        ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${DB_PORT} ${server_ip}
-        ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${SSH_PORT} ${private_server_ip}
-        ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${DB_PORT} ${private_server_ip}
-        ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh 22 ${server_ip}
-        ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh 22 ${private_server_ip}
+      #  ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${SSH_PORT} ${server_ip}
+      #  ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${DB_PORT} ${server_ip}
+      #  ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${SSH_PORT} ${private_server_ip}
+      #  ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${DB_PORT} ${private_server_ip}
+      #  ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh 22 ${server_ip}
+      #  ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh 22 ${private_server_ip}
     fi
 fi
