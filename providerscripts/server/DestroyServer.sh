@@ -18,7 +18,7 @@
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
 #######################################################################################################
 #######################################################################################################
-#set -x
+set -x
 
 OUT_FILE="firewall-remove-out-`/bin/date | /bin/sed 's/ //g'`"
 exec 1>>${HOME}/logs/firewall/${OUT_FILE}
