@@ -20,6 +20,11 @@
 #######################################################################################################
 #set -x
 
+OUT_FILE="firewall-remove-out-`/bin/date | /bin/sed 's/ //g'`"
+exec 1>>${HOME}/logs/firewall/${OUT_FILE}
+ERR_FILE="firewall-remove-err-`/bin/date | /bin/sed 's/ //g'`"
+exec 2>>${HOME}/logs/firewall/${ERR_FILE}
+
 server_ip="${1}"
 cloudhost="${2}"
 BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
