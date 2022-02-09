@@ -141,6 +141,8 @@ do
     then
         /bin/echo "IP ADDRESS ${downip} is DOWN"
         /bin/sed -i "/${downip}/d" ${HOME}/runtime/POTENTIALLY_DOWN.log
+        down_private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddressByIP.sh ${downip} ${cloudhost}`"
+
 
         /bin/echo "${0} `/bin/date`: ################################################################" >> ${HOME}/logs/UnresponsiveWebservers.log
         /bin/echo "${0} `/bin/date`: Webserver with ip address: ${downip} is being marked as unresponsive" >> ${HOME}/logs/UnresponsiveWebservers.log
@@ -181,7 +183,7 @@ do
         /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${downip} "${SUDO} ${HOME}/providerscripts/utilities/ShutdownThisWebserver.sh"
         /bin/echo "${0} `/bin/date`: Webserver with ip address: ${downip} is being destroyed" >> ${HOME}/logs/UnresponsiveWebservers.log
         /bin/echo "${0} `/bin/date` : ${downip} is being destroyed because it was unresponsive" >> ${HOME}/logs/MonitoringLog.log
-        ${HOME}/providerscripts/server/DestroyServer.sh ${downip} ${CLOUDHOST}
+        ${HOME}/providerscripts/server/DestroyServer.sh ${downip} ${CLOUDHOST} ${down_private_ip}
         
         DBaaS_DBSECURITYGROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaSDBSECURITYGROUP'`"
 
