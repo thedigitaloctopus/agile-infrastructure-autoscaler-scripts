@@ -431,18 +431,11 @@ then
     #   done
     #   
     #    autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh autoscaler ${CLOUDHOST}`"
-        webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh webserver ${CLOUDHOST}`"
+    #    webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh webserver ${CLOUDHOST}`"
     #    database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh database ${CLOUDHOST}`"
     #    machine_private_ips="${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
     
-    
-       if ( [ "${DATABASE_INSTALLATION_TYPE}" = "DBaaS" ] )
-       then
-           for webserver_private_ip in ${webserver_private_ips}
-           do
-               /usr/bin/aws rds authorize-db-security-group-ingress --db-security-group-name "agiledeploymenttoolkitdbsecuritygroup" --cidr ${webserver_private_ip}/32
-           done
-       fi    
+     
 
     #    for machine_private_ip in ${machine_private_ips}
     #    do              
