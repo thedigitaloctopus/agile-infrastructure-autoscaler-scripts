@@ -35,6 +35,7 @@ DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPORT'`"
 BUILD_CLIENT_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDCLIENTIP'`"
 CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
 ENABLE_EFS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ENABLEEFS'`"
+DATABASE_INSTALLATION_TYPE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DATABASEINSTALLATIONTYPE'`"
 
 
 if ( [ ! -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
