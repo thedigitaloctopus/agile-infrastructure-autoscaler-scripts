@@ -38,11 +38,16 @@ then
     dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
     zone="`/bin/echo ${dbaas} | /usr/bin/awk '{print $4}'`"
     database_name="`/bin/echo ${dbaas} | /usr/bin/awk '{print $6}'`"
-    ips="`/bin/ls ${HOME}/config/autoscalerpublicip`"
-    ips="${ips} `/bin/ls ${HOME}/config/webserverpublicips`"
-    ips="${ips} `/bin/ls ${HOME}/config/databasepublicip`"
-    ips="${ips} `/bin/ls ${HOME}/config/buildclientip`"
-    ips="`/bin/echo ${ips} | /bin/sed 's/  / /g' | /bin/tr ' ' ',' | /bin/sed 's/,$//g'`"
+    
+    autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
+    webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
+    database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
+    ips="${autoscaler_ips} ${webserver_ips} ${database_ips}"
+    #ips="`/bin/ls ${HOME}/config/autoscalerpublicip`"
+    #ips="${ips} `/bin/ls ${HOME}/config/webserverpublicips`"
+    #ips="${ips} `/bin/ls ${HOME}/config/databasepublicip`"
+    #ips="${ips} `/bin/ls ${HOME}/config/buildclientip`"
+    #ips="`/bin/echo ${ips} | /bin/sed 's/  / /g' | /bin/tr ' ' ',' | /bin/sed 's/,$//g'`"
     
     if ( [ "`/bin/echo ${dbaas} | /bin/grep ' pg '`" != "" ] )
     then
