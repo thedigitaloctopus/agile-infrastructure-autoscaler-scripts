@@ -44,11 +44,12 @@ SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSE
 
 if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] )
 then
-    if ( [ ! -f ${HOME}/config/${SERVER_USER} ] )
+    if ( [ ! -f ${HOME}/config/${SERVER_USER} ] && [ ! -f ${HOME}/runtime/CONFIG-PRIMED ] )
     then
         /bin/rm -r ${HOME}/config/*
         /bin/sleep 5
         /bin/touch ${HOME}/config/${SERVER_USER}
+        /bin/touch ${HOME}/runtime/CONFIG-PRIMED
     fi
 fi
 
