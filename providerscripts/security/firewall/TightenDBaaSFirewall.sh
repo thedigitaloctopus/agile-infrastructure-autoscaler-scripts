@@ -47,7 +47,7 @@ then
     #ips="${ips} `/bin/ls ${HOME}/config/webserverpublicips`"
     #ips="${ips} `/bin/ls ${HOME}/config/databasepublicip`"
     #ips="${ips} `/bin/ls ${HOME}/config/buildclientip`"
-    #ips="`/bin/echo ${ips} | /bin/sed 's/  / /g' | /bin/tr ' ' ',' | /bin/sed 's/,$//g'`"
+    ips="`/bin/echo ${ips} | /bin/sed 's/  / /g' | /bin/tr ' ' ',' | /bin/sed 's/,$//g'`"
     
     if ( [ "`/bin/echo ${dbaas} | /bin/grep ' pg '`" != "" ] )
     then
