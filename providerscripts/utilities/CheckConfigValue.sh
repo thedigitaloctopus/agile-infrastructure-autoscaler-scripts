@@ -22,7 +22,7 @@
 
 export HOME="`/bin/cat /home/homedir.dat`"
 
-key_value="`/bin/grep "${1}" ${HOME}/.ssh/autoscaler_configuration_settings.dat`"
+key_value="`/bin/grep -a "${1}" ${HOME}/.ssh/autoscaler_configuration_settings.dat`"
 
 if ( [ "${key_value}" != "" ] )
 then
