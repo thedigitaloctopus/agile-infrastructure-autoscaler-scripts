@@ -41,6 +41,11 @@ then
     exit
 fi
 
+if ( [ -f ${HOME}/config/SWITCHOFFSCALING ] )
+then
+    exit
+fi
+
 #If there's an build processes hanging around from previous attempts, purge them so we are nice and clean
 if ( [ -f ${HOME}/runtime/buildingwebserver.lock ] )
 then
