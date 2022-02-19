@@ -282,7 +282,11 @@ then
            # nowebservers="`/usr/bin/expr ${nowebservers} - 1`"
            NO_WEBSERVERS="`/bin/grep -a "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
             nowebservers="`${HOME}/autoscaler/GetDNSIPs.sh | /usr/bin/wc -w`"
+            
+            /bin/echo "${0} #############################################################################" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             /bin/echo "${0} `/bin/date`: There is now ${nowebservers} webservers running" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+            /bin/echo "${0} #############################################################################" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+
             ${HOME}/providerscripts/email/SendEmail.sh "UPDATE IN NUMBER OF ACTIVE WEBSERVERS" "There is now ${nowebservers} webservers running"
         else
             #If we have multiple autoscalers its possible that an IP that we are processing has been shutdown by another autoscaler so if we can't find a machine
