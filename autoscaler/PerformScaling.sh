@@ -226,27 +226,12 @@ then
             
             /bin/sleep 120
 
-            /bin/echo "${0} `/bin/date`: Webserver ${ip} is being shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-            
-      #      markattempts="0"
-      #      
-      #      while ([ "${markattempts}" -lt "5" ] )
-      #      do
-      #          /bin/echo "${0} `/bin/date`: Making a fresh attempt to shutdown webserver ${ip}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-      #          markattempts="`/usr/bin/expr ${markattempts} + 1`"
-      #          /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${SUDO} /bin/touch ${HOME}/runtime/MARKEDFORSHUTDOWN"
-      #      done
-      #      
-      #      if ( [ "${markattempts}" = "5" ] )
-      #      then
-      #          /bin/echo "${0} `/bin/date`: Reached 'max tries' for a shutdown, most likely the machine was already shutdown by another autoscaler" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-      #      fi
-       
+            /bin/echo "${0} `/bin/date`: Webserver ${ip} is being shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log       
        
             /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${SUDO} /bin/touch ${HOME}/runtime/MARKEDFORSHUTDOWN"
             while ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${SUDO} /bin/ls ${HOME}/runtime/MARKEDFORSHUTDOWN"`" != "" ] )
             do
-                /bin/echo "${0} `/bin/date`: Monitoring for webserver ${ip} to have completed application backup and shutdown following shudown initiation as a scaling event" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+                /bin/echo "${0} `/bin/date`: Monitoring for webserver ${ip} to have completed application backup and shutdown following shutdown initiation as a scaling event" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
                 /bin/sleep 30
             done
             
@@ -269,7 +254,7 @@ then
                 /bin/sleep 5
             fi
             /bin/echo "${0} `/bin/date`: Webserver ${ip} is being destroyed" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-            /bin/echo "${0} `/bin/date` : ${ip} is has been destroyed because it was excess to the defined scaling requirements" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+            /bin/echo "${0} `/bin/date`: ${ip} is has been destroyed because it was excess to the defined scaling requirements" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST} ${private_ip}
             
             DBaaS_DBSECURITYGROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaSDBSECURITYGROUP'`"
