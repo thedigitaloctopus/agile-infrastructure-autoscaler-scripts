@@ -228,19 +228,27 @@ then
 
             /bin/echo "${0} `/bin/date`: Webserver ${ip} is being shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             
-            markattempts="0"
-            
-            while ([ "${markattempts}" -lt "5" ] )
+      #      markattempts="0"
+      #      
+      #      while ([ "${markattempts}" -lt "5" ] )
+      #      do
+      #          /bin/echo "${0} `/bin/date`: Making a fresh attempt to shutdown webserver ${ip}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+      #          markattempts="`/usr/bin/expr ${markattempts} + 1`"
+      #          /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${SUDO} /bin/touch ${HOME}/runtime/MARKEDFORSHUTDOWN"
+      #      done
+      #      
+      #      if ( [ "${markattempts}" = "5" ] )
+      #      then
+      #          /bin/echo "${0} `/bin/date`: Reached 'max tries' for a shutdown, most likely the machine was already shutdown by another autoscaler" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+      #      fi
+       
+       
+            /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${SUDO} /bin/touch ${HOME}/runtime/MARKEDFORSHUTDOWN"
+            while ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${SUDO} /bin/ls ${HOME}/runtime/MARKEDFORSHUTDOWN"`" != "" ] )
             do
-                /bin/echo "${0} `/bin/date`: Making a fresh attempt to shutdown webserver ${ip}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-                markattempts="`/usr/bin/expr ${markattempts} + 1`"
-                /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${SUDO} /bin/touch ${HOME}/runtime/MARKEDFORSHUTDOWN"
+                /bin/echo "${0} `/bin/date`: Monitoring for webserver ${ip} to have completed application backup and shutdown following shudown initiation as a scaling event" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+                /bin/sleep 30
             done
-            
-            if ( [ "${markattempts}" = "5" ] )
-            then
-                /bin/echo "${0} `/bin/date`: Reached 'max tries' for a shutdown, most likely the machine was already shutdown by another autoscaler" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-            fi
             
             count1="0"
             while ( [ "`/usr/bin/ping -c 3 ${ip} | /bin/grep '100% packet loss'`"  = "" ] && [ "${count1}" -lt "9" ] )
