@@ -222,7 +222,7 @@ then
             #terminated machine. Clear? If there is a longer TTL on the record, this could be a problem and the sleep here would have
             #to be increased here to prevent errors on scaledown
             
-            /bin/echo "${0} `/bin/date`: Pausing for 300 seconds to make sure the DNS system has cleared itself" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+            /bin/echo "${0} `/bin/date`: Pausing for 120 seconds to make sure the DNS system has cleared itself" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             
             /bin/sleep 120
 
