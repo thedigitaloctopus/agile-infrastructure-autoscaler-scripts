@@ -172,7 +172,7 @@ then
            # /bin/echo "${0} `/bin/date`:  Rebooting autoscaler before next scaling event so that memory doesn't run out which sometimes happens on small machines" >> ${HOME}/logs/ScalingEventsLog.log
            # /usr/sbin/shutdown -r now
         else
-            /bin/echo "${0} `/bin/date`:  I have calculated that a webserver needs booting so am booting a new one as a regular build (not a snapshot)" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+            /bin/echo "${0} `/bin/date`: I have calculated that a webserver needs booting so am booting a new one as a regular build (not a snapshot)" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             /bin/touch ${HOME}/runtime/buildingwebserver.lock
             newip="`${HOME}/autoscaler/BuildWebserver.sh`"
             /bin/rm ${HOME}/runtime/buildingwebserver.lock
