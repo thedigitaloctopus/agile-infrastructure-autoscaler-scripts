@@ -47,8 +47,7 @@ if ( [ -f ${HOME}/DROPLET ] )
 then
     #allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
     
-    #if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
-    if ( [ "`${HOME}/providerscripts/utilities/ObtainSharedLock.sh FIREWALL-UPDATING`" = "1" ] )
+    if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
     then
        
         autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
@@ -157,8 +156,7 @@ if ( [ -f ${HOME}/EXOSCALE ] )
 then
   # allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
    
-    #if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
-    if ( [ "`${HOME}/providerscripts/utilities/ObtainSharedLock.sh FIREWALL-UPDATING`" = "1" ] )
+    if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
     then
        # /bin/touch ${HOME}/config/FIREWALL-UPDATING
        
@@ -199,8 +197,7 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] )
 then
-   # if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
-    if ( [ "`${HOME}/providerscripts/utilities/ObtainSharedLock.sh FIREWALL-UPDATING`" = "1" ] )
+    if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
     then
     #    /bin/touch ${HOME}/config/FIREWALL-UPDATING
 
@@ -264,8 +261,7 @@ fi
 
 if ( [ -f ${HOME}/VULTR ] )
 then
-    #if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
-    if ( [ "`${HOME}/providerscripts/utilities/ObtainSharedLock.sh FIREWALL-UPDATING`" = "1" ] )
+    if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
     then
      #   /bin/touch ${HOME}/config/FIREWALL-UPDATING
    
@@ -358,13 +354,8 @@ fi
 
 if ( [ -f ${HOME}/AWS ] )
 then
-
-   
-    if ( [ "`${HOME}/providerscripts/utilities/ObtainSharedLock.sh FIREWALL-UPDATING`" = "1" ] )
+    if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
     then
-    
-    
-    
         interface="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/`"
         subnet_id="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/${interface}/subnet-id`"
         vpc_id="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/${interface}/vpc-id`"
