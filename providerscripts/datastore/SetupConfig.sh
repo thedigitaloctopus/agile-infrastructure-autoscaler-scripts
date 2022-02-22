@@ -120,15 +120,15 @@ then
     /usr/bin/s3fs -o nonempty,allow_other,use_path_request_style,sigv2 -ourl=https://${endpoint} ${configbucket} ${HOME}/config
 fi
 
-SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
-if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] &&  [ "`/bin/ls ${HOME}/config/${SERVER_USER}`" = "" ] )
-then
-    /bin/rm -r ${HOME}/config/*
-    /bin/touch ${HOME}/config/${SERVER_USER}
-    /bin/sleep 20
-fi
+#SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
+#if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] &&  [ "`/bin/ls ${HOME}/config/${SERVER_USER}`" = "" ] )
+#then
+#    /bin/rm -r ${HOME}/config/*
+#    /bin/touch ${HOME}/config/${SERVER_USER}
+#    /bin/sleep 20
+#fi
 
-${HOME}/providerscripts/utilities/SetupConfigDirectories.sh
+#${HOME}/providerscripts/utilities/SetupConfigDirectories.sh
 
 /bin/echo "THESE DIRECTORIES ARE HERE FOR USE DURING THE OPERATION OF THE DIFFERENT CLASSES OF MACHINES IN THE ADTK" > ${HOME}/config/README
 /bin/echo "ESSENTIAL INFORMATION IS SHARED BETWEEN THE MACHINES USING THESE SHARED DIRECTRIES MOUNTED FROM A DATASTORE" >> ${HOME}/config/README
