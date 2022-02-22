@@ -259,7 +259,7 @@ then
                 /bin/sleep 5
             fi
             /bin/echo "${0} `/bin/date`: Webserver ${ip} is being destroyed" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-            /bin/echo "${0} `/bin/date`: ${ip} is has been destroyed because it was excess to the defined scaling requirements" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+            /bin/echo "${0} `/bin/date`: ${ip} has been destroyed because it was excess to the defined scaling requirements" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
             ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST} ${private_ip}
             
             DBaaS_DBSECURITYGROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaSDBSECURITYGROUP'`"
