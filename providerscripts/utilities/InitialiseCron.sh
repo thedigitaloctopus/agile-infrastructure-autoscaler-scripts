@@ -51,8 +51,6 @@
 #This script will run every 10 minutes
 /bin/echo "*/10 * * * * export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/EnforcePermissions.sh" >> /var/spool/cron/crontabs/root
 
-/bin/echo "*/30 * * * * sync && /bin/echo 3 > /proc/sys/vm/drop_caches" >> /var/spool/cron/crontabs/root
-
 #These scripts will run at set times
 /bin/echo "30 2 * * * /usr/sbin/ufw --force reset" >> /var/spool/cron/crontabs/root
 
