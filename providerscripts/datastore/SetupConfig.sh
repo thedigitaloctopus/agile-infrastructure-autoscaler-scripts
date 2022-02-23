@@ -47,6 +47,7 @@ fi
 if ( [ "`/usr/bin/ps aux --sort=-%mem | /usr/bin/head | /bin/grep s3fs | /bin/grep config$ | /usr/bin/awk '{print $4}' | /usr/bin/xargs -n1 printf \"%1.f\n\"`" -gt "15" ] )
 then
     /bin/sleep `/usr/bin/shuf -i 1-60 -n 1`
+    /bin/echo "${0} `date` Unmounting config directory because s3fs leaks and has exceeded its memory allowance" >> ${HOME}/logs/S3FSMountsRecord.log
     /bin/umount -f ${HOME}/config
 fi
 
