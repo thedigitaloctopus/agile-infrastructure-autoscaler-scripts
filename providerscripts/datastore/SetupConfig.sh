@@ -40,6 +40,15 @@ then
     /bin/umount -f ${HOME}/config
 fi
 
+# I found that S3FS has memory creep meaning that it slowly uses up more and more memory to deal with this in as least hacky was as possible
+# I check when S3FS is using more than 15% memory and unmount it and remounting it straight away. This will release the memory it was using
+# until the next time its at 15% when this process will be repeated again
+
+if ( [ "`/usr/bin/ps aux --sort=-%mem | /usr/bin/head | /bin/grep s3fs | /bin/grep config$ | /usr/bin/awk '{print $4}'`" -gt "15" ] )
+then
+    /bin/umount -f ${HOME}/config
+fi
+
 SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
 
 if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" != "" ] )
