@@ -46,6 +46,7 @@ fi
 
 if ( [ "`/usr/bin/ps aux --sort=-%mem | /usr/bin/head | /bin/grep s3fs | /bin/grep config$ | /usr/bin/awk '{print $4}'`" -gt "15" ] )
 then
+    /bin/sleep `/usr/bin/shuf -i 1-60 -n 1`
     /bin/umount -f ${HOME}/config
 fi
 
