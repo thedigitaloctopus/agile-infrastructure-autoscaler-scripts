@@ -47,8 +47,10 @@ do
         if ( [ -f ${HOME}/runtime/PERFORMING_S3FS_CHECK ] && [ -f ${HOME}/runtime/MONITOR_S3FS ] && [ "${count}" = "4" ] )
         then
             /bin/rm ${HOME}/runtime/PERFORMING_S3FS_CHECK ${HOME}/runtime/MONITOR_S3FS
-            /bin/echo "${0} `/bin/date`: Emergency reboot has happened because s3fs looks to have become unresponsive which hoses us if we don't reboot" >> ${HOME}/logs/UnresponsiveS3FSLog.dat
-            /usr/sbin/shutdown -r now
+         #   /bin/echo "${0} `/bin/date`: Emergency reboot has happened because s3fs looks to have become unresponsive which hoses us if we don't reboot" >> ${HOME}/logs/UnresponsiveS3FSLog.dat
+         #   /usr/sbin/shutdown -r now
+            /usr/bin/umount -f ${HOME}/config
+            ${HOME}/providerscripts/datastore/SetupConfig.sh
         fi
     fi
     /bin/sleep 10
