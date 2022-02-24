@@ -489,15 +489,8 @@ else
             . ${HOME}/providerscripts/server/DenyCachingAccess.sh
         fi
 
-        if ( [ -f ${HOME}/config/beingbuiltips/${private_ip} ] )
-        then
-            /bin/rm ${HOME}/config/beingbuiltips/${private_ip}
-        fi
-        
-        if ( [ -f ${HOME}/config/beingbuiltpublicips/${ip} ] )
-        then
-            /bin/rm ${HOME}/config/beingbuiltpublicips/${ip}
-        fi
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltips/${private_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltpublicips/${ip}"
         
         if ( [ -f ${HOME}/runtime/autoscalelock.file ] )
         then
@@ -646,15 +639,9 @@ else
     #So, we add the ip address of our new machine to our DNS provider and that machine is then ready
     #to start serving requests
     /bin/echo "${0} `/bin/date`: ${ip} is fully online and it's public ip is being added to the DNS provider" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-    if ( [ -f ${HOME}/config/beingbuiltips/${private_ip} ] )
-    then
-        /bin/rm ${HOME}/config/beingbuiltips/${private_ip}
-    fi
-    
-    if ( [ -f ${HOME}/config/beingbuiltpublicips/${ip} ] )
-    then
-        /bin/rm ${HOME}/config/beingbuiltpublicips/${ip}
-    fi
+
+    ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltips/${private_ip}"
+    ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltpublicips/${ip}"
     
     ${HOME}/autoscaler/AddIPToDNS.sh ${ip}
     /bin/echo "${ip}"
@@ -662,15 +649,9 @@ fi
 
 /bin/echo "${0} `/bin/date`: Either way, successful or not the build process for machine with ip: ${ip} has completed" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 #Make very sure that we remove our flag saying that this is still in the being built state
-if ( [ -f ${HOME}/config/beingbuiltips/${private_ip} ] )
-then
-    /bin/rm ${HOME}/config/beingbuiltips/${private_ip}
-fi
 
-if ( [ -f ${HOME}/config/beingbuiltpublicips/${ip} ] )
-then
-    /bin/rm ${HOME}/config/beingbuiltpublicips/${ip}
-fi
+${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltips/${private_ip}"
+${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltpublicips/${ip}"
 
 #${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
 
