@@ -27,11 +27,11 @@ fi
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
     /usr/bin/wget https://github.com/kahing/goofys/releases/latest/download/goofys
-    /bin/cp goofyfs /usr/bin
+    /bin/cp goofys /usr/bin
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
     /usr/bin/wget https://github.com/kahing/goofys/releases/latest/download/goofys
-    /bin/cp goofyfs /usr/bin
+    /bin/cp goofys /usr/bin
 fi
