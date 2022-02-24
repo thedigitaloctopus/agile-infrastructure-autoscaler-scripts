@@ -36,7 +36,7 @@ CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`
 ip="${1}"
 private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddressByIP.sh ${ip} ${CLOUDHOST}`"
 
-/bin/rm ${HOME}/config/bootedwebserverips/${private_ip}
+${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "bootedwebserverips/${private_ip}"
 /bin/touch ${HOME}/config/shuttingdownwebserverips/${private_ip}
 
 #remove the ip address which has been passed as a parameter from the DNS provider
