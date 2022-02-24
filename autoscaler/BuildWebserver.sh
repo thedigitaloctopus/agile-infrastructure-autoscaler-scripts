@@ -220,9 +220,9 @@ while ( [ "`/bin/echo ${ip} | /bin/grep -E "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\
 do
     /bin/sleep 20
     ip="`${HOME}/providerscripts/server/GetServerIPAddresses.sh ${SERVER_INSTANCE_NAME} ${CLOUDHOST}`"
-    /bin/touch ${HOME}/config/webserverpublicips/${ip}
+    ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} webserverpublicips/${ip}
     private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh ${SERVER_INSTANCE_NAME} ${CLOUDHOST}`"
-    /bin/touch ${HOME}/config/webserverips/${private_ip}
+    ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${private_ip} webserverips/${private_ip}
     count="`/usr/bin/expr ${count} + 1`"
 done
 
@@ -264,10 +264,12 @@ fi
 #The autoscaler monitors for this when it is looking for slow builds. The being built part of things is cleared out when
 #we reach the end of the build process so if this persists for an excessive amount of time, the "slow builds" script on the
 #autoscaler knows that something is hanging or has gone wrong with the build and it clears things up.
-/usr/bin/touch ${HOME}/config/beingbuiltips/${private_ip}
-/usr/bin/touch ${HOME}/config/beingbuiltpublicips/${ip}
-/usr/bin/touch ${HOME}/config/webserverips/${private_ip}
-/usr/bin/touch ${HOME}/config/webserverpublicips/${ip}
+
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${private_ip} beingbuiltips/${private_ip}
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} beingbuiltpublicips/${ip}
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${private_ip} webserverips/${private_ip}
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} webserverpublicips/${ip}
+
 
 #/bin/echo " ${ip} ${private_ip} " >> ${HOME}/runtime/ipsforfirewall
 ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${private_ip}
