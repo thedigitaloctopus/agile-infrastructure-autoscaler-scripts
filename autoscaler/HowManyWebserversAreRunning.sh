@@ -21,7 +21,7 @@
 set -x
 
 #If the toolkit isn't fully installed, we don't want to do anything
-if ( [ ! -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
+if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLEDSUCCESSFULLY"`" = "0" ] )
 then
     exit
 fi
