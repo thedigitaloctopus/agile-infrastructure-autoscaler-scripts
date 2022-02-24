@@ -76,10 +76,9 @@ then
    exit
 elif ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "scalingprofile/profile.cnf"`" = "0" ] )
 then
-    /bin/mkdir ${HOME}/config/scalingprofile
-    /bin/cp /dev/null ${HOME}/config/scalingprofile/profile.cnf
-    /bin/echo  "SCALING_MODE=${SCALING_MODE}" > ${HOME}/config/scalingprofile/profile.cnf
-    /bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> ${HOME}/config/scalingprofile/profile.cnf
+    /bin/echo  "SCALING_MODE=${SCALING_MODE}" > ./profile.cnf
+    /bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> ./profile.cnf  
+    ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh profile.cnf "scalingprofile/profile.cnf"
 fi
 
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLEDSUCCESSFULLY"`" = "0" ] )
