@@ -457,7 +457,7 @@ else
     /bin/echo "${0} `/bin/date`: Building a new machine from a snapshot" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 
     #If we got to here, then the server has been built from a snapshot.
-    /usr/bin/touch ${HOME}/config/bootedwebserverips/${private_ip}
+    ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${private_ip} bootedwebserverips/${private_ip}
 
     #We want to make sure that our server has spawned correctly from our snapshot so give it plenty of time to connect. If the connection fails
     #then, as I have seen, something has gone wrong with spawning from a snapshot, so destroy the machine and the next run of the autoscaler
