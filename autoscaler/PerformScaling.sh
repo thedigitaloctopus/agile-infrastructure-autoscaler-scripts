@@ -281,11 +281,10 @@ then
             
             /bin/rm ${HOME}/runtime/IPREMOVED:${ip}
             ${HOME}/providerscripts/email/SendEmail.sh "A WEBSERVER HAS BEEN DESTROYED" "Webserver ( ${ip} ) has just been shutdown and destroyed"
-
-            /bin/rm  ${HOME}/config/shuttingdownwebserverips/${ip}
+            ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "shuttingdownwebserverips/${ip}"
             count="`/usr/bin/expr ${count} + 1`"
-           # nowebservers="`/usr/bin/expr ${nowebservers} - 1`"
-           NO_WEBSERVERS="`/bin/grep -a "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
+            # nowebservers="`/usr/bin/expr ${nowebservers} - 1`"
+            NO_WEBSERVERS="`/bin/grep -a "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
             nowebservers="`${HOME}/autoscaler/GetDNSIPs.sh | /usr/bin/wc -w`"
             
             /bin/echo "${0} #############################################################################" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
