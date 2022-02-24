@@ -36,12 +36,12 @@ then
     /bin/mkdir -p ${HOME}/logs/${logdir}
 fi
 
-if ( [ -f ${HOME}/config/webrootsynctunnel/sync*purge ] || [ -f ${HOME}/config/webrootsynctunnel/switchoff* ] )
+if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "webrootsynctunnel/syncpurge"`" = "1" ] || [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "webrootsynctunnel/switchoffscalingpriortosyncpurge"`" = "1" ] )
 then
     exit
 fi
 
-if ( [ -f ${HOME}/config/SWITCHOFFSCALING ] )
+if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "SWITCHOFFSCALING"`" = "1" ] )
 then
     exit
 fi
