@@ -21,6 +21,21 @@
 ####################################################################################
 #set -x
 
+# Sometimes S3FS freezes, at least, I have seen it happen, so, I put this check in which places a monitoring file which won't get deleted
+# if the attempt to list from s3 - ls ${HOME}/config freezed the last time around. This is an emergency situation, so, we shutdown the webserver
+# so that the S3FS system can recover. The server will be offline for 10s of seconds in this case whilst it reboots. 
+# If anyone knows of a solution for shared directories which would suit this toolkit better, your help would be appreciated. 
+
+if ( [ "`/usr/bin/find ${HOME}/runtime/S3FS-TESTER -type f`" != "" ] )
+then
+    /bin/rm ${HOME}/runtime/S3FS-TESTER
+    /usr/sbin/shutdown -r now
+fi
+
+/bin/touch ${HOME}/runtime/S3FS-TESTER
+/bin/ls ${HOME}/config/
+/bin/rm ${HOME}/runtime/S3FS-TESTER
+
 #if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh PRODUCTION:1`" = "1" ] )
 #then
 #    exit
