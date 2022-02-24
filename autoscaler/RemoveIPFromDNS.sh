@@ -37,7 +37,7 @@ ip="${1}"
 private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddressByIP.sh ${ip} ${CLOUDHOST}`"
 
 ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "bootedwebserverips/${private_ip}"
-/bin/touch ${HOME}/config/shuttingdownwebserverips/${private_ip}
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${private_ip} shuttingdownwebserverips/${private_ip}
 
 #remove the ip address which has been passed as a parameter from the DNS provider
 zonename="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{$1=""}1' | /bin/sed 's/^ //g' | /bin/sed 's/ /./g'`"
