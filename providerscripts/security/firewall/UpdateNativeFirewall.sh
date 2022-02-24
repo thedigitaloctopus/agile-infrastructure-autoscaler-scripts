@@ -38,7 +38,7 @@ ENABLE_EFS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ENABLEEFS'
 DATABASE_INSTALLATION_TYPE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DATABASEINSTALLATIONTYPE'`"
 
 
-if ( [ ! -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
+if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLEDSUCCESSFULLY"`" = "0" ] )
 then
    exit
 fi
@@ -47,7 +47,7 @@ if ( [ -f ${HOME}/DROPLET ] )
 then
     #allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
     
-    if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
+    if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "FIREWALL-UPDATING"`" = "0" ] )
     then
        
         autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
@@ -156,7 +156,7 @@ if ( [ -f ${HOME}/EXOSCALE ] )
 then
   # allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
    
-    if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
+    if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "FIREWALL-UPDATING"`" = "0" ] )
     then
        # /bin/touch ${HOME}/config/FIREWALL-UPDATING
        
@@ -197,7 +197,7 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] )
 then
-    if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
+    if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "FIREWALL-UPDATING"`" = "0" ] )
     then
     #    /bin/touch ${HOME}/config/FIREWALL-UPDATING
 
@@ -261,7 +261,7 @@ fi
 
 if ( [ -f ${HOME}/VULTR ] )
 then
-    if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
+    if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "FIREWALL-UPDATING"`" = "0" ] )
     then
      #   /bin/touch ${HOME}/config/FIREWALL-UPDATING
    
@@ -354,7 +354,7 @@ fi
 
 if ( [ -f ${HOME}/AWS ] )
 then
-    if ( [ ! -f ${HOME}/config/FIREWALL-UPDATING ] )
+    if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "FIREWALL-UPDATING"`" = "0" ] )
     then
         interface="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/`"
         subnet_id="`/usr/bin/curl --silent http://169.254.169.254/latest/meta-data/network/interfaces/macs/${interface}/subnet-id`"
