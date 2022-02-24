@@ -104,10 +104,10 @@ ASIP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ASIP'`"
 ${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh 'AUTOSCALED' 
 
 if ( [ "${ASIP}" = "" ] )
-then
-    if ( [ "`/bin/ls ${HOME}/config/autoscalerip | /usr/bin/tr '\n' ' ' | /usr/bin/wc-w`" = "1" ] )
+then 
+    if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh \"autoscalerip/*\" | /usr/bin/tr '\n' ' ' | /usr/bin/wc-w`" = "1" ] )
     then
-        ASIP="`/bin/ls ${HOME}/config/autoscalerip`"
+        ASIP="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh \"autoscalerip/*\"`"
     else
         ASIP="multiple"
     fi
@@ -115,32 +115,40 @@ fi
 AS_PUBLIC_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ASPUBLICIP'`"
 if ( [ "${AS_PUBLIC_IP}" = "" ] )
 then
-    if ( [ "`/bin/ls ${HOME}/config/autoscalerpublicip | /usr/bin/tr '\n' ' ' | /usr/bin/wc-w`" = "1" ] )
+    if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh \"autoscalerpublicip/*\" | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`" = "1" ] )
     then
-        AS_PUBLIC_IP="`/bin/ls ${HOME}/config/autoscalerpublicip`"
+        AS_PUBLIC_IP="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh \"autoscalerpublicip/*\"`"
     else
         AS_PUBLIC_IP="mutiple"
     fi
 fi
+
 DBIP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBIP'`"
+
 if ( [ "${DBIP}" = "" ] )
 then
-     ASIP="`/bin/ls ${HOME}/config/databaseip`"
+     DBIP="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh \"databaseip/*\"`"
 fi
+
 DB_PUBLIC_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPUBLICIP'`"
+
 if ( [ "${DB_PUBLIC_IP}" = "" ] )
 then
-     DB_PUBLIC_IP="`/bin/ls ${HOME}/config/databasepublicip`"
+     DB_PUBLIC_IP="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh \"databasepublicip/*\"`"
 fi
+
 ASIPS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ASIPS'`"
+
 if ( [ "${ASIPS}" = "" ] )
 then
-    ASIPS="`/bin/ls ${HOME}/config/autoscalerpublicip`"
+    ASIPS="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh \"autoscalerpublicip/*\"`"
 fi
 ASIP_PRIVATES="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ASIP_PRIVATES'`"
+
 if ( [ "${ASIP_PRIVATES}" = "" ] )
 then
-    ASIP_PRIVATES"`/bin/ls ${HOME}/config/autoscalerip`"
+    ASIP_PRIVATES"`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh \"autoscalerip/*\"
+`"
 fi
 
 #Autoscalers need access to all webserver's port 22 from the get go
