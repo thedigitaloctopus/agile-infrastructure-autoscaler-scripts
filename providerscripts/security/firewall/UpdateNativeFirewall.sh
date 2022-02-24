@@ -148,7 +148,7 @@ then
        /usr/local/bin/doctl compute firewall add-rules ${webserver_firewall_id} --inbound-rules "${standard_rules}"
        /usr/local/bin/doctl compute firewall add-droplets ${webserver_firewall_id} --droplet-ids ${droplet_ids}
        
-       /bin/rm ${HOME}/config/FIREWALL-UPDATING
+       ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "FIREWALL-UPDATING"
    fi
 fi
 
@@ -191,7 +191,7 @@ then
            /usr/bin/exo compute security-group rule add adt --network 0.0.0.0/0 --port 443
        fi
        
-       /bin/rm ${HOME}/config/FIREWALL-UPDATING
+       ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "FIREWALL-UPDATING"
    fi
 fi
 
@@ -253,7 +253,7 @@ then
             /usr/local/bin/linode-cli firewalls device-create --id ${machine_id} --type linode ${firewall_id} 2>/dev/null #Redirect to null in case already added
         done
         
-        /bin/rm ${HOME}/config/FIREWALL-UPDATING
+       ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "FIREWALL-UPDATING"
    fi
 
 fi
@@ -348,7 +348,7 @@ then
            /usr/bin/vultr instance update-firewall-group -f ${firewall_id} -i ${machine_id}
        done
         
-       /bin/rm ${HOME}/config/FIREWALL-UPDATING
+       ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "FIREWALL-UPDATING"
    fi
 fi
 
@@ -441,6 +441,6 @@ then
       # /usr/bin/aws ec2 revoke-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=${DB_PORT},ToPort=${DB_PORT},IpRanges=[{CidrIp=0.0.0.0/0}]
       # /usr/bin/aws ec2 revoke-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=2049,ToPort=2049,IpRanges=[{CidrIp=0.0.0.0/0}]
        
-       /bin/rm ${HOME}/config/FIREWALL-UPDATING
+       ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "FIREWALL-UPDATING"
    fi
 fi
