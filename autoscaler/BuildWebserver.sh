@@ -26,7 +26,7 @@
 set -x
 
 #If we are trying to build a webserver before the toolkit has been fully installed, we don't want to do anything, so exit
-if ( [ "`${HOME}/providerscripts/datastore/wrapper/CheckConfigDatastore.sh "INSTALLEDSU1CCESSFULLY"`" = "0" ] )
+if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLEDSU1CCESSFULLY"`" = "0" ] )
 then
     exit
 fi
