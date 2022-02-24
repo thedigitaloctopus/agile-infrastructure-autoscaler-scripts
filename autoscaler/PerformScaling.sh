@@ -209,7 +209,7 @@ then
         ip="`/bin/echo ${ipstokill} | /usr/bin/cut -d " " -f ${count}`"
         private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddressByIP.sh ${ip} ${cloudhost}`"
 
-        /bin/touch ${HOME}/config/shuttingdownwebserverips/${ip}
+        ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} shuttingdownwebserverips/${ip}
         /bin/echo "${0} `/bin/date`: We have elected webserver ${ip} to shutdown" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
         webserver_name="`${HOME}/providerscripts/server/GetServerName.sh ${ip} ${CLOUDHOST} | grep webserver`"
         
