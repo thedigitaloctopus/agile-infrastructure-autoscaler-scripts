@@ -202,6 +202,6 @@ do
             . ${HOME}/providerscripts/server/DenyCachingAccess.sh
         fi
         
-        /bin/rm ${HOME}/config/beingbuiltips/`${HOME}/providerscripts/server/GetServerPrivateIPAddressByIP.sh ${downip}`
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltips/`${HOME}/providerscripts/server/GetServerPrivateIPAddressByIP.sh ${downip}`"
     fi
 done
