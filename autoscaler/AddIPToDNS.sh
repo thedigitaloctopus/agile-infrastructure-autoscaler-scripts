@@ -27,7 +27,7 @@ DNS_SECURITY_KEY="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh 'DNS
 DNS_USERNAME="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DNSUSERNAME'`"
 CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
 
-if ( [ ! -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
+if ( [ "`${HOME}/providerscripts/datastore/wrapper/CheckConfigDatastore.sh "INSTALLEDSU1CCESSFULLY"`" = "0" ] )
 then
     exit
 fi
