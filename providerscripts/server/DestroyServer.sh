@@ -49,9 +49,10 @@ then
     #This will destroy a server with the given ip address and cleanup all the associated configuration settings
     if ( [ "${server_ip}" != "" ] )
     then
-        /bin/rm ${HOME}/config/webserverips/${private_server_ip}
-        /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
-        /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
+    
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "bootedwebserverips/${private_server_ip}"
 
         server_id="`/usr/local/bin/doctl compute droplet list | /bin/grep ${server_ip} | /usr/bin/awk '{print $1}'`"
 
@@ -75,9 +76,11 @@ then
             /bin/echo "${0} `/bin/date` : failed in an attempt to get the server name too many times, giving up ...." >> ${HOME}/logs/MonitoringLog.log
         else
             /bin/echo "${0} `/bin/date`: Destroyed a server with name ${server_name}" >> ${HOME}/logs/MonitoringLog.log
-            /bin/rm ${HOME}/config/webserverips/${private_server_ip}
-            /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
-            /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
+            
+            ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
+            ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
+            ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "bootedwebserverips/${private_server_ip}"
+        
             /bin/touch ${HOME}/runtime/FIREWALL-REFRESH
         fi
     fi
@@ -87,15 +90,18 @@ if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
     if ( [ "${server_ip}" != "" ] )
     then
-        /bin/rm ${HOME}/config/webserverips/${private_server_ip}
-        /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
-        /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "bootedwebserverips/${private_server_ip}"
+        
         server_id="`/usr/local/bin/cs listVirtualMachines | jq --arg tmp_ip_address "${server_ip}" '(.virtualmachine[] | select(.nic[].ipaddress == $tmp_ip_address) | .id)' | /bin/sed 's/\"//g'`"
         /usr/local/bin/cs destroyVirtualMachine id="${server_id}"
         /bin/echo "${0} `/bin/date`: Destroyed a server with id ${server_id}" >> ${HOME}/logs/MonitoringLog.log
-        /bin/rm ${HOME}/config/webserverips/${private_server_ip}
-        /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
-        /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
+        
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "bootedwebserverips/${private_server_ip}"
+
         ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${SSH_PORT} ${server_ip}
         ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${DB_PORT} ${server_ip}
         ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${SSH_PORT} ${private_server_ip}
@@ -109,18 +115,20 @@ if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
     if ( [ "${server_ip}" != "" ] )
     then
-        /bin/rm ${HOME}/config/webserverips/${private_server_ip}
-        /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
-        /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "bootedwebserverips/${private_server_ip}"
+        
         server_to_delete=""
         server_to_delete="`${HOME}/providerscripts/server/GetServerName.sh ${server_ip} 'linode'`"
         server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_to_delete} | /bin/grep -v "id" | /usr/bin/awk '{print $1}'`"
         /usr/local/bin/linode-cli linodes shutdown ${server_id}
         /usr/local/bin/linode-cli linodes delete ${server_id}
         /bin/echo "${0} `/bin/date`: Destroyed a server with name ${server_to_delete}" >> ${HOME}/logs/MonitoringLog.log
-        /bin/rm ${HOME}/config/webserverips/${private_server_ip}
-        /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
-        /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
+        
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "bootedwebserverips/${private_server_ip}"
         
         ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${SSH_PORT} ${server_ip}
         ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${DB_PORT} ${server_ip}
@@ -139,9 +147,10 @@ then
 
     if ( [ "${server_ip}" != "" ] )
     then
-        /bin/rm ${HOME}/config/webserverips/${private_server_ip}
-        /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
-        /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
+    
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "bootedwebserverips/${private_server_ip}"
 
         /bin/sleep 1
         #Clonk
@@ -157,9 +166,11 @@ then
         /usr/bin/vultr instance delete ${server_id}
 
         /bin/echo "${0} `/bin/date`: Destroyed a server with id ${server_id}" >> ${HOME}/logs/MonitoringLog.log
-        /bin/rm ${HOME}/config/webserverips/${private_server_ip}
-        /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
-        /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
+        
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "bootedwebserverips/${private_server_ip}"
+        
         ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${server_ip}
         ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${private_server_ip}
     fi
@@ -169,9 +180,10 @@ if ( [ -f ${HOME}/AWS ] || [ "${cloudhost}" = "aws" ] )
 then
     if ( [ "${server_ip}" != "" ] )
     then
-        /bin/rm ${HOME}/config/webserverips/${private_server_ip}
-        /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
-        /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
+    
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "bootedwebserverips/${private_server_ip}"
 
         #Instance initiated shutdown is set to "terminate" so the machine might already be gone if it has done a shutdown, but, if not, make sure
         instance_id="`/usr/bin/aws ec2 describe-instances | /usr/bin/jq '.Reservations[].Instances[] | .InstanceId + " " + .PublicIpAddress' | /bin/sed 's/\"//g' | /bin/grep ${server_ip} | /usr/bin/awk '{print $1}'`"
@@ -181,14 +193,10 @@ then
             /usr/bin/aws ec2 terminate-instances --instance-ids ${instance_id}
         fi
         /bin/echo "${0} `/bin/date`: Destroyed a server with id ${instance_id}" >> ${HOME}/logs/MonitoringLog.log
-        /bin/rm ${HOME}/config/webserverips/${private_server_ip}
-        /bin/rm ${HOME}/config/webserverpublicips/${server_ip}
-        /bin/rm ${HOME}/config/bootedwebserverips/${private_server_ip}
-      #  ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${SSH_PORT} ${server_ip}
-      #  ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${DB_PORT} ${server_ip}
-      #  ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${SSH_PORT} ${private_server_ip}
-      #  ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${DB_PORT} ${private_server_ip}
-      #  ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh 22 ${server_ip}
-      #  ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh 22 ${private_server_ip}
+        
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "bootedwebserverips/${private_server_ip}"
+
     fi
 fi
