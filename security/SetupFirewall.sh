@@ -101,7 +101,7 @@ then
     /bin/sleep 5
 fi
 
-for autoscalerip in `/bin/ls ${HOME}/config/autoscalerip`
+for autoscalerip in `${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh \"autoscalerip/*\"`
 do
     if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${autoscalerip} | /bin/grep ALLOW`" = "" ] )
     then
@@ -111,7 +111,7 @@ do
     fi
 done
     
-for publicautoscalerip in `/bin/ls ${HOME}/config/autoscalerpublicip`
+for publicautoscalerip in `${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh \"autoscalerpublicip/*\"`
 do
     if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${publicautoscalerip} | /bin/grep ALLOW`" = "" ] )
     then
@@ -121,7 +121,7 @@ do
     fi
 done
 
-for ip in `/bin/ls ${HOME}/config/webserverips/`
+for ip in `${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh \"webserverips/*\"`
 do
     /bin/sleep 5
     if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${ip} | /bin/grep ALLOW`" = "" ] )
@@ -132,7 +132,7 @@ do
     fi
 done
 
-for ip in `/bin/ls ${HOME}/config/webserverpublicips/`
+for ip in `${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh \"webserverpublicips/*\"`
 do
     /bin/sleep 5
     if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${ip} | /bin/grep ALLOW`" = "" ] )
@@ -143,7 +143,7 @@ do
     fi
 done
 
-for ip in `/bin/ls ${HOME}/config/databaseip`
+for ip in `${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh \"databaseip/*\"`
 do
     /bin/sleep 5
     if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${ip} | /bin/grep ALLOW`" = "" ] )
@@ -153,7 +153,7 @@ do
         /bin/sleep 5
     fi
 done
-for ip in `/bin/ls ${HOME}/config/databasepublicip`
+for ip in `${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh \"databasepublicip/*\"`
 do
     /bin/sleep 5
     if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${ip} | /bin/grep ALLOW`" = "" ] )
