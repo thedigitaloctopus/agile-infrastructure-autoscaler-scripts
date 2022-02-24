@@ -22,7 +22,8 @@
 ######################################################################################
 ######################################################################################
 #set -x
-if ( [ -f ${HOME}/config/scalingprofile/profile.cnf ] )
+
+if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "scalingprofile/profile.cnf"`" = "1" ] )
 then
     if ( [ "`/bin/grep -cvPa '\S' ${HOME}/config/scalingprofile/profile.cnf`" -gt "60" ] )
     then
