@@ -64,7 +64,8 @@ do
         . ${HOME}/providerscripts/server/DenyCachingAccess.sh
     fi
     
-    /bin/rm ${HOME}/config/beingbuiltips/${strippedip}
-    /bin/rm ${HOME}/config/beingbuiltpublicips/${ip}
+    ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltips/${strippedip}"
+    ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltpublicips/${ip}"
+
     /bin/rm ${HOME}/runtime/autoscalelock.file
 done
