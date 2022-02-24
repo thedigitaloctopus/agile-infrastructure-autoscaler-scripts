@@ -21,13 +21,14 @@
 #set -x
 
 ip="`${HOME}/providerscripts/utilities/GetIP.sh`"
-/bin/touch ${HOME}/config/autoscalerip/${ip}
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} autoscalerip/${ip}
 
 publicip="`${HOME}/providerscripts/utilities/GetPublicIP.sh`"
-/bin/touch ${HOME}/config/autoscalerpublicip/${publicip}
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${publicip} autoscalerip/${publicip}
 
 #Also record build client IP address - each machine has it but for uniformity of interface, we can record it here also
 ip="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDCLIENTIP'`"
 
-/bin/touch ${HOME}/config/buildclientip/${ip}
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} buildclientip/${ip}
+
 
