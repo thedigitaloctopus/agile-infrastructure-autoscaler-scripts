@@ -7,8 +7,9 @@ CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`
 DNS_CHOICE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DNSCHOICE'`"
 
 autoscalerips=""
-autoscalerips="`/bin/ls ${HOME}/config/autoscalerip | /usr/bin/tr '\n' ' '`"
-autoscalerpublicips="`/bin/ls ${HOME}/config/autoscalerpublicip | /usr/bin/tr '\n' ' '`"
+
+autoscalerips="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh \"autoscalerip/*\" | /usr/bin/tr '\n' ' '`"
+autoscalerpublicips="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh \"autoscalerpublicip/*\" | /usr/bin/tr '\n' ' '`"
 autoscalerips=${autoscalerips}${autoscalerpublicips}
 
 preparedautoscalerips=""
