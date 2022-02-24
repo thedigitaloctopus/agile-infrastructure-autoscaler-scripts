@@ -22,7 +22,7 @@
 #######################################################################################################
 #set -x
 
-if ( [ ! -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] )
+if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLEDSUCCESSFULLY"`" = "0" ] )
 then
     exit
 fi
