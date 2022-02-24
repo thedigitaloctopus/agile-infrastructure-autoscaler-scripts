@@ -63,14 +63,14 @@ fi
 
 #/bin/echo "${allips}" > ${HOME}/runtime/ipsforfirewall
 
-if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] && [ ! -f ${HOME}/runtime/FIREWALL-INITIAL ] )
+if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLEDSUCCESSFULLY"`" = "0" ] && [ ! -f ${HOME}/runtime/FIREWALL-INITIAL ] )
 then
     /bin/touch ${HOME}/runtime/FIREWALL-INITIAL
     /bin/touch ${HOME}/runtime/FIREWALL-REFRESH
     ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
 fi
 
-if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] && ( [ -f ${HOME}/runtime/FIREWALL-REFRESH ] && [ "`/usr/bin/find ${HOME}/runtime/FIREWALL-REFRESH -type f -mmin +15`" != "" ] ) )
+if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLEDSUCCESSFULLY"`" = "0" ] && ( [ -f ${HOME}/runtime/FIREWALL-REFRESH ] && [ "`/usr/bin/find ${HOME}/runtime/FIREWALL-REFRESH -type f -mmin +15`" != "" ] ) )
 then
     /bin/touch ${HOME}/runtime/FIREWALL-REFRESH
     if ( [ ! -f ${HOME}/runtime/buildingwebserver.lock ] )
