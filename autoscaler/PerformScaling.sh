@@ -100,10 +100,9 @@ then
     ${HOME}/providerscripts/email/SendEmail.sh "NO SCALING CONFIG FOUND" "Defaulting back to the default number of webservers: ${NO_WEBSERVERS}"
 fi
 
-/bin/mkdir -p ${HOME}/config/scalingprofile
-/bin/cp /dev/null ${HOME}/config/scalingprofile/profile.cnf
-/bin/echo  "SCALING_MODE=${SCALING_MODE}" > ${HOME}/config/scalingprofile/profile.cnf
-/bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> ${HOME}/config/scalingprofile/profile.cnf
+/bin/echo  "SCALING_MODE=${SCALING_MODE}" > ./profile.cnf
+/bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> ./profile.cnf  
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh profile.cnf "scalingprofile/profile.cnf"
 ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'NUMBERWS' "${NO_WEBSERVERS}"
 
 if ( [ "${SCALING_MODE}" != "static" ] )
