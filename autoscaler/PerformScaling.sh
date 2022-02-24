@@ -74,7 +74,7 @@ NO_WEBSERVERS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'NUMBERW
 if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" = "" ] )
 then
    exit
-elif ( [ ! -f ${HOME}/config/scalingprofile/profile.cnf ] )
+elif ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "scalingprofile/profile.cnf"`" = "0" ] )
 then
     /bin/mkdir ${HOME}/config/scalingprofile
     /bin/cp /dev/null ${HOME}/config/scalingprofile/profile.cnf
