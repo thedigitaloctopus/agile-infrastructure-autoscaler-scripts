@@ -72,7 +72,7 @@ noactiveips="0"
 #Find out the number of webservers that are active and also online
 for ip in ${ips}
 do
-    if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=5 -o ConnectionAttempts=5 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E ${HOME}/providerscripts/utilities/CheckServerAlive.sh"`" = "ALIVE" ] && [ "`iswebserverup`" = "1" ] && [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLEDSUCCESSFULLY"`" = "0" ] )
+    if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=5 -o ConnectionAttempts=5 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E ${HOME}/providerscripts/utilities/CheckServerAlive.sh"`" = "ALIVE" ] && [ "`iswebserverup`" = "1" ] && [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLEDSUCCESSFULLY"`" = "1" ] )
     then
         noactiveips="`/usr/bin/expr ${noactiveips} + 1`"
     fi
