@@ -20,18 +20,26 @@
 #######################################################################################################
 #!/bin/sh
 
-if ( [ -d ${HOME}/config/credentials ] && [ -d ${HOME}/.ssh/accounts ] )
+#if ( [ -d ${HOME}/config/credentials ] && [ -d ${HOME}/.ssh/accounts ] )
+#then
+#    if ( [ ! -d ${HOME}/config/ssl/accounts ] )
+#    then
+#        /bin/cp -r ${HOME}/.ssh/accounts ${HOME}/config/ssl
+#    fi
+#fi
+
+if ( [ -d ${HOME}/.ssh/accounts ] )
 then
-    if ( [ ! -d ${HOME}/config/ssl/accounts ] )
-    then
-        /bin/cp -r ${HOME}/.ssh/accounts ${HOME}/config/ssl
-    fi
+    ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/.ssh/accounts config/ssl recursive
 fi
 
-if ( [ -d ${HOME}/config/credentials ] && [ ! -d ${HOME}/.ssh/accounts ] )
-then
-    if ( [ ! -d ${HOME}/.ssh/accounts ] )
-    then
-        /bin/cp -r  ${HOME}/config/ssl/accounts ${HOME}/.ssh/
-    fi
-fi
+#if ( [ -d ${HOME}/config/credentials ] && [ ! -d ${HOME}/.ssh/accounts ] )
+#then
+#    if ( [ ! -d ${HOME}/.ssh/accounts ] )
+#    then
+#        /bin/cp -r  ${HOME}/config/ssl/accounts ${HOME}/.ssh/
+#    fi
+#fi
+
+${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh config/ssl ${HOME}/.ssh/ recursive
+
