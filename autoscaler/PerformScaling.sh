@@ -94,6 +94,8 @@ then
     SCALING_MODE="`/bin/grep -a "SCALING_MODE" /tmp/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
     NO_WEBSERVERS="`/bin/grep -a "NO_WEBSERVERS" /tmp/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
 else
+    SCALING_MODE="static"
+    NO_WEBSERVERS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'NUMBERWS'`"
     ${HOME}/providerscripts/email/SendEmail.sh "NO SCALING CONFIG FOUND" "Defaulting back to the default number of webservers: ${NO_WEBSERVERS}"
 fi
 
