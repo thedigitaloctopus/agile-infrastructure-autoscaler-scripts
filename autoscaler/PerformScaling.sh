@@ -71,10 +71,11 @@ fi
 SCALING_MODE="static"
 NO_WEBSERVERS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'NUMBERWS'`"
 
-if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" = "" ] )
-then
-   exit
-elif ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "scalingprofile/profile.cnf"`" = "0" ] )
+#if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" = "" ] )
+#then
+#   exit
+#el
+if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "scalingprofile/profile.cnf"`" = "0" ] )
 then
     /bin/echo  "SCALING_MODE=${SCALING_MODE}" > /tmp/profile.cnf
     /bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> /tmp/profile.cnf  
