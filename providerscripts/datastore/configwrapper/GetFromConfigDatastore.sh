@@ -25,14 +25,14 @@ WEBSITE_URL="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEUR
 configbucket="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{ for(i = 1; i <= NF; i++) { print $i; } }' | /usr/bin/cut -c1-3 | /usr/bin/tr '\n' '-' | /bin/sed 's/-//g'`"
 configbucket="${configbucket}-config"
 
-/usr/bin/s3cmd get s3://${configbucket}/$1 /tmp
+/usr/bin/s3cmd --force get s3://${configbucket}/$1 /tmp
 
 if ( [ "$2" != "" ] )
 then
-    /usr/bin/s3cmd get s3://${configbucket}/$1 $2
+    /usr/bin/s3cmd --force get s3://${configbucket}/$1 $2
 fi
 
 if ( [ "$3" = "recursive" ] )
 then
-    /usr/bin/s3cmd --recursive get s3://${configbucket}/$1 $2 
+    /usr/bin/s3cmd --force --recursive get s3://${configbucket}/$1 $2 
 fi
