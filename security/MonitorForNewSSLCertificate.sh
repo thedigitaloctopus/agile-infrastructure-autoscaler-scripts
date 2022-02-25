@@ -29,6 +29,11 @@ ${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "ssl/f
 ${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "ssl/privkey.pem"
 ${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "ssl/${WEBSITE_URL}.json"
 
+if ( [ ! -f /tmp/fullchain.pem ${HOME} ] || [ ! -f /tmp/privkey.pem ] || [ ! -f /tmp/${WEBSITE_URL}.json ] )
+then
+    exit
+fi
+
 if ( [ "`/usr/bin/diff /tmp/fullchain.pem ${HOME}/.ssh/fullchain.pem`" != "" ] ||
     [ "`/usr/bin/diff /tmp/privkey.pem ${HOME}/.ssh/privkey.pem`" != "" ] ||
     [ "`/usr/bin/diff /tmp/${WEBSITE_URL}.json ${HOME}/.ssh/${WEBSITE_URL}.json`" != "" ] )
