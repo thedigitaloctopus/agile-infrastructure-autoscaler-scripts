@@ -502,8 +502,6 @@ else
         
         /bin/rm ${HOME}/runtime/beingbuiltips/${private_ip}
         /bin/rm ${HOME}/runtime/beingbuiltpublicips/${ip}
-
-        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltpublicips/${ip}"
         
         if ( [ -f ${HOME}/runtime/autoscalelock.file ] )
         then
