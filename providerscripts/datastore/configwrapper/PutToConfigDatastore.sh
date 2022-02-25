@@ -29,7 +29,10 @@ if ( [ "$3" = "recursive" ] )
 then
     /usr/bin/s3cmd --recursive put $1 s3://${configbucket}/$2
 else
-    if ( [ -f ./${1} ] )
+    if ( [ -f ${1} ] )
+    then
+        /usr/bin/s3cmd put $1 s3://${configbucket}/$2
+    elif ( [ -f ./${1} ] )
     then
         /usr/bin/s3cmd put ./$1 s3://${configbucket}/$2
         /bin/rm ./$1
