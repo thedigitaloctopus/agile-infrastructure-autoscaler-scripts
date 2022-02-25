@@ -61,6 +61,15 @@ then
     /bin/mkdir -p ${HOME}/logs/${logdir}
 fi
 
+if ( [ ! -d ${HOME}/runtime/beingbuiltips ] )
+then
+    /bin/mkdir -p ${HOME}/runtime/beingbuiltips
+fi
+
+if ( [ ! -d ${HOME}/runtime/beingbuiltpublicips ] )
+then
+    /bin/mkdir -p ${HOME}/runtime/beingbuiltpublicips
+fi
 
 DONE="0"
 ip=""
