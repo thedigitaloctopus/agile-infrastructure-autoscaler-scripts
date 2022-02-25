@@ -32,7 +32,7 @@ CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`
 #So, when a webserver is built, we set the 'being built' flag. Basically a machine is given 30 minutes to be built and then we consider it a
 #slow build and something must be wrong, so, we destroy it
 
-for ip in `/usr/bin/find ${HOME}/config/beingbuiltips/* -mmin +30`
+for ip in `/usr/bin/find ${HOME}/runtime/beingbuiltips/* -mmin +30`
 do
     strippedip="`/bin/echo ${ip} | /usr/bin/awk -F'/' '{print $NF}'`"
     /bin/echo "${0} `/bin/date`: #####################################################################################" >> ${HOME}/logs/SlowBuildsLog.log
@@ -64,8 +64,7 @@ do
         . ${HOME}/providerscripts/server/DenyCachingAccess.sh
     fi
     
-    ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltips/${strippedip}"
-    ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltpublicips/${ip}"
-
+    /bin/rm ${HOME}/runtime/beingbuiltips/${strippedip}
+    /bin/rm ${HOME}/runtime/beingbuiltpublicips/${ip}
     /bin/rm ${HOME}/runtime/autoscalelock.file
 done
