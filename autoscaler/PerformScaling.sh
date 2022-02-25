@@ -96,6 +96,7 @@ then
 else
     SCALING_MODE="static"
     NO_WEBSERVERS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'NUMBERWS'`"
+    /bin/echo "${0} `/bin/date`: NO SCALING CONFIG FOUND USING DEFAULT SCALING VALUE OF ${NO_WEBSERVERS}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
     ${HOME}/providerscripts/email/SendEmail.sh "NO SCALING CONFIG FOUND" "Defaulting back to the default number of webservers: ${NO_WEBSERVERS}"
 fi
 
@@ -111,6 +112,7 @@ then
     #For some reason, the scaling config isn't available so, default back to the default value
     SCALING_MODE="static"
     NO_WEBSERVERS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'NUMBERWS'`"
+    /bin/echo "${0} `/bin/date`: NO SCALING CONFIG FOUND USING DEFAULT SCALING VALUE OF ${NO_WEBSERVERS}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
     ${HOME}/providerscripts/email/SendEmail.sh "NO SCALING CONFIG FOUND" "Defaulting back to the default number of webservers: ${NO_WEBSERVERS}"
 fi
 
