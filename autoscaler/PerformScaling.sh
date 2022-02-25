@@ -76,9 +76,10 @@ then
    exit
 elif ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "scalingprofile/profile.cnf"`" = "0" ] )
 then
-    /bin/echo  "SCALING_MODE=${SCALING_MODE}" > ./profile.cnf
-    /bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> ./profile.cnf  
-    ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh profile.cnf "scalingprofile/profile.cnf"
+    /bin/echo  "SCALING_MODE=${SCALING_MODE}" > /tmp/profile.cnf
+    /bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> /tmp/profile.cnf  
+    ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/profile.cnf "scalingprofile/profile.cnf"
+    /bin/rm /tmp/profile.cnf
 fi
 
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLEDSUCCESSFULLY"`" = "0" ] )
@@ -86,8 +87,17 @@ then
     exit
 fi
 
-SCALING_MODE="`/bin/grep -a "SCALING_MODE" ${HOME}/config/scalingprofile/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
-NO_WEBSERVERS="`/bin/grep -a "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
+${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "scalingprofile/profile.cnf"
+
+if ( [ -f /tmp/profile.cnf ] )
+then
+    SCALING_MODE="`/bin/grep -a "SCALING_MODE" /tmp/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
+    NO_WEBSERVERS="`/bin/grep -a "NO_WEBSERVERS" /tmp/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
+fi
+
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/profile.cnf "scalingprofile/profile.cnf"
+
+/bin/rm /tmp/profile.cnf
 
 if ( [ "${SCALING_MODE}" = "static" ] && [ "${NO_WEBSERVERS}" != "" ] )
 then
