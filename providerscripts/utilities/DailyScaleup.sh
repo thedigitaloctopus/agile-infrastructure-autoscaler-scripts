@@ -24,5 +24,5 @@
 
 ${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "scalingprofile/profile.cnf"
 /bin/sed -i "/^NO_WEBSERVERS=/c\NO_WEBSERVERS=$1" /tmp/profile.cnf 
-${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/profile.cnf "scalingprofile/profile.cnf"
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh profile.cnf "scalingprofile/profile.cnf"
 
