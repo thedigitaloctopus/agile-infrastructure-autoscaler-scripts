@@ -26,3 +26,13 @@ configbucket="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{ for(i = 1; i <= 
 configbucket="${configbucket}-config"
 
 /usr/bin/s3cmd get s3://${configbucket}/$1 
+
+if ( [ "$2" != "" ] )
+then
+    /usr/bin/s3cmd get s3://${configbucket}/$1 $2
+fi
+
+if ( [ "$3" = "recursive" ] )
+then
+    /usr/bin/s3cmd --recursive get s3://${configbucket}/$1 $2 
+fi
