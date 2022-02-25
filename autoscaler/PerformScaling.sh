@@ -79,7 +79,7 @@ if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh
 then
     /bin/echo  "SCALING_MODE=${SCALING_MODE}" > /tmp/profile.cnf
     /bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> /tmp/profile.cnf  
-    ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/profile.cnf "scalingprofile/profile.cnf"
+    ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh profile.cnf "scalingprofile/profile.cnf"
     /bin/rm /tmp/profile.cnf
 fi
 
@@ -101,7 +101,7 @@ else
     ${HOME}/providerscripts/email/SendEmail.sh "NO SCALING CONFIG FOUND" "Defaulting back to the default number of webservers: ${NO_WEBSERVERS}"
 fi
 
-${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/profile.cnf "scalingprofile/profile.cnf"
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh profile.cnf "scalingprofile/profile.cnf"
 
 /bin/rm /tmp/profile.cnf
 
