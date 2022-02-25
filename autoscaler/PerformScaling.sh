@@ -93,6 +93,8 @@ if ( [ -f /tmp/profile.cnf ] )
 then
     SCALING_MODE="`/bin/grep -a "SCALING_MODE" /tmp/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
     NO_WEBSERVERS="`/bin/grep -a "NO_WEBSERVERS" /tmp/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
+else
+    ${HOME}/providerscripts/email/SendEmail.sh "NO SCALING CONFIG FOUND" "Defaulting back to the default number of webservers: ${NO_WEBSERVERS}"
 fi
 
 ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/profile.cnf "scalingprofile/profile.cnf"
