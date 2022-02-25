@@ -25,9 +25,9 @@ WEBSITE_URL="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEUR
 configbucket="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{ for(i = 1; i <= NF; i++) { print $i; } }' | /usr/bin/cut -c1-3 | /usr/bin/tr '\n' '-' | /bin/sed 's/-//g'`"
 configbucket="${configbucket}-config"
 
-if ( [ "$2" = "recursive" ] )
+if ( [ "$3" = "recursive" ] )
 then
-    /usr/bin/s3cmd --recursive put $1 s3://${configbucket}
+    /usr/bin/s3cmd --recursive put $1 s3://${configbucket}/$2
 else
     if ( [ -f ./${1} ] )
     then
