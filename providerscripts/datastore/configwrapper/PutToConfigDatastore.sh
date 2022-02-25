@@ -33,6 +33,9 @@ else
     then
         /usr/bin/s3cmd put ./$1 s3://${configbucket}/$2
         /bin/rm ./$1
+    elif ( [ -f /tmp/${1} ] )
+    then
+        /usr/bin/s3cmd put /tmp/$1 s3://${configbucket}/$2
     else
         /bin/touch /tmp/$1
         /usr/bin/s3cmd put /tmp/$1 s3://${configbucket}/$2
