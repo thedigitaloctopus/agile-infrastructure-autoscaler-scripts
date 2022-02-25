@@ -21,6 +21,9 @@
 #set -x
 
 /bin/echo "${0} `/bin/date`: Running daily scale up. Scaling up to ..... $1 servers" >> ${HOME}/logs/MonitoringLog.log
-/bin/sed -i "/^NO_WEBSERVERS=/c\NO_WEBSERVERS=$1" ${HOME}/config/scalingprofile/profile.cnf 
-/bin/echo " " >> ${HOME}/config/scalingprofile/profile.cnf
+
+${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "scalingprofile/profile.cnf"
+/bin/sed -i "/^NO_WEBSERVERS=/c\NO_WEBSERVERS=$1" /tmp/profile.cnf 
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/profile.cnf "scalingprofile/profile.cnf"
+/bin/rm /tmp/profile.cnf
 
