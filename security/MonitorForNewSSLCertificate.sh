@@ -25,20 +25,28 @@
 SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
 WEBSITE_URL="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL'`"
 
-if ( [ "`/usr/bin/diff ${HOME}/config/ssl/fullchain.pem ${HOME}/.ssh/fullchain.pem`" != "" ] ||
-    [ "`/usr/bin/diff ${HOME}/config/ssl/privkey.pem ${HOME}/.ssh/privkey.pem`" != "" ] ||
-[ "`/usr/bin/diff ${HOME}/config/ssl/${WEBSITE_URL}.json ${HOME}/.ssh/${WEBSITE_URL}.json`" != "" ] )
+${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "ssl/fullchain.pem"
+${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "ssl/privkey.pem"
+${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "ssl/${WEBSITE_URL}.json"
+
+if ( [ "`/usr/bin/diff /tmp/fullchain.pem ${HOME}/.ssh/fullchain.pem`" != "" ] ||
+    [ "`/usr/bin/diff /tmp/privkey.pem ${HOME}/.ssh/privkey.pem`" != "" ] ||
+    [ "`/usr/bin/diff /tmp/${WEBSITE_URL}.json ${HOME}/.ssh/${WEBSITE_URL}.json`" != "" ] )
 then
     /bin/mv ${HOME}/.ssh/privkey.pem ${HOME}/.ssh/privkey.pem.previous.`/bin/date | /bin/sed 's/ //g'`
     /bin/mv ${HOME}/.ssh/fullchain.pem ${HOME}/.ssh/fullchain.pem.previous.`/bin/date | /bin/sed 's/ //g'`
     /bin/mv ${HOME}/.ssh/${WEBSITE_URL}.json ${HOME}/.ssh/${WEBSITE_URL}.json.previous.`/bin/date | /bin/sed 's/ //g'`
 
-    /bin/cp ${HOME}/config/ssl/privkey.pem ${HOME}/.ssh/privkey.pem
-    /bin/cp ${HOME}/config/ssl/fullchain.pem ${HOME}/.ssh/fullchain.pem
-    /bin/cp ${HOME}/config/ssl/${WEBSITE_URL}.json ${HOME}/.ssh/${WEBSITE_URL}.json
+    /bin/cp /tmp/fullchain.pem ${HOME}/.ssh/privkey.pem
+    /bin/cp /tmp/privkey.pem ${HOME}/.ssh/fullchain.pem
+    /bin/cp /tmp/${WEBSITE_URL}.json ${HOME}/.ssh/${WEBSITE_URL}.json
 
     /bin/chmod 400 ${HOME}/.ssh/privkey.pem
     /bin/chmod 400 ${HOME}/.ssh/fullchain.pem
     /bin/chmod 400 ${HOME}/.ssh/${WEBSITE_URL}.json
+    
+    /bin/rm /tmp/fullchain.pem 
+    /bin/rm /tmp/privkey.pem 
+    /bin/rm /tmp/${WEBSITE_URL}.json 
 fi
 
