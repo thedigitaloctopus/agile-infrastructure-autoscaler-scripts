@@ -20,7 +20,11 @@
 ###########################################################################################
 #set -x
 
-/bin/echo "${0} `/bin/date`: Running daily scale up. Scaling up to ..... $1 servers" >> ${HOME}/logs/MonitoringLog.log
+if ( [ "$1" = "" ] )
+then
+    /bin/echo "Sorry you need to provide the number of webservers to scale up/down to as a parameter"
+    exit
+fi
 
 ${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "scalingprofile/profile.cnf"
 /bin/sed -i "/^NO_WEBSERVERS=/c\NO_WEBSERVERS=$1" /tmp/profile.cnf 
