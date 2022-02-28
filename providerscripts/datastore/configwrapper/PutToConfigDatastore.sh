@@ -40,8 +40,9 @@ else
     then
         /usr/bin/s3cmd put /tmp/$1 s3://${configbucket}/$2
     else
-        /bin/touch /tmp/$1
-        /usr/bin/s3cmd put /tmp/$1 s3://${configbucket}/$2
-        /bin/rm /tmp/$1
+        /bin/mkdir -p /tmp/${directory}
+        /bin/touch /tmp/${directory}/$1
+        /usr/bin/s3cmd put /tmp/${directory}/$1 s3://${configbucket}/$2
+        /bin/rm /tmp/${directory}/$1
     fi
 fi
