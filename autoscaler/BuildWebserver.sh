@@ -61,15 +61,15 @@ then
     /bin/mkdir -p ${HOME}/logs/${logdir}
 fi
 
-if ( [ ! -d ${HOME}/runtime/beingbuiltips ] )
-then
-    /bin/mkdir -p ${HOME}/runtime/beingbuiltips
-fi
+#if ( [ ! -d ${HOME}/runtime/beingbuiltips ] )
+#then
+#    /bin/mkdir -p ${HOME}/runtime/beingbuiltips
+#fi
 
-if ( [ ! -d ${HOME}/runtime/beingbuiltpublicips ] )
-then
-    /bin/mkdir -p ${HOME}/runtime/beingbuiltpublicips
-fi
+#if ( [ ! -d ${HOME}/runtime/beingbuiltpublicips ] )
+#then
+#    /bin/mkdir -p ${HOME}/runtime/beingbuiltpublicips
+#fi
 
 DONE="0"
 ip=""
@@ -274,8 +274,8 @@ fi
 #we reach the end of the build process so if this persists for an excessive amount of time, the "slow builds" script on the
 #autoscaler knows that something is hanging or has gone wrong with the build and it clears things up.
 
-/usr/bin/touch ${HOME}/runtime/beingbuiltips/${private_ip}
-/usr/bin/touch ${HOME}/runtime/beingbuiltpublicips/${ip}
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${private_ip} beingbuiltips/${private_ip}
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} beingbuiltpublicips/${ip}
 
 ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${private_ip} webserverips/${private_ip}
 ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} webserverpublicips/${ip}
