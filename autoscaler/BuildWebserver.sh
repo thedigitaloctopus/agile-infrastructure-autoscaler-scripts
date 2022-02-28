@@ -509,8 +509,8 @@ else
             . ${HOME}/providerscripts/server/DenyCachingAccess.sh
         fi
         
-        /bin/rm ${HOME}/runtime/beingbuiltips/${private_ip}
-        /bin/rm ${HOME}/runtime/beingbuiltpublicips/${ip}
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltips/${private_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltpublicips/${ip}"
         
         if ( [ -f ${HOME}/runtime/autoscalelock.file ] )
         then
@@ -660,8 +660,8 @@ else
     #to start serving requests
     /bin/echo "${0} `/bin/date`: ${ip} is fully online and it's public ip is being added to the DNS provider" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 
-    /bin/rm ${HOME}/runtime/beingbuiltips/${private_ip}
-    /bin/rm ${HOME}/runtime/beingbuiltpublicips/${ip}
+    ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltips/${private_ip}"
+    ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltpublicips/${ip}"
     
     ${HOME}/autoscaler/AddIPToDNS.sh ${ip}
     /bin/echo "${ip}"
@@ -670,8 +670,8 @@ fi
 /bin/echo "${0} `/bin/date`: Either way, successful or not the build process for machine with ip: ${ip} has completed" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 
 #Make very sure that we remove our flag saying that this is still in the being built state
-/bin/rm ${HOME}/runtime/beingbuiltips/${private_ip}
-/bin/rm ${HOME}/runtime/beingbuiltpublicips/${ip}
+${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltips/${private_ip}"
+${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltpublicips/${ip}"
 
 #Output how long the build took
 end=`/bin/date +%s`
