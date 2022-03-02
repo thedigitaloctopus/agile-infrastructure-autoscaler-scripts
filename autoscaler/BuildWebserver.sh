@@ -275,7 +275,7 @@ fi
 #autoscaler knows that something is hanging or has gone wrong with the build and it clears things up.
 
 /bin/touch ${HOME}/runtime/beingbuiltips/${private_ip}
-/bin/touch ${HOME}/runtime/beingbuiltips/${ip}
+/bin/touch ${HOME}/runtime/beingbuiltpublicips/${ip}
 
 ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${private_ip} webserverips/${private_ip}
 ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} webserverpublicips/${ip}
@@ -510,7 +510,7 @@ else
         fi
         
         /bin/rm ${HOME}/runtime/beingbuiltips/${private_ip}
-        /bin/rm ${HOME}/runtime/beingbuiltips/${ip}
+        /bin/rm ${HOME}/runtime/beingbuiltpublicips/${ip}
         
         if ( [ -f ${HOME}/runtime/autoscalelock.file ] )
         then
