@@ -29,3 +29,11 @@ fi
 ${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "scalingprofile/profile.cnf"
 /bin/sed -i "/^NO_WEBSERVERS=/c\NO_WEBSERVERS=$1" /tmp/profile.cnf 
 ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh profile.cnf "scalingprofile/profile.cnf"
+/bin/rm /tmp/profile.cnf
+${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "scalingprofile/profile.cnf"
+no_webservers="`/bin/grep NO_WEBSERVERS /tmp/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
+if ( [ "${no_webservers}" != "" ] )
+then
+    /bin/echo "Number of webservers is now successfully set to ${no_webservers}"
+fi
+/bin/rm /tmp/profile.cnf
