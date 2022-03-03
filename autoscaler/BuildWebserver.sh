@@ -409,6 +409,9 @@ then
     #Configure our datastore for this server. This will enable us to use tools like s3cmd from our webserver for backups etc
     ${HOME}/providerscripts/datastore/ConfigureDatastoreProvider.sh ${DATASTORE_CHOICE} ${ip} ${CLOUDHOST} ${BUILD_IDENTIFIER} ${ALGORITHM} ${SERVER_USER}
 
+    /usr/bin/scp -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${HOME}/.ssh/webserver_configuration_settings.dat ${SERVER_USER}@${ip}:${HOME}/.ssh/
+    /usr/bin/scp -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${HOME}/.ssh/buildstyles.dat ${SERVER_USER}@${ip}:${HOME}/.ssh/
+ 
     #Configuration values
     ${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh MYPUBLICIP ${ip}
     ${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh MYIP ${private_ip}
@@ -417,9 +420,6 @@ then
     ${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh ASPUBLICIP ${AS_PUBLIC_IP}
     ${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh DBIP ${DBIP}
     ${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh DBPUBLICIP ${DB_PUBLIC_IP}
- 
-    /usr/bin/scp -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${HOME}/.ssh/webserver_configuration_settings.dat ${SERVER_USER}@${ip}:${HOME}/.ssh/
-    /usr/bin/scp -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} ${HOME}/.ssh/buildstyles.dat ${SERVER_USER}@${ip}:${HOME}/.ssh/
  
     
     MACHINE_TYPE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MACHINETYPE'`"
