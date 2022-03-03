@@ -26,11 +26,11 @@ then
     exit
 fi
 
-${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "scalingprofile/profile.cnf"
+${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "scalingprofile/profile.cnf" 1>/dev/null 2>/dev/null
 /bin/sed -i "/^NO_WEBSERVERS=/c\NO_WEBSERVERS=$1" /tmp/profile.cnf 
-${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh profile.cnf "scalingprofile/profile.cnf"
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh profile.cnf "scalingprofile/profile.cnf" 1>/dev/null 2>/dev/null
 /bin/rm /tmp/profile.cnf
-${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "scalingprofile/profile.cnf"
+${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "scalingprofile/profile.cnf" 1>/dev/null 2>/dev/null
 no_webservers="`/bin/grep NO_WEBSERVERS /tmp/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
 if ( [ "${no_webservers}" != "" ] )
 then
