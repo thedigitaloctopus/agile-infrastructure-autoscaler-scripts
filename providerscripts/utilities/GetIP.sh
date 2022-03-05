@@ -19,7 +19,7 @@
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
 #######################################################################################################
 #######################################################################################################
-#set -x
+##set -x
 
 if ( [ -f ${HOME}/EXOSCALE ] )
 then
@@ -27,9 +27,10 @@ then
 fi
 
 IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MYIP'`"
-if ( [ "${IP}" != "`/usr/bin/hostname -I | /usr/bin/awk '{print $1}'`" ] )
+
+if ( [ "`/usr/bin/hostname -I | /bin/grep ${IP}`" = "" ] )
 then
-    IP="`/usr/bin/hostname -I | /usr/bin/awk '{print $1}'`"
+    IP="`/usr/bin/hostname -I | /usr/bin/awk '{print $2}'`"
     ${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh 'MYIP' "${IP}"
 fi
 
