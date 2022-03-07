@@ -36,7 +36,7 @@ then
     /bin/mkdir -p ${HOME}/logs/${logdir}
 fi
 
-if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "webrootsynctunnel/syncpurge"`" = "1" ] || [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "webrootsynctunnel/switchoffscalingpriortosyncpurge"`" = "1" ] )
+if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "syncpurge"`" = "1" ] || [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "switchoffscalingpriortosyncpurge"`" = "1" ] )
 then
     exit
 fi
