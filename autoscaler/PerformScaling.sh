@@ -255,8 +255,6 @@ then
                 /bin/sleep 30
             done
             
-            /usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "${SUDO} /bin/touch ${HOME}/runtime/SHUTDOWNACCEPTED"
-
             count1="0"
             while ( [ "`/usr/bin/ping -c 3 ${ip} | /bin/grep '100% packet loss'`"  = "" ] && [ "${count1}" -lt "9" ] )
             do
