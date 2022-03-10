@@ -35,12 +35,18 @@ then
 fi
 
 if ( [ "`/usr/bin/diff /tmp/fullchain.pem ${HOME}/.ssh/fullchain.pem`" != "" ] ||
-    [ "`/usr/bin/diff /tmp/privkey.pem ${HOME}/.ssh/privkey.pem`" != "" ] ||
-    [ "`/usr/bin/diff /tmp/${WEBSITE_URL}.json ${HOME}/.ssh/${WEBSITE_URL}.json`" != "" ] )
+     [ "`/usr/bin/diff /tmp/privkey.pem ${HOME}/.ssh/privkey.pem`" != "" ] ||
+     [ "`/usr/bin/diff /tmp/${WEBSITE_URL}.json ${HOME}/.ssh/${WEBSITE_URL}.json`" != "" ] )
 then
-    /bin/mv ${HOME}/.ssh/privkey.pem ${HOME}/.ssh/privkey.pem.previous.`/bin/date | /bin/sed 's/ //g'`
-    /bin/mv ${HOME}/.ssh/fullchain.pem ${HOME}/.ssh/fullchain.pem.previous.`/bin/date | /bin/sed 's/ //g'`
-    /bin/mv ${HOME}/.ssh/${WEBSITE_URL}.json ${HOME}/.ssh/${WEBSITE_URL}.json.previous.`/bin/date | /bin/sed 's/ //g'`
+
+    if ( [ ! -d ${HOME}/.ssh/ssh-legacy ] )
+    then
+        /bin/mkdir -p ${HOME}/.ssh/ssh-legacy
+    fi
+
+    /bin/mv ${HOME}/.ssh/privkey.pem ${HOME}/.ssh/ssh-legacy/privkey.pem.previous.`/bin/date | /bin/sed 's/ //g'`
+    /bin/mv ${HOME}/.ssh/fullchain.pem ${HOME}/.ssh/ssh-legacy/fullchain.pem.previous.`/bin/date | /bin/sed 's/ //g'`
+    /bin/mv ${HOME}/.ssh/${WEBSITE_URL}.json ${HOME}/.ssh/ssh-legacy/${WEBSITE_URL}.json.previous.`/bin/date | /bin/sed 's/ //g'`
 
     /bin/cp /tmp/fullchain.pem ${HOME}/.ssh/privkey.pem
     /bin/cp /tmp/privkey.pem ${HOME}/.ssh/fullchain.pem
