@@ -67,15 +67,15 @@ then
     webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
     database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
 
-    ips="${autoscaler_ips} ${webserver_ips} ${database_ips}"
+    ipaddresses="${autoscaler_ips} ${webserver_ips} ${database_ips}"
 
-    for ip in ${ips}
+    for ipaddress in ${ipaddresses}
     do
-        newips=${newips}"\"${ip}/32\","
+        newips=${newips}"\"${ipaddress}/32\","
     done
     
-    ips="`/bin/echo ${newips} | /bin/sed 's/,$//g'`"
+    ipaddresses="`/bin/echo ${newips} | /bin/sed 's/,$//g'`"
 
-    /usr/bin/curl -H "Content-Type: application/json" -H "Authorization: Bearer ${token}" -X PUT -d "{ \"allow_list\": [ ${ips} ] }" https://api.linode.com/v4beta/databases/mysql/instances/${DATABASE_ID}
+    /usr/bin/curl -H "Content-Type: application/json" -H "Authorization: Bearer ${token}" -X PUT -d "{ \"allow_list\": [ ${ipaddresses} ] }" https://api.linode.com/v4beta/databases/mysql/instances/${DATABASE_ID}
 
 fi
