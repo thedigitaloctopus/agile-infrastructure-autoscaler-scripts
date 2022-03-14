@@ -42,19 +42,15 @@ then
     autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
     webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
     database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
-    ips="${autoscaler_ips} ${webserver_ips} ${database_ips}"
-    #ips="`/bin/ls ${HOME}/config/autoscalerpublicip`"
-    #ips="${ips} `/bin/ls ${HOME}/config/webserverpublicips`"
-    #ips="${ips} `/bin/ls ${HOME}/config/databasepublicip`"
-    #ips="${ips} `/bin/ls ${HOME}/config/buildclientip`"
-    ips="`/bin/echo ${ips} | /bin/sed 's/  / /g' | /bin/tr ' ' ',' | /bin/sed 's/,$//g'`"
+    newips="${autoscaler_ips} ${webserver_ips} ${database_ips}"
+    newips="`/bin/echo ${newips} | /bin/sed 's/  / /g' | /bin/tr ' ' ',' | /bin/sed 's/,$//g'`"
     
     if ( [ "`/bin/echo ${dbaas} | /bin/grep ' pg '`" != "" ] )
     then
-        /usr/bin/exo dbaas update -z ${zone}  ${database_name} --pg-ip-filter=${ips}
+        /usr/bin/exo dbaas update -z ${zone}  ${database_name} --pg-ip-filter=${newips}
     elif ( [ "`/bin/echo ${dbaas} | /bin/grep ' mysql '`" != "" ] )
     then
-        /usr/bin/exo dbaas update -z ${zone}  ${database_name} --mysql-ip-filter=${ips}
+        /usr/bin/exo dbaas update -z ${zone}  ${database_name} --mysql-ip-filter=${newips}
     fi
 fi
 
