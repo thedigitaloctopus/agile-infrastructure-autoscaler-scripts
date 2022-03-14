@@ -619,7 +619,7 @@ do
     if ( [ "`/usr/bin/curl -I --max-time 60 --insecure https://${ip}:443/${file} | /bin/grep -E 'HTTP/2 200|HTTP/2 301|HTTP/2 302|200 OK|302 Found|301 Moved Permanently'`" = "" ] )
     then
         /bin/echo "${0} `/bin/date`: Expecting ${ip} to be online, but can't curl it yet...." >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-        /bin/sleep 900
+        /bin/sleep 30
         loop="`/usr/bin/expr ${loop} + 1`"
     else
         /bin/echo "${0} `/bin/date`: ${ip} is online wicked..." >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
