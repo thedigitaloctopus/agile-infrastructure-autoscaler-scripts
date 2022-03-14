@@ -57,3 +57,23 @@ then
         /usr/bin/exo dbaas update -z ${zone}  ${database_name} --mysql-ip-filter=${ips}
     fi
 fi
+
+if ( [ "${CLOUDHOST}" = "linode" ] )
+then
+    label="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh 'DATABASEDBaaSINSTALLATIONTYPE'` | /usr/bin/awk -F':' '{print $7}'"
+    DATABASE_ID="`/usr/local/bin/linode-cli --json databases mysql-list | jq ".[] | select(.[\\"label\\"] | contains (\\"${label}\\")) | .id"`"
+    autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
+    webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
+    database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
+
+    ips="${autoscaler_ips} ${webserver_ips} ${database_ips}"
+
+    for ip in ${ips}
+    do
+        newips=${newips}"\"${ip}/32\","
+    done
+    ips="`/bin/echo ${newips} | /bin/sed 's/,$//g'`"
+
+    /usr/bin/curl -H "Content-Type: application/json" -H "Authorization: Bearer ${TOKEN}" -X PUT -d "{ \"allow_list\": [ ${ips} ] }" https://api.linode.com/v4beta/databases/mysql/instances/${DATABASE_ID}
+
+fi
