@@ -171,8 +171,6 @@ ${HOME}/installscripts/InstallLibioSocket.sh ${BUILDOS}
 ${HOME}/installscripts/InstallLibnetSsleay.sh ${BUILDOS}
 >&2 /bin/echo "${0} InstallSysStat.sh"
 ${HOME}/installscripts/InstallSysStat.sh ${BUILDOS}
->&2 /bin/echo "${0} InstallSSHFS.sh"
-${HOME}/installscripts/InstallSSHFS.sh ${BUILDOS}
 >&2 /bin/echo "${0} InstallS3FS.sh"
 ${HOME}/installscripts/InstallS3FS.sh ${BUILDOS}
 >&2 /bin/echo "${0} InstallRsync.sh"
