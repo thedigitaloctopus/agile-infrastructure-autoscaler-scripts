@@ -215,12 +215,14 @@ then
         /bin/sleep 1
         os_choice="`/usr/bin/vultr os list | /bin/grep "${os_choice}" | /usr/bin/awk '{print $1}'`"
         /bin/sleep 1
+        
         #Clonk
         #/usr/bin/vultr server create --name="${server_name}"  --region=${region} --plan=${server_plan} --os=${os_choice} --private-networking=true --ipv6=false -k ${key_id}
         #if ( [ "$?" = "0" ] )
         #then
         #    /bin/sleep 120
         #fi
+        
         #Official
         /usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_plan}" --os="${os_choice}" --private-network=true --ipv6=false -s ${key_id}
         if ( [ "$?" = "0" ] )
@@ -256,10 +258,7 @@ then
         /usr/bin/aws ec2 create-security-group --description "This is the security group for your agile deployment toolkit autoscaled webservers" --group-name "AgileDeploymentToolkitWebserversSecurityGroup" --vpc-id=${vpc_id}
         security_group_id1="`/usr/bin/aws ec2 describe-security-groups | /usr/bin/jq '.SecurityGroups[] | .GroupName + " " + .GroupId' | /bin/grep AgileDeploymentToolkitWebserversSecurityGroup | /bin/sed 's/\"//g' | /usr/bin/awk '{print $NF}'`"
     fi
-
-   # /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=0,ToPort=65535,IpRanges='[{CidrIp=0.0.0.0/0}]'
-   # /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=icmp,FromPort=-1,ToPort=-1,IpRanges='[{CidrIp=0.0.0.0/0}]'
-  
+    
     snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
     
     if ( [ "${snapshot_id}" = "" ] )
