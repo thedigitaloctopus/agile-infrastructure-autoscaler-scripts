@@ -34,7 +34,7 @@ if ( [ "${CLOUDHOST}" = "vultr" ] )
 then
     if ( [ "${BUILDOS}" = "ubuntu" ] )
     then
-        if ( [ "${BUILDOSVERSION}" = "20.04" ] )
+        if ( [ "${BUILDOSVERSION}" = "20.04" ] ||  [ "${BUILDOSVERSION}" = "22.04" ] )
 	then
 	    ip="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MYIP'`"
 	    
