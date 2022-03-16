@@ -34,10 +34,7 @@ then
     ${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh 'MYIP' "${IP}"
 fi
 
-#if ( [ "`/usr/bin/ip addr | /bin/grep ${IP}`" != "" ] )
-#then
-    /bin/echo ${IP}
-#fi
+/bin/echo ${IP}
 
 BUILDOS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOS'`"
 BUILDOSVERSION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOSVERSION'`"
