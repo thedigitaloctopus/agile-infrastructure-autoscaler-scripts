@@ -65,6 +65,6 @@ if ( [ "${CLOUDHOST}" = "aws" ] )
 then
     ${HOME}/installscripts/InstallJQ.sh ${BUILDOS}
     ${HOME}/installscripts/InstallAWSCLI.sh ${BUILDOS}
-  #  ${HOME}/installscripts/InstallAWSCLI53.sh ${BUILDOS}
+    ${HOME}/installscripts/InstallAWSCLI53.sh ${BUILDOS}
     /usr/bin/touch ${HOME}/AWS
 fi
