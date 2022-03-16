@@ -71,10 +71,6 @@ fi
 SCALING_MODE="static"
 NO_WEBSERVERS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'NUMBERWS'`"
 
-#if ( [ "`/bin/mount | /bin/grep ${HOME}/config`" = "" ] )
-#then
-#   exit
-#el
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "scalingprofile/profile.cnf"`" = "0" ] )
 then
     /bin/echo  "SCALING_MODE=${SCALING_MODE}" > /tmp/profile.cnf
@@ -214,9 +210,6 @@ then
     /bin/touch ${HOME}/runtime/SWITCHOFFDEADORALIVE.lock
     /bin/touch ${HOME}/runtime/SWITCHOFFPURGEDETACHEDIPS.lock
 
-    #we need to terminate an arbitrary webserver so get a list of candidate ones
-   # ipstokill="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST}`"
-   
     ipstokill="`${HOME}/autoscaler/GetDNSIPs.sh`"
     count="1"
     while ( [ "${nowebservers}" -gt "${NO_WEBSERVERS}" ] )
@@ -296,8 +289,6 @@ then
             ${HOME}/providerscripts/email/SendEmail.sh "A WEBSERVER HAS BEEN DESTROYED" "Webserver ( ${ip} ) has just been shutdown and destroyed"
             ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "shuttingdownwebserverips/${ip}"
             count="`/usr/bin/expr ${count} + 1`"
-            # nowebservers="`/usr/bin/expr ${nowebservers} - 1`"
-            #NO_WEBSERVERS="`/bin/grep -a "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
             nowebservers="`${HOME}/autoscaler/GetDNSIPs.sh | /usr/bin/wc -w`"
             
             /bin/echo "${0} #############################################################################" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
@@ -309,7 +300,6 @@ then
             #If we have multiple autoscalers its possible that an IP that we are processing has been shutdown by another autoscaler so if we can't find a machine
             #name for that IP address assume it has been shutdown and treat it as if we had shut it down ourselves in terms of our iterating. 
             count="`/usr/bin/expr ${count} + 1`"
-           # NO_WEBSERVERS="`/bin/grep -a "NO_WEBSERVERS" ${HOME}/config/scalingprofile/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
             nowebservers="`${HOME}/autoscaler/GetDNSIPs.sh | /usr/bin/wc -w`"
             /bin/echo "${0} `/bin/date`: Couldn't find the name for webserver ${ip} its most likely already been shutdown for some other reason" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
         fi
