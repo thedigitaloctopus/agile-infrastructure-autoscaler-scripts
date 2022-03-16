@@ -44,9 +44,7 @@ then
 fi
 
 if ( [ -f ${HOME}/DROPLET ] )
-then
-    #allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
-    
+then    
     if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "FIREWALL-UPDATING"`" = "0" ] )
     then
        
@@ -123,11 +121,9 @@ then
            for ip in ${alldnsproxyips}
            do
                standard_rules=${standard_rules}"protocol:tcp,ports:443,address:${ip} "    
-        #      standard_rules=${standard_rules}"protocol:tcp,ports:80,address:${ip} "    
            done
        else
            standard_rules=${standard_rules}"protocol:tcp,ports:443,address:0.0.0.0/0 "    
-           #standard_rules=${standard_rules}"protocol:tcp,ports:80,address:0.0.0.0/0 "    
        fi
     
        standard_rules=${standard_rules}"protocol:icmp,address:0.0.0.0/0 "    
@@ -153,9 +149,7 @@ then
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] )
-then
-  # allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
-   
+then   
     if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "FIREWALL-UPDATING"`" = "0" ] )
     then
        # /bin/touch ${HOME}/config/FIREWALL-UPDATING
@@ -198,11 +192,7 @@ fi
 if ( [ -f ${HOME}/LINODE ] )
 then
     if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "FIREWALL-UPDATING"`" = "0" ] )
-    then
-    #    /bin/touch ${HOME}/config/FIREWALL-UPDATING
-
-        #allips="`/bin/cat ${HOME}/runtime/ipsforfirewall`"
-    
+    then    
         autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
         webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
         database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
@@ -227,9 +217,7 @@ then
         rules=${rules}"{\"addresses\":{\"ipv4\":[${iplist}]},\"action\":\"ACCEPT\",\"protocol\":\"TCP\",\"ports\":\"${SSH_PORT},${DB_PORT},22\"},"
 
         rules="[`/bin/echo ${rules} | /bin/sed 's/,$//g'`,"
-        # firewall_build_machine_id="`/usr/local/bin/linode-cli --json firewalls list | jq '.[] | select (.label == "adt-build-machine" ).id'`"
-        # build_machine_rules="`/usr/local/bin/linode-cli --markdown firewalls rules-list ${firewall_build_machine_id}  | /bin/grep addresses | /usr/bin/awk -F'|' '{print $2}' | /bin/sed 's/ //g' | /usr/bin/tr "'" '"'`,"
-        
+ 
         . ${HOME}/providerscripts/security/firewall/GetProxyDNSIPs.sh
                                 
         if ( [ "${alldnsproxyips}" != "" ] )
@@ -262,9 +250,7 @@ fi
 if ( [ -f ${HOME}/VULTR ] )
 then
     if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "FIREWALL-UPDATING"`" = "0" ] )
-    then
-     #   /bin/touch ${HOME}/config/FIREWALL-UPDATING
-   
+    then   
         export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
         firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt$' | /usr/bin/awk '{print $1}'`"
    
@@ -397,49 +383,11 @@ then
        fi
        
        /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=icmp,FromPort=-1,ToPort=-1,IpRanges='[{CidrIp=0.0.0.0/0}]'
-
-    #   autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
-    #   webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
-    #   database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
-    #   machine_ips="${autoscaler_ips} ${webserver_ips} ${database_ips} ${BUILD_CLIENT_IP}"
-       
-    
   
-    
-    
-    
-    #   for machine_ip in ${machine_ips}
-    #   do              
-    #       /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --port 22 --cidr ${machine_ip}/32
-    #       /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --port ${SSH_PORT} --cidr ${machine_ip}/32
-    #      /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --port ${DB_PORT} --cidr ${machine_ip}/32
-    #   done
-    #   
-    #    autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh autoscaler ${CLOUDHOST}`"
-    #    webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh webserver ${CLOUDHOST}`"
-    #    database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh database ${CLOUDHOST}`"
-    #    machine_private_ips="${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
-    
-     
-
-    #    for machine_private_ip in ${machine_private_ips}
-    #    do              
-    #       /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --port 22 --cidr ${machine_private_ip}/32
-    #       /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --port ${SSH_PORT} --cidr ${machine_private_ip}/32
-    #       /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --port ${DB_PORT} --cidr ${machine_private_ip}/32
-    #    done
-               
-    #   /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=${SSH_PORT},ToPort=${SSH_PORT},IpRanges="[{CidrIp=${BUILD_CLIENT_IP}/32}]"
-
        if ( [ "${ENABLE_EFS}" = "1" ] )
        then
            /usr/bin/aws ec2 authorize-security-group-ingress --group-id ${security_group_id} --protocol tcp --source-group ${security_group_id} --port 2049 --cidr 0.0.0.0/0
        fi
-       
-     #  /usr/bin/aws ec2 revoke-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=0,ToPort=65535,IpRanges=[{CidrIp=0.0.0.0/0}]
-      # /usr/bin/aws ec2 revoke-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=${SSH_PORT},ToPort=${SSH_PORT},IpRanges=[{CidrIp=0.0.0.0/0}]
-      # /usr/bin/aws ec2 revoke-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=${DB_PORT},ToPort=${DB_PORT},IpRanges=[{CidrIp=0.0.0.0/0}]
-      # /usr/bin/aws ec2 revoke-security-group-ingress --group-id ${security_group_id} --ip-permissions IpProtocol=tcp,FromPort=2049,ToPort=2049,IpRanges=[{CidrIp=0.0.0.0/0}]
        
        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "FIREWALL-UPDATING"
    fi
