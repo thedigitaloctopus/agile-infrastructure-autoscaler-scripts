@@ -38,31 +38,6 @@ SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
 
 . ${HOME}/providerscripts/utilities/SetupInfrastructureIPs.sh
 
-#allips=""
-#allips="`/bin/ls ${HOME}/config/autoscalerip | /usr/bin/tr '\n' ' '`"
-#allips="${allips} `/bin/ls ${HOME}/config/autoscalerpublicip | /usr/bin/tr '\n' ' '`"
-#allips="${allips} `/bin/ls ${HOME}/config/webserverips | /usr/bin/tr '\n' ' '`"
-#allips="${allips} `/bin/ls ${HOME}/config/webserverpublicips | /usr/bin/tr '\n' ' '`"
-#allips="${allips} `/bin/ls ${HOME}/config/databaseip | /usr/bin/tr '\n' ' '`"
-#allips="${allips} `/bin/ls ${HOME}/config/databasepublicip | /usr/bin/tr '\n' ' '`"
-#beingbuiltips="${allips} `/bin/ls ${HOME}/config/beingbuiltips | /usr/bin/tr '\n' ' '`"
-#beingbuiltips="${allips} `/bin/ls ${HOME}/config/beingbuiltpublicips | /usr/bin/tr '\n' ' '`"
-
-#if ( [ "${beingbuiltips}" != "" ] )
-#then
-#    for ip in ${beingbuiltips}
-#    do
-#        if ( [ "`/bin/echo ${allips} | /bin/grep ${ip}`" = "" ] )
-#        then
-#            allips="${allips}" ${ip}
-#        fi
-#    done
-#fi
-
-#allips="${allips} ${BUILD_CLIENT_IP}"
-
-#/bin/echo "${allips}" > ${HOME}/runtime/ipsforfirewall
-
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLEDSUCCESSFULLY"`" = "1" ] && [ ! -f ${HOME}/runtime/FIREWALL-INITIAL ] )
 then
     /bin/touch ${HOME}/runtime/FIREWALL-INITIAL
@@ -79,17 +54,6 @@ then
     fi
 fi
 
-#if ( [ "`/usr/bin/find ${HOME}/runtime/FIREWALL-REFRESH -type f -mmin +5`" != "" ] )
-#then
-#    /bin/touch ${HOME}/runtime/FIREWALL-REFRESH
-#    ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
-#fi
-
-#if ( [ -f ${HOME}/config/INSTALLEDSUCCESSFULLY ] && [ "${1}" = "reboot" ] )
-#then
-#    ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
-#fi
-
 SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
 
 if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${BUILD_CLIENT_IP} | /bin/grep ALLOW`" = "" ] )
@@ -97,7 +61,6 @@ then
     /usr/sbin/ufw default deny incoming
     /usr/sbin/ufw default allow outgoing
     /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${BUILD_CLIENT_IP} to any port ${SSH_PORT}
-  #  ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${BUILD_CLIENT_IP} ${SSH_PORT}
     /bin/sleep 5
 fi
 
@@ -107,7 +70,6 @@ do
     then
        /bin/sleep 5
        /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${autoscalerip}
-    #   ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${autoscalerip} 
     fi
 done
     
@@ -117,7 +79,6 @@ do
     then
         /bin/sleep 5
         /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${publicautoscalerip}
-     #   ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${publicautoscalerip}
     fi
 done
 
@@ -127,7 +88,6 @@ do
     if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${ip} | /bin/grep ALLOW`" = "" ] )
     then
         /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${ip} to any port ${SSH_PORT}
-      #  ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${SSH_PORT}
         /bin/sleep 5
     fi
 done
@@ -138,7 +98,6 @@ do
     if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${ip} | /bin/grep ALLOW`" = "" ] )
     then
         /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${ip} to any port ${SSH_PORT}
-      #  ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${SSH_PORT}
         /bin/sleep 5
     fi
 done
@@ -149,7 +108,6 @@ do
     if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${ip} | /bin/grep ALLOW`" = "" ] )
     then
         /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${ip} to any port ${SSH_PORT}
-      #  ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${SSH_PORT}
         /bin/sleep 5
     fi
 done
@@ -159,19 +117,10 @@ do
     if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${ip} | /bin/grep ALLOW`" = "" ] )
     then
         /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${ip} to any port ${SSH_PORT}
-       # ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh ${ip} ${SSH_PORT}
         /bin/sleep 5
     fi
 done
 
 /bin/sleep 5
-#if ( [ "`/bin/cat ${HOME}/logs/FIREWALL_CONFIGURATION.log | /bin/grep 'Chain already exists.'`" != "" ] )
-#then
-#    /sbin/iptables -F
-#    /sbin/iptables -X
-#    /sbin/iptables -Z
-#    /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw --force reset
-#    /bin/cp /dev/null ${HOME}/logs/FIREWALL_CONFIGURATION.log
-#fi
 
 /usr/sbin/ufw -f enable
