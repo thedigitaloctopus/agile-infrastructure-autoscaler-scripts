@@ -32,11 +32,9 @@
 /bin/echo "*/1 * * * * export HOME="${HOMEDIR}" && /usr/bin/find ${HOME}/runtime -name *lock* -type f -mmin +35 -delete" >> /var/spool/cron/crontabs/root
 /bin/echo "*/1 * * * * export HOME="${HOMEDIR}" && ${HOME}/security/MonitorForNewSSLCertificate.sh" >> /var/spool/cron/crontabs/root
 /bin/echo "*/1 * * * * export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/BroadcastSSLAccount.sh" >> /var/spool/cron/crontabs/root
-######EFS#####/bin/echo "*/1 * * * * export HOME="${HOMEDIR}" && ${HOME}/providerscripts/datastore/SetupConfig.sh" >> /var/spool/cron/crontabs/root
 /bin/echo "*/1 * * * * export HOME="${HOMEDIR}" && ${HOME}/providerscripts/datastore/ObtainBuildClientIP.sh" >> /var/spool/cron/crontabs/root
 /bin/echo "*/1 * * * * export HOME="${HOMEDIR}" && ${HOME}/cron/SetupFirewallFromCron.sh" >> /var/spool/cron/crontabs/root
 /bin/echo "*/1 * * * * export HOME="${HOMEDIR}" && ${HOME}/autoscaler/PurgeDetachedIPs.sh" >> /var/spool/cron/crontabs/root
-/bin/echo "*/1 * * * * export HOME="${HOMEDIR}" && ${HOME}/autoscaler/RefreshScalingProfile.sh" >> /var/spool/cron/crontabs/root
 
 #These scripts are set to run every 5 minutes
 /bin/echo "*/5 * * * * export HOME="${HOMEDIR}" && ${HOME}/security/MonitorFirewall.sh" >> /var/spool/cron/crontabs/root
@@ -48,12 +46,10 @@
 #These scripts will run at set times
 /bin/echo "30 2 * * * /usr/sbin/ufw --force reset" >> /var/spool/cron/crontabs/root
 
-/bin/echo "@daily export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/MonitorFreeDiskSpace.sh" >> /var/spool/cron/crontabs/root
 /bin/echo "@daily export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/PerformSoftwareUpdate.sh" >> /var/spool/cron/crontabs/root
 
 #These scripts will run at a reboot event
 /bin/echo "@reboot export HOME="${HOMEDIR}" && ${HOME}/providerscripts/cloudhost/ConfigureProvider.sh" >> /var/spool/cron/crontabs/root
-#/bin/echo "@reboot export HOME="${HOMEDIR}" && ${HOME}/cron/SetupFirewallFromCron.sh reboot" >> /var/spool/cron/crontabs/root
 
 SERVER_TIMEZONE_CONTINENT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERTIMEZONECONTINENT'`"
 SERVER_TIMEZONE_CITY="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERTIMEZONECITY'`"
@@ -61,7 +57,6 @@ SERVER_TIMEZONE_CITY="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh '
 /bin/echo "@reboot export TZ=\":${SERVER_TIMEZONE_CONTINENT}/${SERVER_TIMEZONE_CITY}\"" >> /var/spool/cron/crontabs/root
 /bin/echo "@reboot export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/CleanupAtReboot.sh" >> /var/spool/cron/crontabs/root
 /bin/echo "@reboot export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/SetHostname.sh" >> /var/spool/cron/crontabs/root
-######EFS#####/bin/echo "@reboot export HOME=${HOMEDIR} && ${HOME}/providerscripts/datastore/SetupConfig.sh" >> /var/spool/cron/crontabs/root
 /bin/echo "@reboot /bin/sleep 600 && export HOME="${HOMEDIR}" && ${HOME}/security/KnickersUp.sh" >> /var/spool/cron/crontabs/root
 /bin/echo "@reboot export HOME=${HOMEDIR} && /usr/bin/find ${HOME}/runtime -name *lock* -type f -delete" >> /var/spool/cron/crontabs/root
 /bin/echo "@reboot export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/GetIP.sh" >> /var/spool/cron/crontabs/root
@@ -71,10 +66,8 @@ SERVER_TIMEZONE_CITY="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh '
 #installed.
 if ( [ "${PRODUCTION}" = "1" ] )
 then
-    /bin/echo "*/1 * * * * export HOME="${HOMEDIR}" && ${HOME}/autoscaler/MonitorCPUUsage.sh" >> /var/spool/cron/crontabs/root
     /bin/echo "*/2 * * * * export HOME="${HOMEDIR}" && ${HOME}/cron/AutoscaleFromCron.sh" >> /var/spool/cron/crontabs/root
     /bin/echo "*/1 * * * * export HOME="${HOMEDIR}" && ${HOME}/cron/DeadOrAliveFromCron.sh" >> /var/spool/cron/crontabs/root
-   # /bin/echo "*/2 * * * * export HOME="${HOMEDIR}" && ${HOME}/autoscaler/DeadOrAlive.sh" >> /var/spool/cron/crontabs/root
     /bin/echo "30 7 * * *  export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/DailyScaleup.sh 3" >> /var/spool/cron/crontabs/root
     /bin/echo "30 17 * * * export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/DailyScaledown.sh 2" >> /var/spool/cron/crontabs/root
 fi
