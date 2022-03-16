@@ -65,7 +65,7 @@ netmask 255.255.0.0
         fi
 elif ( [ "${BUILDOS}" = "ubuntu" ] )
     then
-        if ( [ "${BUILDOSVERSION}" = "20.04" ]  )
+        if ( [ "${BUILDOSVERSION}" = "20.04" ] || [ "${BUILDOSVERSION}" = "22.04" ] )
         then
             mac="`/usr/bin/ip addr | /bin/grep "link" | /bin/grep "ether" | /usr/bin/tail -1 | /usr/bin/awk '{print $2}'`"
             /bin/echo "network:
