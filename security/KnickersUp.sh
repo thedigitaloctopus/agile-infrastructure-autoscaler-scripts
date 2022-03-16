@@ -26,8 +26,6 @@ SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh '
 /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw default deny incoming
 /bin/sleep 10
 /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw default allow outgoing
-#/bin/sleep 10
-#/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw --force reload
 
 /bin/echo "${0} `/bin/date`: Pulled knickers up and setup firewall" >> ${HOME}/logs/MonitoringLog.log
 
