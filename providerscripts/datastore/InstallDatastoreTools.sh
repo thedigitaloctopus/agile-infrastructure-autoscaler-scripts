@@ -24,13 +24,6 @@ BUILDOS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOS'`"
 
 if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh DATASTORECHOICE:amazonS3`" = "1" ]  || [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh DATASTORECHOICE:digitalocean`" = "1" ] || [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh DATASTORECHOICE:exoscale`" = "1" ] || [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh DATASTORECHOICE:linode`" = "1" ] || [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh DATASTORECHOICE:vultr`" = "1" ] )
 then
-   # if ( [ -f /usr/bin/python ] )
-   # then
-   #     ${HOME}/installscripts/PurgePython.sh ${BUILDOS}
-   #     ${HOME}/installscripts/Update.sh ${BUILDOS}
-   #     ${HOME}/installscripts/ForceInstall.sh ${BUILDOS}
-   # fi
-    
     ${HOME}/installscripts/InstallPythonPIP.sh ${BUILDOS}
     ${HOME}/installscripts/InstallPythonDateUtil.sh ${BUILDOS}
     
