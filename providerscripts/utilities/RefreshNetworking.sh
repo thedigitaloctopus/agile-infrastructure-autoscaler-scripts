@@ -37,24 +37,12 @@ then
         if ( [ "${BUILDOSVERSION}" = "20.04" ] )
 	then
 	    ip="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MYIP'`"
-	    #/bin/sed -i "s/addresses.*/addresses: [${ip}\/16]/" /etc/netplan/10-ens7.yaml
 	    
 	    macaddress="`/usr/bin/ip addr | /bin/grep "link" | /bin/grep "ether" | /usr/bin/tail -1 | /usr/bin/awk '{print $2}'`"
             
             /bin/sed -i "s/macaddress.*/macaddress: ${macaddress}/" /etc/netplan/10-enp6s0.yaml
 	    /bin/sed -i "s/addresses.*/addresses: [${ip}\/16]/" /etc/netplan/10-enp6s0.yaml
 
-           # if ( [ -f /etc/netplan/10-ens3.yaml ] )
-           # then
-           #     /bin/echo "network:
- # version: 2
- # renderer: networkd
- # ethernets:
- #   ens3:
- #     mtu: 1450
- #     dhcp4: yes
- #     addresses: [${ip}/16]" > /etc/netplan/10-ens3.yaml
-  #           fi
             /usr/sbin/netplan apply
 	fi
     fi
