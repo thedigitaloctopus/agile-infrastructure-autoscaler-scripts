@@ -20,10 +20,6 @@
 ########################################################################################
 ########################################################################################
 #set -x
-#while ( [ "`/bin/mount | /bin/grep ${HOME}/config`" = "" ] )
-#do
-#    /bin/sleep 5
-#done
 
 ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "autoscalerpublicip/*"
 ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "autoscalerip/*"
