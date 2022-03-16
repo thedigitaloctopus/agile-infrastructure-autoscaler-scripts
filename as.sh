@@ -81,7 +81,6 @@ ROOT_DOMAIN="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{$1=""}1' | /bin/se
 GIT_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'GITUSER'  | /bin/sed 's/#/ /g'` "
 WEBSITE_NAME="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{print $2}'`"
 
-
 #Record what everything has actually been set to in case there is a problem...
 /bin/echo "CLOUDHOST:${CLOUDHOST}" > ${HOME}/logs/InitialBuildEnvironment.log
 /bin/echo "WEBSITE_URL:${WEBSITE_URL}" >> ${HOME}/logs/InitialBuildEnvironment.log
@@ -189,6 +188,7 @@ ${HOME}/providerscripts/utilities/InstallMonitoringGear.sh
 >&2 /bin/echo "${0} Setting up timezone"
 /bin/echo "${0} `/bin/date`: Setting timezone" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+
 #Set the time on the machine
 /usr/bin/timedatectl set-timezone ${SERVER_TIMEZONE_CONTINENT}/${SERVER_TIMEZONE_CITY}
 ${HOME}/providerscripts/utilities/StoreConfigValue.sh "SERVERTIMEZONECONTINENT" "${SERVER_TIMEZONE_CONTINENT}"
@@ -208,9 +208,9 @@ fi
 >&2 /bin/echo "${0} Installing cloudtools"
 /bin/echo "${0} `/bin/date`: Installing cloudtools" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
+
 #Install the tools for our particular cloudhost provider
 . ${HOME}/providerscripts/cloudhost/InstallCloudhostTools.sh
-
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 >&2 /bin/echo "${0} Getting repos from git"
@@ -278,7 +278,6 @@ fi
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/AUTOSCALER_BUILD.log
 
 #Double down on preventing logins as root. We already tried, but, make absolutely sure because we can't guarantee format of /etc/ssh/sshd_config
-
 if ( [ "`/bin/grep '^#PermitRootLogin' /etc/ssh/sshd_config`" != "" ] || [ "`/bin/grep '^PermitRootLogin' /etc/ssh/sshd_config`" != "" ] )
 then
     /bin/sed -i "s/^PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config
