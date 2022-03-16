@@ -27,14 +27,7 @@ fi
 
 if ( [ "${BUILD_OS}" = "ubuntu" ] )
 then
-    #official depreciated 
-   # /usr/bin/git clone https://github.com/vultr/vultr-cli.git
-   # cd vultr-cli
-   # /usr/bin/make builds/vultr-cli_linux_amd64
-   # /bin/cp builds/vultr* /usr/bin/vultr
-   # cd ..
-    
-        #Official
+    #Official
     /usr/bin/go get -u github.com/vultr/vultr-cli/v2
     vultrcli="`/usr/bin/find / -name "vultr-cli" -print | /bin/grep bin | /bin/grep vultr-cli`"
     /bin/cp ${vultrcli} /usr/bin/vultr
@@ -54,12 +47,6 @@ fi
 
 if ( [ "${BUILD_OS}" = "debian" ] )
 then
-    #official depreciated 
-    #/usr/bin/git clone https://github.com/vultr/vultr-cli.git
-    #cd vultr-cli
-    #/usr/bin/make builds/vultr-cli_linux_amd64
-    #/bin/cp builds/vultr* /usr/bin/vultr
-    #cd ..
     #Official
     /usr/bin/go get -u github.com/vultr/vultr-cli/v2
     vultrcli="`/usr/bin/find / -name "vultr-cli" -print | /bin/grep bin | /bin/grep vultr-cli`"
