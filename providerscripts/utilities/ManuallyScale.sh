@@ -22,18 +22,30 @@
 
 if ( [ "$1" = "" ] )
 then
-    /bin/echo "Sorry you need to provide the number of webservers to scale up/down to as a parameter"
-    exit
+    /bin/echo "Please enter the number of webservers you want to scale to, 2 or more, as an integer"
+    read no_webservers
+else
+    no_webservers="${1}"
 fi
 
+while ( [ "${no_webservers}" -lt "2" ] )
+do
+    /bin/echo "Number of webservers has to be 2 or more. Please supply a different value"
+    read no_webservers
+done
+
 ${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "scalingprofile/profile.cnf" 1>/dev/null 2>/dev/null
-/bin/sed -i "/^NO_WEBSERVERS=/c\NO_WEBSERVERS=$1" /tmp/profile.cnf 
+/bin/sed -i "/^NO_WEBSERVERS=/c\NO_WEBSERVERS=${no_webservers}" /tmp/profile.cnf 
 ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh profile.cnf "scalingprofile/profile.cnf" 1>/dev/null 2>/dev/null
+
 /bin/rm /tmp/profile.cnf
+
 ${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "scalingprofile/profile.cnf" 1>/dev/null 2>/dev/null
 no_webservers="`/bin/grep NO_WEBSERVERS /tmp/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
+
 if ( [ "${no_webservers}" != "" ] )
 then
     /bin/echo "Number of webservers is now successfully set to ${no_webservers}"
 fi
+
 /bin/rm /tmp/profile.cnf
