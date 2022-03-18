@@ -123,6 +123,12 @@ then
     exit
 fi
 
+#We don't want less than 2 webservers so, if somehow, webservers is set to less than 2 default it to 2 to be on the safe side. 
+if ( [ "${NO_WEBSERVERS}" -lt "2" ] )
+then
+    NO_WEBSERVERS="2"
+fi
+
 CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
 BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 ALGORITHM="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ALGORITHM'`"
