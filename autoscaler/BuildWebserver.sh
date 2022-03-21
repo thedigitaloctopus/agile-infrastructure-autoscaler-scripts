@@ -601,7 +601,7 @@ fi
 
 #Do a check, as best we can to make sure that the website application is actually running correctly
 loop="0"
-while ( [ "${loop}" -lt "7" ] )
+while ( [ "${loop}" -lt "10" ] )
 do
     if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh APPLICATIONLANGUAGE:PHP`" = "1" ] )
     then
@@ -621,7 +621,7 @@ do
     fi
 done
 
-if ( [ "${loop}" = "7" ] || [ "${tries}" = "20" ] )
+if ( [ "${loop}" = "10" ] || [ "${tries}" = "20" ] )
 then
     #If either of these are true, then somehow the machine/application didn't come online and so we need to destroy the machine
     if ( [ "${CLOUDHOST}" = "vultr" ] )
