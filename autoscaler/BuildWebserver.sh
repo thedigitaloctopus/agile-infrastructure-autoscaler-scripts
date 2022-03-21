@@ -521,6 +521,7 @@ else
         exit
     fi
     
+   /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /bin/rm /home/${SERVER_USER}/runtime/APPLICATION_DB_CONFIGURED"
    /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /home/${SERVER_USER}/providerscripts/utilities/RefreshNetworking.sh"
    /usr/bin/ssh -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${CUSTOM_USER_SUDO} /sbin/shutdown -r now"
 
