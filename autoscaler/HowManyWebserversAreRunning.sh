@@ -18,7 +18,7 @@
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
 #######################################################################################################
 #######################################################################################################
-set -x
+#set -x
 
 #If the toolkit isn't fully installed, we don't want to do anything
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLEDSUCCESSFULLY"`" = "0" ] )
