@@ -114,7 +114,7 @@ PERSIST_ASSETS_TO_CLOUD="`${HOME}/providerscripts/utilities/ExtractConfigValue.s
 ENABLE_EFS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ENABLEEFS'`"
 DIRECTORIES_TO_MOUNT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DIRECTORIESTOMOUNT'`"
 
-${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh 'AUTOSCALED' 
+${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh 'AUTOSCALED:1' 
 
 if ( [ "${ASIP}" = "" ] )
 then 
