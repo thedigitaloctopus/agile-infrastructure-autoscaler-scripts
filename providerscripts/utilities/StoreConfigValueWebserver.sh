@@ -21,6 +21,8 @@
 
 export HOME="`/bin/cat /home/homedir.dat`"
 
+/bin/sed -i '/:/!d' ${HOME}/.ssh/webserver_configuration_settings.dat
+
 if ( [ "${1}" != "" ] && [ "${2}" != "" ] )
 then
     /bin/sed -i "/.*${1}:/d" ${HOME}/.ssh/webserver_configuration_settings.dat
