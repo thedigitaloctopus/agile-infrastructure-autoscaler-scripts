@@ -27,7 +27,8 @@ do
    if ( [ "`/bin/cat /var/log/syslog | /bin/grep -i CRON | /bin/grep fork | /bin/grep error`" != "" ] )
    then
       /bin/sed -i '/.*error.*fork.*/d' /var/log/syslog  
-      ${HOME}/providerscripts/email/SendEmail.sh "CRITICAL: CRON NOT RUNNING" "It looks like the machine with IP address: `${HOME}/providerscripts/utilities/GetPublicIP.sh` is low on memory and therefore cron is not running"
+      ${HOME}/providerscripts/email/SendEmail.sh "CRITICAL: CRON NOT RUNNING" "It looks like the machine with IP address: `${HOME}/providerscripts/utilities/GetPublicIP.sh` is low on memory and therefore cron is not running. Rebooting...."
+      /usr/sbin/shutdown -r now 
    fi
    /bin/sleep 60
 done
