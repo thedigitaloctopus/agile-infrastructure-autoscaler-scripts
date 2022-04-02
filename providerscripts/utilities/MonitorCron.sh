@@ -28,6 +28,7 @@ do
    then
       /bin/sed -i '/.*error.*fork.*/d' /var/log/syslog  
       ${HOME}/providerscripts/email/SendEmail.sh "CRITICAL: CRON NOT RUNNING" "It looks like the machine with IP address: `${HOME}/providerscripts/utilities/GetPublicIP.sh` is low on memory and therefore cron is not running. Rebooting...."
+      /bin/echo "${0} Forking error from cron (critically low memory in other words), rebooting machine to release memory and recover. Consider deploying machines with more memory." >> ${HOME}/logs/CRON_LOW_MEMORY.log
       /usr/sbin/shutdown -r now 
    fi
    /bin/sleep 60
